@@ -1,0 +1,388 @@
+/* Trade records: journal, backtesting, simulation, mistake lab */
+
+.trades-page {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+/* ─── Stats header ──────────────────────────────────────────────────────── */
+
+.tl-stats {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 22px;
+  align-items: center;
+  padding: 18px;
+}
+.tl-stats-ring {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding: 0 6px;
+}
+.tl-stat-grid {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+.tl-setup-name {
+  display: block;
+  font-size: 18px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.tl-split {
+  align-items: stretch;
+}
+
+/* ─── Table cells ───────────────────────────────────────────────────────── */
+
+.tl-table td.num {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+}
+.tl-table .thumbs {
+  flex-wrap: nowrap;
+}
+.tl-table .thumb {
+  width: 56px;
+  height: 38px;
+}
+.tl-asset {
+  font-family: var(--font-mono);
+  letter-spacing: 0.04em;
+  color: #fff;
+}
+.tl-dir {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 12px;
+  letter-spacing: 0.14em;
+}
+.tl-dir.long {
+  color: var(--cyan);
+}
+.tl-dir.short {
+  color: var(--blue);
+}
+.tl-notes {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  color: var(--text-2);
+  font-size: 12.5px;
+}
+.tl-mini-bar {
+  display: inline-block;
+  vertical-align: middle;
+  width: 46px;
+  height: 4px;
+  margin-right: 8px;
+  border-radius: 2px;
+  background: rgba(120, 225, 255, 0.1);
+  overflow: hidden;
+}
+.tl-mini-bar i {
+  display: block;
+  height: 100%;
+  background: linear-gradient(90deg, var(--blue), var(--cyan));
+  box-shadow: 0 0 8px rgba(62, 230, 255, 0.5);
+}
+
+/* ─── Filters ───────────────────────────────────────────────────────────── */
+
+.tl-filters {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 12px;
+  padding: 14px;
+  margin-bottom: 16px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  background: rgba(3, 10, 16, 0.4);
+}
+.tl-filter {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+.tl-filter .stat-label {
+  font-size: 11px;
+}
+.tl-filter .input,
+.tl-filter .select {
+  padding: 7px 10px;
+  font-size: 13px;
+}
+.tl-filter-foot {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  flex-wrap: wrap;
+  padding-top: 10px;
+  border-top: 1px solid rgba(120, 225, 255, 0.06);
+}
+
+/* ─── Editor form ───────────────────────────────────────────────────────── */
+
+.tl-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.tl-form-note {
+  color: var(--warn);
+  border-color: rgba(255, 203, 107, 0.3);
+  background: rgba(255, 203, 107, 0.05);
+}
+.tl-form-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
+}
+.tl-form-grid .span-3 {
+  grid-column: span 3;
+}
+.tl-form-grid .seg-control {
+  width: 100%;
+}
+.tl-calc {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1px;
+  background: var(--line);
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius);
+  overflow: hidden;
+  box-shadow: inset 0 0 24px rgba(62, 230, 255, 0.05);
+}
+.tl-calc > div {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  padding: 10px 14px;
+  background: rgba(4, 14, 22, 0.92);
+}
+.tl-calc .stat-label {
+  font-size: 11px;
+}
+.tl-calc .num {
+  font-size: 18px;
+  color: #fff;
+}
+
+/* Large simulation banner */
+.tl-sim-banner .sim-banner {
+  padding: 18px 20px;
+  font-size: 17px;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+.tl-sim-banner .sim-banner svg {
+  width: 22px;
+  height: 22px;
+}
+.tl-sim-banner .sim-banner span {
+  flex-basis: 100%;
+  font-size: 14px;
+}
+
+/* ─── Mistake lab ───────────────────────────────────────────────────────── */
+
+.ml-hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) auto minmax(0, 1.2fr);
+  gap: 24px;
+  align-items: center;
+  padding: 22px;
+}
+.ml-common {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+.ml-common-title {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(26px, 3.4vw, 42px);
+  line-height: 1.05;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #fff;
+  text-shadow: 0 0 24px rgba(62, 230, 255, 0.4);
+  overflow-wrap: anywhere;
+}
+.ml-stat-grid {
+  grid-template-columns: 1fr;
+}
+.ml-stat-grid > * {
+  padding: 10px 16px;
+}
+.ml-stat-grid .stat-value {
+  font-size: 24px;
+}
+.ml-split {
+  display: grid;
+  grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr);
+  gap: 16px;
+}
+.ml-steps {
+  margin: 0;
+  padding-left: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  color: var(--text-2);
+  font-size: 13.5px;
+}
+.ml-steps li::marker {
+  color: var(--cyan);
+  font-family: var(--font-mono);
+}
+.ml-steps b {
+  color: #fff;
+  font-weight: 600;
+}
+
+.ml-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.ml-item {
+  padding: 14px 16px;
+  border: 1px solid var(--line);
+  border-left: 2px solid var(--cyan);
+  border-radius: var(--radius);
+  background: rgba(3, 12, 19, 0.55);
+  cursor: pointer;
+  transition: border-color 0.2s, background 0.2s, box-shadow 0.2s;
+}
+.ml-item:hover {
+  border-color: var(--line-strong);
+  border-left-color: var(--cyan);
+  background: rgba(62, 230, 255, 0.04);
+  box-shadow: 0 0 18px -8px rgba(62, 230, 255, 0.5);
+}
+.ml-item.improved {
+  border-left-color: var(--good);
+  opacity: 0.78;
+}
+.ml-item-head {
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+}
+.ml-check {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  width: 64px;
+  flex-shrink: 0;
+  text-align: center;
+  font-size: 9.5px;
+  letter-spacing: 0.1em;
+}
+.ml-title {
+  margin: 0;
+  font-size: 17px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #fff;
+}
+.ml-item-body {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+  margin-top: 12px;
+  padding-top: 12px;
+  margin-left: 78px;
+  border-top: 1px solid rgba(120, 225, 255, 0.06);
+}
+.ml-item-body .stat-label {
+  font-size: 10.5px;
+}
+.ml-item-body p {
+  margin: 4px 0 0;
+  font-size: 13px;
+  color: var(--text-2);
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+/* ─── Responsive ────────────────────────────────────────────────────────── */
+
+@media (max-width: 1100px) {
+  .tl-stat-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .ml-hero {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+  .ml-hero .ml-stat-grid {
+    grid-column: 1 / -1;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+  .ml-split {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 760px) {
+  .tl-stats {
+    grid-template-columns: 1fr;
+    padding: 14px;
+  }
+  .tl-form-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .tl-form-grid .span-3 {
+    grid-column: 1 / -1;
+  }
+  .tl-calc {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .ml-hero {
+    grid-template-columns: 1fr;
+    justify-items: start;
+    padding: 16px;
+  }
+  .ml-hero .ml-ring {
+    justify-self: center;
+  }
+  .ml-item-body {
+    grid-template-columns: 1fr;
+    margin-left: 0;
+  }
+}
+
+@media (max-width: 480px) {
+  .tl-stat-grid,
+  .ml-hero .ml-stat-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .tl-stat-grid > *,
+  .ml-stat-grid > * {
+    padding: 12px;
+  }
+  .tl-form-grid {
+    grid-template-columns: 1fr;
+  }
+  .tl-form-grid .span-2 {
+    grid-column: 1 / -1;
+  }
+  .tl-filters {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .ml-check {
+    width: 52px;
+  }
+}
