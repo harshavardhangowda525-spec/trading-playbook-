@@ -1,0 +1,207 @@
+/* ─── Analytics command center ──────────────────────────────────────────── */
+
+.an-top {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 16px;
+  margin-bottom: 16px;
+}
+.an-metric {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 18px 20px;
+  min-width: 0;
+}
+.an-big {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 46px;
+  line-height: 1;
+  color: #fff;
+  text-shadow: 0 0 26px rgba(62, 230, 255, 0.4);
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+}
+.an-big.dim {
+  color: var(--dim);
+  text-shadow: none;
+}
+.an-big small {
+  font-size: 0.36em;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.an-note {
+  font-size: 11.5px;
+  color: var(--dim);
+  letter-spacing: 0.04em;
+}
+
+.an-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+.an-grid > * {
+  min-width: 0;
+}
+.an-panel {
+  height: 100%;
+}
+.an-panel .recharts-wrapper,
+.an-panel .recharts-surface {
+  overflow: visible;
+}
+.an-panel .recharts-legend-item-text {
+  font-family: var(--font-display);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+.an-panel .recharts-polar-angle-axis-tick text {
+  font-family: var(--font-display);
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.an-radar {
+  position: relative;
+}
+.an-radar::before {
+  content: '';
+  position: absolute;
+  inset: 12% 22%;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(62, 230, 255, 0.1), transparent 70%);
+  pointer-events: none;
+}
+
+.an-aside {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 22px;
+  margin-bottom: 10px;
+}
+.an-mini {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+.an-mini .stat-label {
+  font-size: 10.5px;
+}
+.an-mini-value {
+  font-size: 18px;
+  color: var(--cyan-soft);
+}
+
+.an-foot {
+  margin-top: 20px;
+  text-align: center;
+}
+
+@media (max-width: 1180px) {
+  .an-top {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (max-width: 860px) {
+  .an-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+@media (max-width: 480px) {
+  .an-top {
+    gap: 10px;
+  }
+  .an-metric {
+    padding: 14px;
+  }
+  .an-big {
+    font-size: 34px;
+  }
+}
+
+/* ─── Settings ──────────────────────────────────────────────────────────── */
+
+.set-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+.set-grid > * {
+  min-width: 0;
+}
+.set-targets {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 12px;
+}
+.set-code {
+  font-family: var(--font-mono);
+  font-size: 12.5px;
+  line-height: 1.7;
+  padding: 12px 14px;
+  border-radius: var(--radius);
+  border: 1px solid var(--line);
+  background: rgba(2, 8, 14, 0.75);
+  color: var(--cyan-soft);
+  overflow-x: auto;
+  white-space: pre;
+  margin: 0;
+}
+.set-steps {
+  margin: 0;
+  padding-left: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  color: var(--text-2);
+  font-size: 13.5px;
+}
+.set-steps code,
+.set-inline-code {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--cyan-soft);
+  background: rgba(62, 230, 255, 0.07);
+  padding: 1px 5px;
+  border-radius: 4px;
+}
+.set-mode {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 26px;
+  letter-spacing: 0.14em;
+  color: #fff;
+  text-shadow: 0 0 22px rgba(62, 230, 255, 0.35);
+}
+.set-kv {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 8px 16px;
+  align-items: center;
+  font-size: 13.5px;
+}
+.set-kv > span:nth-child(odd) {
+  font-family: var(--font-display);
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.set-kv > span:nth-child(even) {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 860px) {
+  .set-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
