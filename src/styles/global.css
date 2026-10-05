@@ -283,8 +283,7 @@ canvas.bg-particles {
 }
 
 .topbar {
-  position: sticky;
-  top: 0;
+  position: relative;
   z-index: 20;
   height: var(--topbar-h);
   display: grid;
@@ -292,7 +291,6 @@ canvas.bg-particles {
   align-items: center;
   gap: 16px;
   padding: 0 clamp(16px, 4vw, 48px);
-  background: linear-gradient(180deg, rgba(8, 8, 10, 0.85), rgba(8, 8, 10, 0));
   font-family: var(--font-mono);
   font-size: 11px;
   letter-spacing: 0.16em;
