@@ -40,6 +40,13 @@ const DEV: { key: keyof Skills; label: string }[] = [
   { key: 'discipline', label: 'Discipline' },
 ];
 const WORDS = ['LEARN', 'EXECUTE', 'REVIEW', 'IMPROVE'];
+const QUICK = [
+  { to: '/trading-journal?new=1', label: 'Trade' },
+  { to: '/daily-journal', label: 'Journal' },
+  { to: '/backtesting?new=1', label: 'Backtest' },
+  { to: '/vault?new=1', label: 'Note' },
+  { to: '/strategy-lab?new=1', label: 'Strategy' },
+];
 const ease = [0.22, 1, 0.36, 1] as const;
 
 const block = (id: string) => BLOCKS.find((b) => b.id === id)!;
@@ -112,6 +119,13 @@ export function Dashboard() {
             DAY {String(day).padStart(2, '0')} · {lesson.title}
           </span>
         </div>
+        <nav className="quick-capture mono" aria-label="Quick capture">
+          {QUICK.map((q) => (
+            <Link key={q.to} to={q.to}>
+              + {q.label}
+            </Link>
+          ))}
+        </nav>
         <RotatingWord />
       </motion.section>
 
