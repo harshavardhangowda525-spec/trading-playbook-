@@ -125,14 +125,14 @@ export function MyDay() {
               <div className="md-periods">
                 <div className="md-period">
                   <span className="sc-kicker">Week</span>
-                  <span className="display" style={{ fontSize: 24, fontWeight: 700, color: '#fff' }}>
+                  <span className="display" style={{ fontSize: 24, fontWeight: 400, color: '#fff' }}>
                     <CountUp value={Math.round(week * 100)} />%
                   </span>
                   <Bar value={week} />
                 </div>
                 <div className="md-period">
                   <span className="sc-kicker">Month</span>
-                  <span className="display" style={{ fontSize: 24, fontWeight: 700, color: '#fff' }}>
+                  <span className="display" style={{ fontSize: 24, fontWeight: 400, color: '#fff' }}>
                     <CountUp value={Math.round(month * 100)} />%
                   </span>
                   <Bar value={month} />

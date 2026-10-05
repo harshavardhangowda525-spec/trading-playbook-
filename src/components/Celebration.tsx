@@ -1,86 +1,90 @@
 import { useEffect, useState } from 'react';
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
-import { celebrations, type Celebration } from '../lib/events';
+import { celebrations, corePulse, type Celebration } from '../lib/events';
 
-/** Short holographic overlay for MISSION COMPLETE / DAY COMPLETE events. */
+type Toast = { key: number; title: string; line?: string; major: boolean };
+
+/**
+ * Quiet completion feedback. Every ticked task shows a brief "COMPLETED";
+ * finishing a session or the whole day shows a slightly longer message.
+ */
 export function CelebrationOverlay() {
-  const [current, setCurrent] = useState<(Celebration & { key: number }) | null>(null);
+  const [toast, setToast] = useState<Toast | null>(null);
   const reduce = useReducedMotion();
 
-  useEffect(
-    () =>
-      celebrations.on((c) => {
-        setCurrent({ ...c, key: Date.now() });
+  useEffect(() => {
+    const offPulse = corePulse.on(() =>
+      setToast((t) => (t?.major ? t : { key: Date.now(), title: 'COMPLETED', major: false })),
+    );
+    const offCel = celebrations.on((c: Celebration) =>
+      setToast({
+        key: Date.now(),
+        title: c.kind === 'day' ? 'DAY COMPLETE' : c.kind === 'session' ? 'SESSION COMPLETE' : 'LESSON COMPLETE',
+        line: c.kind === 'day' ? 'System status: optimal' : c.lines[c.lines.length - 1]?.replace('IMPROVEMENT', 'improvement'),
+        major: true,
       }),
-    [],
-  );
+    );
+    return () => {
+      offPulse();
+      offCel();
+    };
+  }, []);
 
   useEffect(() => {
-    if (!current) return;
-    const t = setTimeout(() => setCurrent(null), reduce ? 1800 : 2800);
+    if (!toast) return;
+    const t = setTimeout(() => setToast(null), toast.major ? 3200 : 1700);
     return () => clearTimeout(t);
-  }, [current, reduce]);
-
-  const sparks = Array.from({ length: 22 }, (_, i) => i);
+  }, [toast]);
 
   return (
     <AnimatePresence>
-      {current && (
+      {toast && (
         <motion.div
-          key={current.key}
-          className="celebration"
+          key={toast.key}
+          className="completion-toast"
           role="status"
           aria-live="polite"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          transition={{ duration: 0.3 }}
-          onClick={() => setCurrent(null)}
+          initial={{ opacity: 0, y: 14, x: '-50%', filter: 'blur(6px)' }}
+          animate={{ opacity: 1, y: 0, x: '-50%', filter: 'blur(0px)' }}
+          exit={{ opacity: 0, y: 8, x: '-50%', filter: 'blur(4px)' }}
+          transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
         >
-          <div className="celebration-inner">
-            {!reduce && (
-              <svg className="celebration-rings" viewBox="0 0 300 300" aria-hidden>
-                <motion.circle cx="150" cy="150" r="120" fill="none" stroke="rgba(62,230,255,0.35)" strokeWidth="1"
-                  initial={{ pathLength: 0, rotate: -90 }} animate={{ pathLength: 1 }} transition={{ duration: 1, ease: 'easeOut' }} />
-                <motion.circle cx="150" cy="150" r="98" fill="none" stroke="rgba(62,230,255,0.8)" strokeWidth="3" strokeLinecap="round"
-                  initial={{ pathLength: 0 }} animate={{ pathLength: 1 }} transition={{ duration: 1.1, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}
-                  style={{ filter: 'drop-shadow(0 0 8px rgba(62,230,255,0.9))' }} />
-                <motion.circle cx="150" cy="150" r="140" fill="none" stroke="rgba(62,230,255,0.25)" strokeDasharray="2 8"
-                  initial={{ scale: 0.6, opacity: 0 }} animate={{ scale: 1.15, opacity: [0, 1, 0] }} transition={{ duration: 1.8 }} />
-              </svg>
-            )}
-            {!reduce &&
-              sparks.map((i) => {
-                const angle = (i / sparks.length) * Math.PI * 2;
-                return (
-                  <motion.span
-                    key={i}
-                    className="celebration-spark"
-                    initial={{ x: 0, y: 0, opacity: 1 }}
-                    animate={{ x: Math.cos(angle) * (130 + (i % 3) * 30), y: Math.sin(angle) * (130 + (i % 3) * 30), opacity: 0 }}
-                    transition={{ duration: 1.4, delay: 0.2, ease: 'easeOut' }}
-                  />
-                );
-              })}
-            <motion.div
-              className="celebration-title glitch-once"
-              initial={{ opacity: 0, letterSpacing: '0.6em' }}
-              animate={{ opacity: 1, letterSpacing: '0.22em' }}
-              transition={{ duration: 0.6, ease: 'easeOut' }}
-            >
-              {current.title}
-            </motion.div>
-            {current.lines.map((line, i) => (
-              <motion.div
-                key={line}
-                className={i === current.lines.length - 1 ? 'celebration-big' : 'celebration-line'}
-                initial={{ opacity: 0, y: 8 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.35 + i * 0.25 }}
-              >
-                {line}
-              </motion.div>
-            ))}
+          <svg className="ring" viewBox="0 0 36 36" aria-hidden>
+            <defs>
+              <linearGradient id="toast-g" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0" stopColor="#c4b9e6" />
+                <stop offset="1" stopColor="#ecdcb6" />
+              </linearGradient>
+            </defs>
+            <circle cx="18" cy="18" r="15" fill="none" stroke="rgba(236,228,214,0.12)" strokeWidth="1.5" />
+            <motion.circle
+              cx="18"
+              cy="18"
+              r="15"
+              fill="none"
+              stroke="url(#toast-g)"
+              strokeWidth="1.5"
+              strokeLinecap="round"
+              transform="rotate(-90 18 18)"
+              initial={{ pathLength: reduce ? 1 : 0 }}
+              animate={{ pathLength: 1 }}
+              transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
+            />
+            <motion.path
+              d="M12 18.5l4 4 8-9"
+              fill="none"
+              stroke="#f1ece4"
+              strokeWidth="1.6"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              initial={{ pathLength: reduce ? 1 : 0 }}
+              animate={{ pathLength: 1 }}
+              transition={{ duration: 0.5, delay: 0.5 }}
+            />
+          </svg>
+          <div>
+            <div className="t-title">{toast.title}</div>
+            {toast.line && <div className="t-line">{toast.line}</div>}
           </div>
         </motion.div>
       )}

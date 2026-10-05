@@ -64,11 +64,11 @@ export function SessionTimer({ sessionId }: { sessionId: TradingSessionId }) {
             cy={RING / 2}
             r={RING / 2 - 1.5}
             fill="none"
-            stroke="rgba(120,225,255,0.22)"
+            stroke="rgba(214, 208, 198,0.22)"
             strokeWidth="2"
             strokeDasharray={`1 ${(2 * Math.PI * (RING / 2 - 1.5)) / 60 - 1}`}
           />
-          <circle cx={RING / 2} cy={RING / 2} r={r} fill="none" stroke="rgba(120,225,255,0.1)" strokeWidth={STROKE} />
+          <circle cx={RING / 2} cy={RING / 2} r={r} fill="none" stroke="rgba(214, 208, 198,0.1)" strokeWidth={STROKE} />
           <motion.circle
             cx={RING / 2}
             cy={RING / 2}
@@ -78,7 +78,7 @@ export function SessionTimer({ sessionId }: { sessionId: TradingSessionId }) {
             strokeWidth={STROKE}
             strokeLinecap="round"
             strokeDasharray={circ}
-            style={{ filter: 'drop-shadow(0 0 4px rgba(62,230,255,0.8))' }}
+            style={{ filter: 'drop-shadow(0 0 4px rgba(232, 220, 196,0.8))' }}
             initial={false}
             animate={{ strokeDashoffset: circ * (1 - progress) }}
             transition={{ duration: reduce ? 0 : 0.4, ease: 'linear' }}

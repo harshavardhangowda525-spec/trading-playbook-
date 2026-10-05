@@ -28,7 +28,7 @@ const RULE_KEY: Record<EvalKey, keyof Skills> = {
   psychology: 'psychology',
 };
 
-const TOOLTIP_STYLE = { background: 'rgba(6,18,28,0.95)', border: '1px solid rgba(120,225,255,0.3)', borderRadius: 6, fontSize: 12 };
+const TOOLTIP_STYLE = { background: 'rgba(20, 19, 23, 0.95)', border: '1px solid rgba(214, 208, 198,0.3)', borderRadius: 6, fontSize: 12 };
 
 export function EvaluationPage() {
   const skills = useSkills();
@@ -65,7 +65,7 @@ export function EvaluationPage() {
             <div className="col" style={{ alignItems: 'center', gap: 14, padding: '6px 0' }}>
               <RingMeter value={overall / 100} size={190} stroke={8} showValue={false}>
                 <div>
-                  <div className="display" style={{ fontSize: 54, fontWeight: 700, color: '#fff', lineHeight: 1 }}>
+                  <div className="display" style={{ fontSize: 54, fontWeight: 400, color: '#fff', lineHeight: 1 }}>
                     <CountUp value={Math.round(overall)} />
                   </div>
                   <div className="stat-label">/ 100</div>
@@ -91,18 +91,18 @@ export function EvaluationPage() {
                       </feMerge>
                     </filter>
                   </defs>
-                  <PolarGrid stroke="rgba(120,225,255,0.14)" />
-                  <PolarAngleAxis dataKey="area" tick={{ fill: '#7f9aa7', fontSize: 11 }} />
+                  <PolarGrid stroke="rgba(214, 208, 198,0.14)" />
+                  <PolarAngleAxis dataKey="area" tick={{ fill: '#8f8a82', fontSize: 11 }} />
                   <PolarRadiusAxis domain={[0, 100]} tick={false} axisLine={false} />
                   <Tooltip contentStyle={TOOLTIP_STYLE} formatter={(v) => [`${v}`, 'Score']} />
                   <Radar
                     dataKey="score"
-                    stroke="#3ee6ff"
+                    stroke="#e9dfcb"
                     strokeWidth={2}
-                    fill="#3ee6ff"
+                    fill="#e9dfcb"
                     fillOpacity={0.18}
                     style={{ filter: 'url(#eval-glow)' }}
-                    dot={{ r: 3, fill: '#3ee6ff' }}
+                    dot={{ r: 3, fill: '#e9dfcb' }}
                     isAnimationActive
                   />
                 </RadarChart>

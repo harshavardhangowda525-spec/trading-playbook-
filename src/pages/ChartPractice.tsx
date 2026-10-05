@@ -365,19 +365,19 @@ function CandleSvg({ candles }: { candles: Candle[] }) {
       </defs>
       {ticks.map((t) => (
         <g key={t}>
-          <line x1={plotL} x2={plotR} y1={y(t)} y2={y(t)} stroke="rgba(120,225,255,0.08)" strokeDasharray="3 4" />
-          <text x={plotR + 8} y={y(t) + 4} fill="#7f9aa7" fontSize="11" fontFamily="var(--font-mono)">
+          <line x1={plotL} x2={plotR} y1={y(t)} y2={y(t)} stroke="rgba(214, 208, 198,0.08)" strokeDasharray="3 4" />
+          <text x={plotR + 8} y={y(t) + 4} fill="#8f8a82" fontSize="11" fontFamily="var(--font-mono)">
             {t.toFixed(decimals)}
           </text>
         </g>
       ))}
-      <line x1={plotR} x2={plotR} y1={top} y2={bottom} stroke="rgba(120,225,255,0.18)" />
+      <line x1={plotR} x2={plotR} y1={top} y2={bottom} stroke="rgba(214, 208, 198,0.18)" />
       {candles.map((c, i) => {
         const last = i === candles.length - 1;
         const cx0 = plotL + slotW * (slots - candles.length + i + 0.5);
         const bw = last ? Math.min(30, slotW * 0.6) : Math.min(18, slotW * 0.45);
         const bull = c.c >= c.o;
-        const color = bull ? '#3ee6ff' : '#4b8dff';
+        const color = bull ? '#e9dfcb' : '#a89bd4';
         const bTop = y(Math.max(c.o, c.c));
         const bH = Math.max(1.5, Math.abs(y(c.o) - y(c.c)));
         return (
@@ -389,14 +389,14 @@ function CandleSvg({ candles }: { candles: Candle[] }) {
             transition={{ delay: i * 0.05, duration: 0.3 }}
             filter={last ? 'url(#ct-glow)' : undefined}
           >
-            {last && <rect x={cx0 - slotW / 2 + 2} y={top} width={slotW - 4} height={bottom - top} fill="rgba(62,230,255,0.05)" rx={4} />}
+            {last && <rect x={cx0 - slotW / 2 + 2} y={top} width={slotW - 4} height={bottom - top} fill="rgba(232, 220, 196,0.05)" rx={4} />}
             <line x1={cx0} x2={cx0} y1={y(c.h)} y2={y(c.l)} stroke={color} strokeWidth={last ? 2 : 1.4} />
             <rect
               x={cx0 - bw / 2}
               y={bTop}
               width={bw}
               height={bH}
-              fill={bull ? 'rgba(2,10,16,0.95)' : color}
+              fill={bull ? 'rgba(14, 13, 16, 0.95)' : color}
               stroke={color}
               strokeWidth={last ? 2 : 1.4}
               rx={1.5}
