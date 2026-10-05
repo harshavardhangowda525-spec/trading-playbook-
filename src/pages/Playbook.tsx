@@ -1,3 +1,4 @@
+import { StrategyJournal } from '../components/journal/StrategyJournal';
 import { useMemo, useState } from 'react';
 import { motion } from 'framer-motion';
 import { BookOpenText, PenLine, Plus, Printer, Sparkles } from 'lucide-react';
@@ -212,6 +213,7 @@ export function PlaybookPage() {
           </div>
         )}
       </div>
+      <StrategyJournal />
     </div>
   );
 }

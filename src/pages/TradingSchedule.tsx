@@ -1,3 +1,4 @@
+import { JournalCTA } from '../components/journal/JournalCTA';
 import { Link } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
 import { ArrowRight, BookOpen, CalendarCheck, Zap } from 'lucide-react';
@@ -79,6 +80,9 @@ function SessionPanel({
         <span className="sc-session-range">
           {time12(session.start)} – {time12(session.end)}
         </span>
+      </div>
+      <div className="row" style={{ justifyContent: 'flex-end', marginTop: -6, marginBottom: 12 }}>
+        <JournalCTA session={session.id} live={live} />
       </div>
       {children}
       <div className="sc-thead sc-kicker" aria-hidden>

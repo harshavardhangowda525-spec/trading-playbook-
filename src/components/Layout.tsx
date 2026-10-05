@@ -162,14 +162,15 @@ export function Layout() {
           {section.pages.length > 1 && (
             <nav className="section-tabs" aria-label={`${section.label} pages`}>
               {section.pages.map((p) => (
-                <NavLink key={p.to} to={p.to} end={p.to === '/journey' ? false : true}>
+                <NavLink key={p.to} to={p.to} end={!['/journey', '/trading-journal'].includes(p.to)}>
                   {p.label}
                 </NavLink>
               ))}
             </nav>
           )}
           <AnimatePresence mode="wait">
-            <PageFade key={location.pathname}>
+            {/* One transition per top-level page; sub-routes (journal tabs, lessons) animate inside the page. */}
+            <PageFade key={location.pathname.split('/')[1] || 'home'}>
               <FrozenOutlet />
             </PageFade>
           </AnimatePresence>

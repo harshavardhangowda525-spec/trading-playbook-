@@ -15,7 +15,8 @@ Navigation is a floating glass bar with six sections — Home, Trading, Journal,
 | **Learn** | **84-Day Journey** (12 phases built in) · daily **learning workspace** · **The 1% Engine** · **Final Evaluation** |
 | **Practice** | **Chart Practice** (practice log + synthetic Candle Trainer) · **Backtesting** journal · **Simulation** (paper trading) |
 | **Build** | **Strategy Lab** (multiple drafts + visual flow) · **Playbook** (10 editable sections, print view) |
-| **Track** | **Trading Journal** (filters) · **Daily Journal** (auto score, screenshots) · **Psychology** journal · **Mistake Lab** · **Analytics** command center |
+| **Trading Journal** | Simulation / educational journal: full-screen entry editor (basic info, setup & R:R, six analysis prompts, chart screenshot with notes & zoom, execution review, mindset check, mistakes, result, auto-generated Today's 1% Improvement + Tomorrow's Focus), overview stats, searchable/filterable history timeline, journal analytics, weekly review with next week's 1% target, JSON/CSV export. Linked to the timetable (Open journal / Log today's session) and to strategies in the Playbook |
+| **Track** | **Daily Journal** (auto score, screenshots) · **Psychology** journal · **Mistake Lab** · **Analytics** command center |
 | **Vault** | Searchable **Knowledge Vault** |
 
 Ticking a trading task on **Trading Schedule** also ticks it on **My Day** (they share one record per date). Tasks reset each calendar day; history is kept forever. Missed days never reset streak history or the 84-day journey.

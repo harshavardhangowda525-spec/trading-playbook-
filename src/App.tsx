@@ -50,7 +50,7 @@ export function App() {
             <Route path="chart-practice" element={<ChartPractice />} />
             <Route path="backtesting" element={<Backtesting />} />
             <Route path="simulation" element={<Simulation />} />
-            <Route path="trading-journal" element={<TradingJournal />} />
+            <Route path="trading-journal/*" element={<TradingJournal />} />
             <Route path="mistakes" element={<MistakeLab />} />
             <Route path="strategy-lab" element={<StrategyLab />} />
             <Route path="playbook" element={<PlaybookPage />} />

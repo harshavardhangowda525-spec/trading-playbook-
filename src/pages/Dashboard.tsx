@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 import { ArrowRight, Check } from 'lucide-react';
 import { GlassOrb } from '../components/GlassOrb';
+import { JOURNAL_CTA } from '../components/journal/JournalCTA';
 import { CountUp, cx } from '../components/ui';
 import { BLOCKS, type Block } from '../data/schedule';
 import { TOTAL_DAYS, lessonFor, phaseFor } from '../data/curriculum';
@@ -41,8 +42,8 @@ const DEV: { key: keyof Skills; label: string }[] = [
 ];
 const WORDS = ['LEARN', 'EXECUTE', 'REVIEW', 'IMPROVE'];
 const QUICK = [
-  { to: '/trading-journal?new=1', label: 'Trade' },
-  { to: '/daily-journal', label: 'Journal' },
+  { to: '/trading-journal?new=1', label: 'Journal entry' },
+  { to: '/daily-journal', label: 'Daily reflection' },
   { to: '/backtesting?new=1', label: 'Backtest' },
   { to: '/vault?new=1', label: 'Note' },
   { to: '/strategy-lab?new=1', label: 'Strategy' },
@@ -153,12 +154,18 @@ export function Dashboard() {
               ) : (
                 <span />
               )}
-              <button
-                className="text-btn strong"
-                onClick={() => navigate(next.block.tradingSession ? '/trading-schedule' : `/my-day?task=${next.block.id}`)}
-              >
-                ENTER <ArrowRight size={13} />
-              </button>
+              {next.block.tradingSession && next.state === 'now' ? (
+                <button className="text-btn strong" onClick={() => navigate(JOURNAL_CTA[next.block.tradingSession!].to)}>
+                  {JOURNAL_CTA[next.block.tradingSession].label} <ArrowRight size={13} />
+                </button>
+              ) : (
+                <button
+                  className="text-btn strong"
+                  onClick={() => navigate(next.block.tradingSession ? '/trading-schedule' : `/my-day?task=${next.block.id}`)}
+                >
+                  ENTER <ArrowRight size={13} />
+                </button>
+              )}
             </div>
           </>
         ) : (
