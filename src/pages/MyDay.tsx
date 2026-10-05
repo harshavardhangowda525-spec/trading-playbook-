@@ -1,3 +1,4 @@
+import { JournalCTA } from '../components/journal/JournalCTA';
 import { useEffect, useMemo, useState } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
@@ -244,6 +245,7 @@ function BlockView({ block, day, nowMin, flash }: { block: Block; day: Day; nowM
               <Link to="/trading-schedule" className="btn btn-ghost btn-sm" aria-label="Open trading schedule">
                 Schedule <ArrowRight size={13} />
               </Link>
+              <JournalCTA session={block.tradingSession!} live={current} />
             </>
           )}
           <CatTag block={block} />
