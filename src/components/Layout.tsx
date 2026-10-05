@@ -26,7 +26,6 @@ export const SECTIONS: Section[] = [
     icon: LineChart,
     pages: [
       { to: '/trading-schedule', label: 'Sessions' },
-      { to: '/trading-journal', label: 'Journal' },
       { to: '/backtesting', label: 'Backtest' },
       { to: '/simulation', label: 'Simulation' },
       { to: '/chart-practice', label: 'Chart Practice' },
@@ -38,7 +37,8 @@ export const SECTIONS: Section[] = [
     label: 'Journal',
     icon: NotebookPen,
     pages: [
-      { to: '/daily-journal', label: 'Daily' },
+      { to: '/trading-journal', label: 'Trading Journal' },
+      { to: '/daily-journal', label: 'Daily Journal' },
       { to: '/engine', label: '1% Engine' },
       { to: '/psychology', label: 'Psychology' },
       { to: '/mistakes', label: 'Mistake Lab' },
