@@ -1,55 +1,48 @@
-import { useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { motion } from 'framer-motion';
-import { ArrowRight, Bot, Check, Flame, Play, Plus, Sparkles } from 'lucide-react';
-import { OrbitalCore } from '../components/OrbitalCore';
-import { CountUp, Panel, RingMeter, SegBar, cx, reveal } from '../components/ui';
-import { BLOCKS, CORE_CATEGORIES, type Block, type Category } from '../data/schedule';
+import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
+import { ArrowRight, Check } from 'lucide-react';
+import { GlassOrb } from '../components/GlassOrb';
+import { CountUp, cx } from '../components/ui';
+import { BLOCKS, type Block } from '../data/schedule';
 import { TOTAL_DAYS, lessonFor, phaseFor } from '../data/curriculum';
 import { useDayLog } from '../lib/daylog';
 import { useDayLogs, useJourney, useJourneyDay, useSkills } from '../lib/data';
 import { useDoc, useNow, useToday } from '../lib/hooks';
-import { formatDuration, hmToMin, minTo12, minToClock, nowMinutes } from '../lib/dates';
+import { addDays, hmToMin, minTo12, minToClock, nowMinutes } from '../lib/dates';
+import { corePulse } from '../lib/events';
 import {
   C,
-  DEFAULT_PLAYBOOK,
   computeStreak,
   emptyJournal,
   isTaskDone,
   journeyState,
-  playbookCompletion,
   type DayLog,
   type JournalEntry,
-  type Playbook,
   type Skills,
 } from '../lib/domain';
 import '../styles/dashboard.css';
 
-/** Where each orbit / category indicator leads. */
-const CATEGORY_LINKS: Record<Category, string> = {
-  trading: '/trading-schedule',
-  study: '/my-day?task=study_am',
-  business: '/my-day?task=client_acq',
-  fitness: '/my-day?task=workout',
-  discipline: '/my-day?task=daily_review',
-  routine: '/my-day',
-};
-
-const TIMETABLE_PREVIEW = ['wake', 'manifest', 'trading_edu', 'deep_work', 'client_acq', 'darwin', 'trading_practice', 'workout', 'daily_review'];
-
-const DEV_METERS: { key: keyof Skills; label: string }[] = [
-  { key: 'knowledge', label: 'Knowledge' },
-  { key: 'chart', label: 'Chart Reading' },
-  { key: 'risk', label: 'Risk Mgmt' },
-  { key: 'strategy', label: 'Strategy' },
-  { key: 'backtesting', label: 'Backtesting' },
-  { key: 'simulation', label: 'Simulation' },
-  { key: 'discipline', label: 'Discipline' },
-  { key: 'psychology', label: 'Psychology' },
+const OBJECTIVE = ['trading_edu', 'client_acq', 'trading_practice', 'workout', 'daily_review'];
+const TIMELINE = [
+  { id: 'wake', label: 'Start Day' },
+  { id: 'trading_edu', label: 'Trading Education' },
+  { id: 'client_acq', label: 'Client Acquisition' },
+  { id: 'darwin', label: 'Darwin' },
+  { id: 'trading_practice', label: 'Trading Practice' },
+  { id: 'workout', label: 'Workout' },
+  { id: 'daily_review', label: 'Daily Review' },
 ];
+const DEV: { key: keyof Skills; label: string }[] = [
+  { key: 'knowledge', label: 'Knowledge' },
+  { key: 'strategy', label: 'Strategy' },
+  { key: 'risk', label: 'Risk' },
+  { key: 'discipline', label: 'Discipline' },
+];
+const WORDS = ['LEARN', 'EXECUTE', 'REVIEW', 'IMPROVE'];
+const ease = [0.22, 1, 0.36, 1] as const;
 
-const MILESTONES = [1, 7, 14, 21, 28, 35, 42, 49, 56, 63, 70, 77, 84];
-const LABELLED = [1, 14, 28, 42, 56, 70, 84];
+const block = (id: string) => BLOCKS.find((b) => b.id === id)!;
 
 function blockDone(log: DayLog, b: Block): boolean {
   if (b.counters) return b.counters.every((c) => !!log.done[c.id]);
@@ -57,18 +50,20 @@ function blockDone(log: DayLog, b: Block): boolean {
 }
 
 /** First unfinished block whose window hasn't ended; else the earliest overdue one. */
-function findNextTask(log: DayLog, now: number) {
+function findNext(log: DayLog, now: number) {
   const open = BLOCKS.filter((b) => !blockDone(log, b));
   if (!open.length) return null;
-  const upcoming = open.find((b) => hmToMin(b.end ?? b.start) > now);
-  if (upcoming) {
-    const start = hmToMin(upcoming.start);
-    const end = hmToMin(upcoming.end ?? upcoming.start);
-    return { block: upcoming, state: start <= now ? ('active' as const) : ('upcoming' as const), start, end };
-  }
-  const b = open[0];
-  return { block: b, state: 'overdue' as const, start: hmToMin(b.start), end: hmToMin(b.end ?? b.start) };
+  const b = open.find((x) => hmToMin(x.end ?? x.start) > now) ?? open[0];
+  const start = hmToMin(b.start);
+  const end = hmToMin(b.end ?? b.start);
+  return { block: b, start, end, state: start <= now && now < end ? 'now' : start > now ? 'later' : 'overdue' };
 }
+
+const enter = (i: number) => ({
+  initial: { opacity: 0, y: 16, filter: 'blur(6px)' },
+  animate: { opacity: 1, y: 0, filter: 'blur(0px)' },
+  transition: { duration: 0.9, delay: 0.08 * i, ease },
+});
 
 export function Dashboard() {
   const navigate = useNavigate();
@@ -81,356 +76,454 @@ export function Dashboard() {
   const { map: logs } = useDayLogs();
   const journey = useJourney();
   const skills = useSkills();
-  const [playbook] = useDoc<Playbook>(C.playbook, 'main', DEFAULT_PLAYBOOK);
-  const journalFallback = useMemo(() => emptyJournal(today), [today]);
-  const [journal] = useDoc<JournalEntry>(C.journal, today, journalFallback);
+  const fbToday = useMemo(() => emptyJournal(today), [today]);
+  const yesterday = addDays(today, -1);
+  const fbYesterday = useMemo(() => emptyJournal(yesterday), [yesterday]);
+  const [journal] = useDoc<JournalEntry>(C.journal, today, fbToday);
+  const [prevJournal] = useDoc<JournalEntry>(C.journal, yesterday, fbYesterday);
 
   const streak = useMemo(() => computeStreak('daily', logs, today), [logs, today]);
-  const overall = journey.completed / TOTAL_DAYS;
-  const playbookPct = playbookCompletion(playbook);
-  const nowMin = nowMinutes(now);
-  const next = findNextTask(log, nowMin);
-  const progress = useMemo(
-    () => Object.fromEntries(CORE_CATEGORIES.map((c) => [c, stats.byCategory[c].pct])) as Record<Category, number>,
-    [stats],
-  );
+  const next = findNext(log, nowMinutes(now));
   const lessonDone = !!journey.byDay.get(day)?.completed;
+  const focus = journal.improvement.trim()
+    ? { text: journal.improvement.trim(), from: 'today' }
+    : prevJournal.improvement.trim()
+      ? { text: prevJournal.improvement.trim(), from: 'yesterday' }
+      : null;
 
-  const startNext = () => {
-    if (!next) return navigate('/my-day');
-    if (next.block.tradingSession) navigate('/trading-schedule');
-    else navigate(`/my-day?task=${next.block.id}`);
-  };
-
-  const pctLabel = (c: Category) => {
-    const r = stats.byCategory[c];
-    return r.pct >= 1 ? 'Complete' : `${Math.round(r.pct * 100)}%`;
-  };
+  const toggle = (b: Block) => (b.counters ? navigate(`/my-day?task=${b.id}`) : toggleTask(b.id));
 
   return (
-    <div className="dash">
-      {/* ── LEFT ───────────────────────────────────────────── */}
-      <div className="dash-left">
-        <motion.div variants={reveal} initial="hidden" animate="show" custom={0}>
-          <Panel className="streak-panel" hud onClick={() => navigate('/history')}>
-            <div className="panel-title">
-              <span>Streak</span>
-              <Flame size={16} className="cyan" />
-            </div>
-            <div className="streak-body">
-              <span className="streak-flame" aria-hidden>
-                🔥
-              </span>
-              <div>
-                <div className="stat-label">Current streak</div>
-                <div className="streak-num">
-                  <CountUp value={streak.current} /> <span>{streak.current === 1 ? 'DAY' : 'DAYS'}</span>
-                </div>
-              </div>
-            </div>
-            <div className="streak-foot">
-              LONGEST STREAK: <b className="num">{streak.longest}</b> {streak.longest === 1 ? 'DAY' : 'DAYS'}
-            </div>
-          </Panel>
-        </motion.div>
-
-        <motion.div variants={reveal} initial="hidden" animate="show" custom={1}>
-          <Panel title="Trading Development" onClick={() => navigate('/analytics')}>
-            <div className="dev-grid">
-              {DEV_METERS.map((m, i) => (
-                <RingMeter key={m.key} value={skills[m.key]} size={62} stroke={3.5} label={m.label} delay={0.2 + i * 0.06} />
-              ))}
-            </div>
-          </Panel>
-        </motion.div>
-      </div>
-
-      {/* ── CENTER ─────────────────────────────────────────── */}
-      <div className="dash-center">
-        <Link to="/journey" className="day-header">
-          <div className="day-title">
-            DAY <CountUp value={day} /> / {TOTAL_DAYS}
-          </div>
-          <div className="day-sub">1% JOURNEY · PHASE {phase.code} — {phase.short}</div>
-        </Link>
-        <div className="day-meta">
-          <span>
-            OVERALL <b className="num">{Math.round(overall * 100)}%</b>
-          </span>
-          <span>
-            PLAYBOOK <b className="num">{Math.round(playbookPct * 100)}%</b>
-          </span>
-          <span>
-            LESSONS <b className="num">{journey.completed}</b>/{TOTAL_DAYS}
+    <div className="home">
+      {/* ── Hero ── */}
+      <motion.section className="home-hero" {...enter(0)}>
+        <div className="eyebrow">Personal Performance OS</div>
+        <h1 className="hero-title">
+          Become 1% better
+          <br />
+          every single day.
+        </h1>
+        <p className="hero-sub">Learn. Execute. Review. Improve.</p>
+        <div className="hero-actions">
+          <button className="btn btn-primary" onClick={() => navigate(`/journey/${day}`)}>
+            {lessonDone ? "Review today's session" : "Start today's session"} <ArrowRight size={15} />
+          </button>
+          <span className="hero-lesson mono">
+            DAY {String(day).padStart(2, '0')} · {lesson.title}
           </span>
         </div>
+        <RotatingWord />
+      </motion.section>
 
-        <OrbitalCore progress={progress} onSelect={(c) => navigate(CATEGORY_LINKS[c])} />
+      {/* ── Orb ── */}
+      <motion.section className="home-orb" initial={{ opacity: 0, scale: 0.96 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 1.6, ease }}>
+        <GlassOrb />
+      </motion.section>
 
-        <div className="mission-row">
-          <div className="cat-rings left">
-            {(['trading', 'study'] as Category[]).map((c, i) => (
-              <CategoryRing key={c} cat={c} value={stats.byCategory[c].pct} delay={0.4 + i * 0.1} onClick={() => navigate(CATEGORY_LINKS[c])} />
-            ))}
-          </div>
-
-          <motion.section
-            className="glass glow hud mission"
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.25, ease: [0.22, 1, 0.36, 1] }}
-          >
-            <div className="mission-scan" aria-hidden />
-            <h2 className="mission-title">TODAY'S MISSION</h2>
-            <p className="mission-objective">Complete today's trading education + execute the planned daily routine.</p>
-            <div className="mission-lesson">
-              <div className="stat-label" style={{ marginBottom: 4 }}>
-                <Sparkles size={11} style={{ verticalAlign: -1 }} /> Today's 1% improvement · Day {day}
-              </div>
-              <div>
-                <span className="k">LEARN</span> {lesson.learn}
-              </div>
-              <div>
-                <span className="k">PRACTICE</span> {lesson.practice}
-              </div>
-              <div>
-                <span className="k">JOURNAL</span> {lesson.journal}
-              </div>
+      <div className="home-side">
+      {/* ── Next action ── */}
+      <motion.section className="glass home-next" {...enter(2)}>
+        <div className="mono-label">Next action</div>
+        {next ? (
+          <>
+            <div className="next-title">{next.block.label}</div>
+            <div className="next-time mono">
+              {minTo12(next.start).replace(/^0/, '')} — {minTo12(next.end).replace(/^0/, '')}
+              <span className={cx('next-state', next.state)}>{next.state === 'now' ? 'NOW' : next.state === 'later' ? 'UP NEXT' : 'PENDING'}</span>
             </div>
-            <div className="row between" style={{ marginTop: 12 }}>
-              <span className="stat-label">Daily completion</span>
-              <span className="num cyan" style={{ fontWeight: 700 }}>
-                <CountUp value={Math.round(stats.pct * 100)} suffix="%" />
-              </span>
-            </div>
-            <SegBar value={stats.pct} segments={22} />
-            <div className="tiny muted mono" style={{ marginTop: 6 }}>
-              {stats.done} / {stats.total} TASKS COMPLETE
-            </div>
-            <div className="mission-actions">
-              <button className="btn btn-primary" onClick={() => navigate(`/journey/${day}`)}>
-                {lessonDone ? <Check size={15} /> : <Play size={15} />}
-                {lessonDone ? "Review Today's Session" : "Start Today's Session"}
-              </button>
-              <button className="btn" onClick={() => navigate('/my-day')}>
-                Resume Mission <ArrowRight size={15} />
+            <div className="row between" style={{ marginTop: 14 }}>
+              {!next.block.counters ? (
+                <button className="text-btn" onClick={() => toggleTask(next.block.id)}>
+                  Mark done
+                </button>
+              ) : (
+                <span />
+              )}
+              <button
+                className="text-btn strong"
+                onClick={() => navigate(next.block.tradingSession ? '/trading-schedule' : `/my-day?task=${next.block.id}`)}
+              >
+                ENTER <ArrowRight size={13} />
               </button>
             </div>
-          </motion.section>
+          </>
+        ) : (
+          <>
+            <div className="next-title">Day complete</div>
+            <div className="next-time mono">System status: optimal</div>
+          </>
+        )}
+      </motion.section>
 
-          <div className="cat-rings right">
-            {(['business', 'fitness', 'discipline'] as Category[]).map((c, i) => (
-              <CategoryRing key={c} cat={c} value={stats.byCategory[c].pct} delay={0.6 + i * 0.1} onClick={() => navigate(CATEGORY_LINKS[c])} />
-            ))}
-          </div>
+      {/* ── Today's objective ── */}
+      <motion.section className="glass home-objective" {...enter(3)}>
+        <div className="mono-label">Today's objective</div>
+        <div className="obj-day">
+          DAY {String(day).padStart(2, '0')} <span>/ {TOTAL_DAYS}</span>
         </div>
-      </div>
-
-      {/* ── RIGHT ──────────────────────────────────────────── */}
-      <div className="dash-right">
-        <motion.div variants={reveal} initial="hidden" animate="show" custom={1}>
-          <Panel className="next-task" hud>
-            <div className="panel-title">
-              <span>Next Task</span>
-              <span className={cx('next-state', next?.state)}>{next ? next.state.toUpperCase() : 'ALL CLEAR'}</span>
-            </div>
-            {next ? (
-              <>
-                <div className="next-time">{minTo12(next.start)}</div>
-                <div className="next-label">{next.block.label}</div>
-                <p className="next-hint">{next.block.hint ?? nextHint(next.block)}</p>
-                <div className="next-controls">
-                  <NextCountdown start={next.start} end={next.end} nowMin={nowMin} state={next.state} />
-                  <div className="col gap-4 grow">
-                    <button className="btn btn-primary btn-sm" onClick={startNext}>
-                      <Play size={13} /> Start
-                    </button>
-                    {!next.block.counters && (
-                      <button className="btn btn-sm" onClick={() => toggleTask(next.block.id)}>
-                        <Check size={13} /> Complete Task
-                      </button>
-                    )}
-                  </div>
-                </div>
-              </>
-            ) : (
-              <div className="col" style={{ alignItems: 'flex-start' }}>
-                <div className="next-label">DAY COMPLETE</div>
-                <p className="next-hint">Every task is done. System status: optimal.</p>
-              </div>
-            )}
-          </Panel>
-        </motion.div>
-
-        <motion.div variants={reveal} initial="hidden" animate="show" custom={2}>
-          <Panel title="Today's Timetable" onClick={() => navigate('/my-day')} className="tt-panel">
-            <ul className="tt-list">
-              {TIMETABLE_PREVIEW.map((id) => {
-                const b = BLOCKS.find((x) => x.id === id)!;
-                const done = blockDone(log, b);
-                const current = next?.block.id === id;
-                return (
-                  <li key={id} className={cx('tt-item', done && 'done', current && 'current')}>
-                    <span className="tt-time">{minToClock(hmToMin(b.start))}</span>
-                    <span className="tt-label">{b.short}</span>
-                    <span className="tt-mark">
+        <div className="obj-pct mono">
+          <CountUp value={Math.round(stats.pct * 100)} />% COMPLETE
+        </div>
+        <div className="obj-bar">
+          <motion.i initial={{ width: 0 }} animate={{ width: `${stats.pct * 100}%` }} transition={{ duration: 1.4, ease }} />
+        </div>
+        <ul className="obj-list">
+          {OBJECTIVE.map((id) => {
+            const b = block(id);
+            const done = blockDone(log, b);
+            const current = next?.block.id === id;
+            return (
+              <li key={id} className={cx(done && 'done', current && 'current')}>
+                <button onClick={() => toggle(b)} aria-pressed={done} title={done ? 'Mark not done' : 'Mark done'}>
+                  <span className="obj-mark">
+                    <AnimatePresence mode="wait" initial={false}>
                       {done ? (
-                        <motion.svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round">
-                          <motion.path d="M5 12.5l4.5 4.5L19 7" initial={{ pathLength: 0 }} animate={{ pathLength: 1 }} transition={{ duration: 0.5 }} />
-                        </motion.svg>
+                        <motion.span key="d" initial={{ scale: 0.4, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.45, ease }}>
+                          <Check size={14} strokeWidth={1.8} />
+                        </motion.span>
                       ) : current ? (
-                        <ArrowRight size={15} />
-                      ) : null}
-                    </span>
-                  </li>
-                );
-              })}
-            </ul>
-          </Panel>
-        </motion.div>
+                        <motion.span key="c" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+                          <ArrowRight size={14} strokeWidth={1.6} />
+                        </motion.span>
+                      ) : (
+                        <motion.i key="o" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} />
+                      )}
+                    </AnimatePresence>
+                  </span>
+                  {b.short}
+                </button>
+              </li>
+            );
+          })}
+        </ul>
+        <Link to="/my-day" className="obj-link mono">
+          {stats.done} / {stats.total} TASKS · OPEN TIMETABLE →
+        </Link>
+      </motion.section>
       </div>
 
-      {/* ── BOTTOM ─────────────────────────────────────────── */}
-      <div className="dash-bottom">
-        <Panel className="journey-panel" pad>
-          <div className="panel-title">
-            <Link to="/journey" style={{ color: 'inherit' }}>
-              1% Journey <span className="sub">({TOTAL_DAYS} days)</span>
-            </Link>
-            <span className="sub">
-              {journey.completed} COMPLETE · DAY {day}
-            </span>
-          </div>
-          <JourneyStrip current={day} completed={journey.byDay} onSelect={(d) => navigate(`/journey/${d}`)} />
-          <div className="quick-actions">
-            <button className="cmd-btn" onClick={() => navigate('/trading-journal?new=1')}>
-              <Plus size={14} /> New Trade
-            </button>
-            <button className="cmd-btn" onClick={() => navigate('/daily-journal')}>
-              <Plus size={14} /> Journal
-            </button>
-            <button className="cmd-btn" onClick={() => navigate('/backtesting?new=1')}>
-              <Plus size={14} /> Backtest
-            </button>
-            <button className="cmd-btn" onClick={() => navigate('/vault?new=1')}>
-              <Plus size={14} /> Knowledge Note
-            </button>
-            <button className="cmd-btn" onClick={() => navigate('/strategy-lab?new=1')}>
-              <Plus size={14} /> Strategy
-            </button>
-            <button className="cmd-btn accent" onClick={() => navigate('/playbook')}>
-              View Playbook
-            </button>
-          </div>
-        </Panel>
+      {/* ── Daily timeline ── */}
+      <motion.section className="home-timeline" {...enter(4)}>
+        <div className="mono-label">Daily timeline</div>
+        <DailyTimeline log={log} currentId={next?.block.id} onOpen={() => navigate('/my-day')} />
+      </motion.section>
 
-        <Panel className="syscheck" hud>
-          <div className="panel-title">
-            <span>End-of-Day System Check</span>
-            <span className="ai-badge">
-              <Bot size={12} /> AI
-            </span>
-          </div>
-          <div className="syscheck-grid">
-            <span>Tasks</span>
-            <b className="num">
-              {stats.done}/{stats.total}
-            </b>
-            <span>Trading</span>
-            <b className={stats.byCategory.trading.pct >= 1 ? 'good' : ''}>{pctLabel('trading')}</b>
-            <span>Study</span>
-            <b className={stats.byCategory.study.pct >= 1 ? 'good' : ''}>{pctLabel('study')}</b>
-            <span>Business</span>
-            <b className={stats.byCategory.business.pct >= 1 ? 'good' : ''}>{pctLabel('business')}</b>
-            <span>Workout</span>
-            <b className={stats.byCategory.fitness.pct >= 1 ? 'good' : ''}>{stats.byCategory.fitness.pct >= 1 ? 'Complete' : 'Pending'}</b>
-          </div>
-          <div className="divider" style={{ margin: '12px 0' }} />
-          <div className="stat-label">Today's 1% improvement</div>
-          {journal.improvement.trim() ? (
-            <p className="syscheck-answer">{journal.improvement}</p>
-          ) : (
-            <div className="row between wrap" style={{ marginTop: 6 }}>
-              <span className="small dim">No improvement recorded yet.</span>
-              <button className="btn btn-sm" onClick={() => navigate('/daily-journal')}>
-                <Plus size={13} /> Add Improvement
-              </button>
-            </div>
-          )}
-        </Panel>
-      </div>
+      {/* ── Aurora ring ── */}
+      <motion.section className="home-ring" {...enter(5)}>
+        <div className="mono-label center">Aurora progress ring</div>
+        <AuroraRing value={stats.pct} onClick={() => navigate('/my-day')} />
+      </motion.section>
+
+      {/* ── Today's 1% ── */}
+      <motion.section className="home-quote" {...enter(6)}>
+        <div className="mono-label center">Today's 1%</div>
+        <div className="quote-q">What will you improve today?</div>
+        <AnimatePresence mode="wait">
+          <motion.blockquote
+            key={focus?.text ?? 'empty'}
+            className={cx('quote', !focus && 'is-empty')}
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.8, ease }}
+          >
+            {focus ? `“${focus.text}”` : 'No improvement recorded yet.'}
+          </motion.blockquote>
+        </AnimatePresence>
+        {focus?.from === 'yesterday' && <div className="quote-src mono">SET IN YESTERDAY'S REVIEW</div>}
+        <button className="btn btn-primary btn-sm" onClick={() => navigate('/daily-journal')}>
+          Record today's improvement
+        </button>
+      </motion.section>
+
+      {/* ── Streak ── */}
+      <motion.button className="home-streak" onClick={() => navigate('/history')} {...enter(7)}>
+        <div className="mono-label center">Streak</div>
+        <div className="streak-num">
+          <CountUp value={streak.current} duration={1600} />
+        </div>
+        <div className="streak-unit mono">DAY STREAK</div>
+        <div className="streak-msg">{streakMessage(streak.current)}</div>
+        {streak.longest > 0 && <div className="streak-best mono">BEST · {String(streak.longest).padStart(2, '0')}</div>}
+      </motion.button>
+
+      {/* ── Trading development ── */}
+      <motion.section className="home-dev" {...enter(5)}>
+        <div className="mono-label">Trading development</div>
+        <button className="dev-rail" onClick={() => navigate('/analytics')} aria-label="Open analytics">
+          {DEV.map((d, i) => (
+            <ThinRing key={d.key} value={skills[d.key]} label={d.label} delay={0.4 + i * 0.15} />
+          ))}
+        </button>
+      </motion.section>
+
+      {/* ── 1% journey ── */}
+      <motion.section className="home-journey" {...enter(8)}>
+        <div className="row between">
+          <div className="mono-label">The 1% journey · Phase {phase.code} — {phase.name}</div>
+          <Link to="/journey" className="mono-label link">
+            {journey.completed} / {TOTAL_DAYS} complete
+          </Link>
+        </div>
+        <JourneyPath current={day} done={journey.byDay} onSelect={(d) => navigate(`/journey/${d}`)} onEnd={() => navigate('/playbook')} />
+      </motion.section>
     </div>
   );
 }
 
-function nextHint(b: Block): string {
-  if (b.counters) return 'Calls, DMs, follow-ups and proposals — log your counts as you work.';
-  if (b.backup) return 'Client delivery — or pick a backup deep-work task.';
-  return `${minTo12(hmToMin(b.start))} – ${minTo12(hmToMin(b.end ?? b.start))}`;
+function streakMessage(n: number): string {
+  if (n === 0) return 'Every streak begins with a single day.';
+  if (n < 3) return 'Momentum is building.';
+  if (n < 14) return 'Consistency is becoming a habit.';
+  return 'Discipline is now part of who you are.';
 }
 
-function CategoryRing({ cat, value, delay, onClick }: { cat: Category; value: number; delay: number; onClick: () => void }) {
+function RotatingWord() {
+  const [i, setI] = useState(0);
+  const reduce = useReducedMotion();
+  useEffect(() => {
+    if (reduce) return;
+    const t = setInterval(() => setI((x) => (x + 1) % WORDS.length), 3800);
+    return () => clearInterval(t);
+  }, [reduce]);
   return (
-    <button className="cat-ring" onClick={onClick} aria-label={`${cat} ${Math.round(value * 100)}%`}>
-      <span className="stat-label">{cat}</span>
-      <RingMeter value={value} size={68} stroke={3.5} delay={delay} />
-    </button>
+    <div className="rotating-word mono" aria-hidden>
+      <span className="dim">SYSTEM MODE /</span>
+      <AnimatePresence mode="wait">
+        <motion.span key={WORDS[i]} initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -6 }} transition={{ duration: 0.7 }}>
+          {WORDS[i]}
+        </motion.span>
+      </AnimatePresence>
+    </div>
   );
 }
 
-function NextCountdown({ start, end, nowMin, state }: { start: number; end: number; nowMin: number; state: 'active' | 'upcoming' | 'overdue' }) {
-  const dur = Math.max(1, end - start);
-  const value = state === 'active' ? (nowMin - start) / dur : state === 'overdue' ? 1 : 0;
-  const text =
-    state === 'active'
-      ? `${Math.max(0, Math.ceil(end - nowMin))}m left`
-      : state === 'upcoming'
-        ? `in ${formatDuration((start - nowMin) * 60).replace(/:\d\d$/, '')}`
-        : 'overdue';
+function DailyTimeline({ log, currentId, onOpen }: { log: DayLog; currentId?: string; onOpen: () => void }) {
+  const reduce = useReducedMotion();
+  const [beam, setBeam] = useState(0);
+  useEffect(() => corePulse.on(() => setBeam((b) => b + 1)), []);
   return (
-    <RingMeter value={value} size={64} stroke={3} ticks={false} color={state === 'overdue' ? 'var(--warn)' : 'var(--cyan)'}>
-      <span className="mono" style={{ fontSize: 9.5, lineHeight: 1.1, color: 'var(--text-2)', maxWidth: 48, textAlign: 'center' }}>
-        {text}
+    <div className="dtl" onClick={onOpen} role="button" tabIndex={0} onKeyDown={(e) => e.key === 'Enter' && onOpen()}>
+      <div className="dtl-line">
+        {beam > 0 && !reduce && (
+          <motion.i key={beam} className="dtl-beam" initial={{ top: '-10%', opacity: 0 }} animate={{ top: '105%', opacity: [0, 1, 1, 0] }} transition={{ duration: 1.4, ease: 'easeInOut' }} />
+        )}
+      </div>
+      {TIMELINE.map((t) => {
+        const b = block(t.id);
+        const done = blockDone(log, b);
+        const current = currentId === t.id;
+        return (
+          <div key={t.id} className={cx('dtl-item', done && 'done', current && 'current')}>
+            <span className="dtl-time mono">{minToClock(hmToMin(b.start))}</span>
+            <span className="dtl-dot" />
+            <span className="dtl-label">{t.label}</span>
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
+function AuroraRing({ value, onClick }: { value: number; onClick: () => void }) {
+  const reduce = useReducedMotion();
+  const [pulse, setPulse] = useState(0);
+  useEffect(() => corePulse.on(() => setPulse((p) => p + 1)), []);
+  const r = 92;
+  const c = 2 * Math.PI * r;
+  const v = Math.min(1, Math.max(0, value));
+  return (
+    <motion.button
+      className="aurora-ring"
+      onClick={onClick}
+      key={pulse}
+      initial={pulse && !reduce ? { scale: 1.04 } : false}
+      animate={{ scale: 1 }}
+      transition={{ duration: 1.4, ease }}
+      aria-label={`Today ${Math.round(v * 100)}% complete`}
+    >
+      <svg viewBox="0 0 220 220">
+        <defs>
+          <linearGradient id="aurora-g" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stopColor="#9d8fca" />
+            <stop offset="45%" stopColor="#d9cfe8" />
+            <stop offset="100%" stopColor="#ecd9b0" />
+            {!reduce && <animateTransform attributeName="gradientTransform" type="rotate" from="0 .5 .5" to="360 .5 .5" dur="14s" repeatCount="indefinite" />}
+          </linearGradient>
+          <filter id="aurora-blur" x="-30%" y="-30%" width="160%" height="160%">
+            <feGaussianBlur stdDeviation="6" />
+          </filter>
+        </defs>
+        <circle cx="110" cy="110" r={r} fill="none" stroke="rgba(236,228,214,0.07)" strokeWidth="6" />
+        <circle cx="110" cy="110" r={r + 12} fill="none" stroke="rgba(236,228,214,0.05)" strokeWidth="1" />
+        {/* soft aurora bloom underneath the stroke */}
+        <motion.circle
+          cx="110"
+          cy="110"
+          r={r}
+          fill="none"
+          stroke="url(#aurora-g)"
+          strokeWidth="10"
+          strokeLinecap="round"
+          strokeDasharray={c}
+          transform="rotate(-90 110 110)"
+          filter="url(#aurora-blur)"
+          opacity={0.55}
+          initial={{ strokeDashoffset: c }}
+          animate={{ strokeDashoffset: c * (1 - v) }}
+          transition={{ duration: reduce ? 0 : 2, ease }}
+        />
+        <motion.circle
+          cx="110"
+          cy="110"
+          r={r}
+          fill="none"
+          stroke="url(#aurora-g)"
+          strokeWidth="2.5"
+          strokeLinecap="round"
+          strokeDasharray={c}
+          transform="rotate(-90 110 110)"
+          initial={{ strokeDashoffset: c }}
+          animate={{ strokeDashoffset: c * (1 - v) }}
+          transition={{ duration: reduce ? 0 : 2, ease }}
+        />
+      </svg>
+      <span className="aurora-center">
+        <span className="mono-label">Today</span>
+        <span className="aurora-value">
+          <CountUp value={Math.round(v * 100)} duration={1600} />
+          <small>%</small>
+        </span>
       </span>
-    </RingMeter>
+    </motion.button>
   );
 }
 
-function JourneyStrip({
+function ThinRing({ value, label, delay }: { value: number; label: string; delay: number }) {
+  const reduce = useReducedMotion();
+  const r = 40;
+  const c = 2 * Math.PI * r;
+  const v = Math.min(1, Math.max(0, value));
+  return (
+    <span className="thin-ring">
+      <svg viewBox="0 0 100 100">
+        <defs>
+          <linearGradient id="thin-g" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stopColor="#c4b9e6" />
+            <stop offset="100%" stopColor="#ecd9b0" />
+          </linearGradient>
+        </defs>
+        <circle cx="50" cy="50" r={r} fill="none" stroke="rgba(236,228,214,0.1)" strokeWidth="1" />
+        <motion.circle
+          cx="50"
+          cy="50"
+          r={r}
+          fill="none"
+          stroke="url(#thin-g)"
+          strokeWidth="1.6"
+          strokeLinecap="round"
+          strokeDasharray={c}
+          transform="rotate(-90 50 50)"
+          initial={{ strokeDashoffset: c }}
+          animate={{ strokeDashoffset: c * (1 - v) }}
+          transition={{ duration: reduce ? 0 : 1.8, delay: reduce ? 0 : delay, ease }}
+        />
+      </svg>
+      <span className="thin-ring-inner">
+        <span className="thin-label mono">{label}</span>
+        <span className="thin-value">
+          <CountUp value={Math.round(v * 100)} />%
+        </span>
+      </span>
+    </span>
+  );
+}
+
+/** 84 days as a single flowing path of light. */
+function JourneyPath({
   current,
-  completed,
+  done,
   onSelect,
+  onEnd,
 }: {
   current: number;
-  completed: Map<number, { completed: boolean }>;
-  onSelect: (day: number) => void;
+  done: Map<number, { completed: boolean }>;
+  onSelect: (d: number) => void;
+  onEnd: () => void;
 }) {
-  const days = Array.from({ length: TOTAL_DAYS }, (_, i) => i + 1);
-  const lit = Math.max(0, ...days.filter((d) => completed.get(d)?.completed));
+  const W = 1200;
+  const H = 150;
+  const padL = 30;
+  const padR = 230;
+  const pt = (i: number) => {
+    const t = i / (TOTAL_DAYS - 1);
+    const x = padL + t * (W - padL - padR);
+    const y = 78 + Math.sin(t * Math.PI * 2.2 + 0.4) * 16 + Math.sin(t * Math.PI * 5.3) * 5;
+    return { x, y };
+  };
+  const pts = Array.from({ length: TOTAL_DAYS }, (_, i) => pt(i));
+  const d = pts.map((p, i) => `${i ? 'L' : 'M'} ${p.x.toFixed(1)} ${p.y.toFixed(1)}`).join(' ');
+  const lastLit = Math.max(current, ...[...done.entries()].filter(([, v]) => v.completed).map(([k]) => k));
+  const litLen = (lastLit - 1) / (TOTAL_DAYS - 1);
+  const labels = new Set([1, 7, 14, 21, 28, 35, 42, 49, 56, 63, 70, 77, 84, current]);
+  const end = pts[TOTAL_DAYS - 1];
+
   return (
-    <div className="jstrip" role="list">
-      <div className="jstrip-track">
-        <div className="jstrip-fill" style={{ width: `${((Math.max(lit, current) - 1) / (TOTAL_DAYS - 1)) * 100}%` }} />
-      </div>
-      <div className="jstrip-ticks">
-        {days.map((d) => {
-          const state = journeyState(d, current, completed.get(d) as never);
-          const milestone = MILESTONES.includes(d) || d === current;
+    <div className="jpath">
+      <svg viewBox={`0 0 ${W} ${H}`} role="list" aria-label="84-day journey">
+        <defs>
+          <linearGradient id="jp-lit" x1="0" x2="1">
+            <stop offset="0" stopColor="#9d8fca" stopOpacity="0.5" />
+            <stop offset="1" stopColor="#ecd9b0" />
+          </linearGradient>
+          <filter id="jp-glow" x="-50%" y="-50%" width="200%" height="200%">
+            <feGaussianBlur stdDeviation="3" result="b" />
+            <feMerge>
+              <feMergeNode in="b" />
+              <feMergeNode in="SourceGraphic" />
+            </feMerge>
+          </filter>
+        </defs>
+        <path d={d} fill="none" stroke="rgba(236,228,214,0.12)" strokeWidth="1" />
+        <motion.path
+          d={d}
+          fill="none"
+          stroke="url(#jp-lit)"
+          strokeWidth="1.6"
+          initial={{ pathLength: 0 }}
+          animate={{ pathLength: litLen }}
+          transition={{ duration: 2.4, ease: [0.22, 1, 0.36, 1] }}
+        />
+        {pts.map((p, i) => {
+          const day = i + 1;
+          const state = journeyState(day, current, done.get(day) as never);
+          const isLabel = labels.has(day);
           return (
-            <button
-              key={d}
-              role="listitem"
-              className={cx('jtick', state, milestone && 'milestone', (d === 1 || d === 42 || d === TOTAL_DAYS) && 'major')}
-              style={{ left: `${((d - 1) / (TOTAL_DAYS - 1)) * 100}%` }}
-              onClick={() => onSelect(d)}
-              title={`Day ${d} · ${lessonFor(d).title} · ${state}`}
-            >
-              <i />
-              {(LABELLED.includes(d) || d === current) && <span>DAY {String(d).padStart(2, '0')}</span>}
-            </button>
+            <g key={day} role="listitem" className={cx('jnode', state)} onClick={() => onSelect(day)} style={{ cursor: 'pointer' }}>
+              <title>{`Day ${day} · ${lessonFor(day).title}`}</title>
+              <circle cx={p.x} cy={p.y} r={10} fill="transparent" />
+              {state === 'current' && <circle cx={p.x} cy={p.y} r={9} className="jnode-halo" />}
+              <circle cx={p.x} cy={p.y} r={state === 'current' ? 5.5 : isLabel ? 3.2 : 1.8} className="jnode-dot" filter={state === 'complete' || state === 'current' ? 'url(#jp-glow)' : undefined} />
+              {isLabel && (
+                <text x={p.x} y={p.y + (i % 2 ? 30 : -18)} className="jnode-label">
+                  DAY {String(day).padStart(2, '0')}
+                </text>
+              )}
+            </g>
           );
         })}
-      </div>
+        <g className="jpath-end" onClick={onEnd} style={{ cursor: 'pointer' }}>
+          <line x1={end.x + 10} y1={end.y} x2={end.x + 44} y2={end.y} stroke="rgba(236,228,214,0.3)" />
+          <circle cx={end.x + 60} cy={end.y} r={15} fill="rgba(255,255,255,0.04)" stroke="rgba(236,228,214,0.35)" />
+          <path d={`M ${end.x + 54} ${end.y} h 12 m -4 -4 l 4 4 l -4 4`} fill="none" stroke="#f1ece4" strokeWidth="1.3" />
+          <text x={end.x + 86} y={end.y - 4} className="jpath-end-a">
+            84 DAYS
+          </text>
+          <text x={end.x + 86} y={end.y + 12} className="jpath-end-b">
+            PERSONAL PLAYBOOK
+          </text>
+        </g>
+      </svg>
     </div>
   );
 }

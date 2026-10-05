@@ -1,7 +1,10 @@
 import { useEffect, useRef } from 'react';
 import { usePrefersReducedMotion } from '../lib/hooks';
 
-/** Layered sci-fi backdrop: gradient, moving grid, particles, scan beam, cursor light. */
+/**
+ * Obsidian atmosphere: radial light, slow aurora ribbons, faint architectural
+ * lines, drifting dust and film grain. Calm by design.
+ */
 export function Background() {
   const canvas = useRef<HTMLCanvasElement>(null);
   const cursor = useRef<HTMLDivElement>(null);
@@ -25,6 +28,7 @@ export function Background() {
     };
   }, [reduced]);
 
+  // Dust motes: very slow, warm, softly twinkling.
   useEffect(() => {
     const c = canvas.current;
     if (!c) return;
@@ -33,7 +37,7 @@ export function Background() {
     let w = 0;
     let h = 0;
     const dpr = Math.min(window.devicePixelRatio || 1, 2);
-    type P = { x: number; y: number; vx: number; vy: number; r: number; a: number };
+    type P = { x: number; y: number; vx: number; vy: number; r: number; a: number; t: number };
     let parts: P[] = [];
     const resize = () => {
       w = window.innerWidth;
@@ -41,42 +45,28 @@ export function Background() {
       c.width = w * dpr;
       c.height = h * dpr;
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-      const n = Math.round(Math.min(90, (w * h) / 22000));
+      const n = Math.round(Math.min(70, (w * h) / 26000));
       parts = Array.from({ length: n }, () => ({
         x: Math.random() * w,
         y: Math.random() * h,
-        vx: (Math.random() - 0.5) * 0.12,
-        vy: -0.05 - Math.random() * 0.18,
-        r: Math.random() * 1.3 + 0.3,
-        a: Math.random() * 0.5 + 0.15,
+        vx: (Math.random() - 0.5) * 0.05,
+        vy: -0.02 - Math.random() * 0.06,
+        r: Math.random() * 1.1 + 0.25,
+        a: Math.random() * 0.35 + 0.08,
+        t: Math.random() * Math.PI * 2,
       }));
     };
     resize();
     window.addEventListener('resize', resize);
 
-    const draw = () => {
+    const draw = (time: number) => {
       ctx.clearRect(0, 0, w, h);
       for (const p of parts) {
+        const tw = 0.6 + 0.4 * Math.sin(time / 2400 + p.t);
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(120, 230, 255, ${p.a})`;
+        ctx.fillStyle = `rgba(238, 228, 210, ${p.a * tw})`;
         ctx.fill();
-      }
-      // faint constellation lines between close particles
-      for (let i = 0; i < parts.length; i++) {
-        for (let j = i + 1; j < parts.length; j++) {
-          const dx = parts[i].x - parts[j].x;
-          const dy = parts[i].y - parts[j].y;
-          const d = dx * dx + dy * dy;
-          if (d < 9000) {
-            ctx.strokeStyle = `rgba(62, 230, 255, ${0.06 * (1 - d / 9000)})`;
-            ctx.lineWidth = 0.6;
-            ctx.beginPath();
-            ctx.moveTo(parts[i].x, parts[i].y);
-            ctx.lineTo(parts[j].x, parts[j].y);
-            ctx.stroke();
-          }
-        }
       }
     };
 
@@ -88,21 +78,21 @@ export function Background() {
       for (const p of parts) {
         p.x += p.vx * dt;
         p.y += p.vy * dt;
-        if (p.y < -5) {
-          p.y = h + 5;
+        if (p.y < -4) {
+          p.y = h + 4;
           p.x = Math.random() * w;
         }
-        if (p.x < -5) p.x = w + 5;
-        if (p.x > w + 5) p.x = -5;
+        if (p.x < -4) p.x = w + 4;
+        if (p.x > w + 4) p.x = -4;
       }
-      draw();
+      draw(t);
       raf = requestAnimationFrame(loop);
     };
     const onVis = () => {
       cancelAnimationFrame(raf);
       if (!document.hidden && !reduced) raf = requestAnimationFrame(loop);
     };
-    if (reduced) draw();
+    if (reduced) draw(0);
     else raf = requestAnimationFrame(loop);
     document.addEventListener('visibilitychange', onVis);
     return () => {
@@ -114,12 +104,26 @@ export function Background() {
 
   return (
     <>
-      <div className="bg-layer bg-gradient" />
-      <div className="bg-layer bg-grid" />
+      <div className="bg-layer bg-base" />
+      <div className="bg-layer bg-aurora" aria-hidden>
+        <i />
+        <i />
+        <i />
+        <i />
+      </div>
+      <div className="bg-layer bg-lines" aria-hidden>
+        <svg viewBox="0 0 1600 1000" preserveAspectRatio="xMidYMid slice">
+          <circle cx="1120" cy="360" r="420" />
+          <circle cx="1120" cy="360" r="560" />
+          <path d="M -40 760 C 400 620, 900 900, 1640 640" />
+          <line x1="0" y1="180" x2="1600" y2="120" />
+          <line x1="260" y1="0" x2="200" y2="1000" />
+        </svg>
+      </div>
       <canvas ref={canvas} className="bg-particles" aria-hidden />
-      <div className="bg-layer bg-scan" />
-      <div className="bg-layer bg-scanlines" />
       <div ref={cursor} className="bg-layer bg-cursor" />
+      <div className="bg-layer bg-vignette" />
+      <div className="bg-layer bg-grain" />
     </>
   );
 }

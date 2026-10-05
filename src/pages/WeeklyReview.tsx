@@ -130,16 +130,16 @@ export function WeeklyReview() {
                 <BarChart data={chart} margin={{ top: 8, right: 6, left: -18, bottom: 0 }}>
                   <defs>
                     <linearGradient id="wk-bar" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="0%" stopColor="#3ee6ff" stopOpacity={0.95} />
-                      <stop offset="100%" stopColor="#3ee6ff" stopOpacity={0.12} />
+                      <stop offset="0%" stopColor="#e9dfcb" stopOpacity={0.95} />
+                      <stop offset="100%" stopColor="#e9dfcb" stopOpacity={0.12} />
                     </linearGradient>
                   </defs>
-                  <CartesianGrid stroke="rgba(120,225,255,0.08)" vertical={false} />
-                  <XAxis dataKey="day" tick={{ fill: '#7f9aa7', fontSize: 11 }} axisLine={false} tickLine={false} />
-                  <YAxis domain={[0, 100]} tick={{ fill: '#7f9aa7', fontSize: 11 }} axisLine={false} tickLine={false} unit="%" />
+                  <CartesianGrid stroke="rgba(214, 208, 198,0.08)" vertical={false} />
+                  <XAxis dataKey="day" tick={{ fill: '#8f8a82', fontSize: 11 }} axisLine={false} tickLine={false} />
+                  <YAxis domain={[0, 100]} tick={{ fill: '#8f8a82', fontSize: 11 }} axisLine={false} tickLine={false} unit="%" />
                   <Tooltip
-                    cursor={{ fill: 'rgba(62,230,255,0.06)' }}
-                    contentStyle={{ background: 'rgba(6,18,28,0.95)', border: '1px solid rgba(120,225,255,0.3)', borderRadius: 6, fontSize: 12 }}
+                    cursor={{ fill: 'rgba(232, 220, 196,0.06)' }}
+                    contentStyle={{ background: 'rgba(20, 19, 23, 0.95)', border: '1px solid rgba(214, 208, 198,0.3)', borderRadius: 6, fontSize: 12 }}
                     formatter={(v) => [`${v}%`, 'Completion']}
                   />
                   <RBar dataKey="pct" fill="url(#wk-bar)" radius={[3, 3, 0, 0]} maxBarSize={34} />

@@ -9,9 +9,9 @@ import { EmptyState, Field, PageHeader, Panel, RingMeter, Slider, cx, reveal } f
 import { DateNav, SavedIndicator, useDateParam, useSavedFlash } from './DailyJournal';
 import '../styles/build.css';
 
-const TICK = { fill: '#7f9aa7', fontSize: 11 };
-const GRID = 'rgba(120,225,255,0.08)';
-const TOOLTIP = { background: 'rgba(6,18,28,0.95)', border: '1px solid rgba(120,225,255,0.3)', borderRadius: 6, fontSize: 12 };
+const TICK = { fill: '#8f8a82', fontSize: 11 };
+const GRID = 'rgba(214, 208, 198,0.08)';
+const TOOLTIP = { background: 'rgba(20, 19, 23, 0.95)', border: '1px solid rgba(214, 208, 198,0.3)', borderRadius: 6, fontSize: 12 };
 const POSITIVE: EmotionKey[] = ['confidence', 'discipline'];
 
 export function Psychology() {
@@ -61,7 +61,7 @@ export function Psychology() {
           <Panel hud glow title="Daily emotional rating" sub="1 – 10">
             <div className="psy-rating">
               <RingMeter value={entry.rating / 10} size={130} stroke={7}>
-                <span className="display" style={{ fontSize: 42, fontWeight: 700, color: '#fff' }}>
+                <span className="display" style={{ fontSize: 42, fontWeight: 400, color: '#fff' }}>
                   <span className="num">{entry.rating}</span>
                 </span>
               </RingMeter>
@@ -105,15 +105,15 @@ export function Psychology() {
               <AreaChart data={trend} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
                 <defs>
                   <linearGradient id="psyRating" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stopColor="#3ee6ff" stopOpacity={0.4} />
-                    <stop offset="100%" stopColor="#3ee6ff" stopOpacity={0} />
+                    <stop offset="0%" stopColor="#e9dfcb" stopOpacity={0.4} />
+                    <stop offset="100%" stopColor="#e9dfcb" stopOpacity={0} />
                   </linearGradient>
                 </defs>
                 <CartesianGrid stroke={GRID} vertical={false} />
                 <XAxis dataKey="date" tick={TICK} tickLine={false} axisLine={{ stroke: GRID }} minTickGap={20} />
                 <YAxis domain={[0, 10]} ticks={[0, 2, 4, 6, 8, 10]} tick={TICK} tickLine={false} axisLine={false} />
-                <Tooltip contentStyle={TOOLTIP} labelStyle={{ color: '#b4cbd5' }} itemStyle={{ color: '#3ee6ff' }} />
-                <Area type="monotone" dataKey="rating" name="Rating" stroke="#3ee6ff" strokeWidth={2} fill="url(#psyRating)" dot={{ r: 3, fill: '#3ee6ff' }} />
+                <Tooltip contentStyle={TOOLTIP} labelStyle={{ color: '#bdb7ad' }} itemStyle={{ color: '#e9dfcb' }} />
+                <Area type="monotone" dataKey="rating" name="Rating" stroke="#e9dfcb" strokeWidth={2} fill="url(#psyRating)" dot={{ r: 3, fill: '#e9dfcb' }} />
               </AreaChart>
             </ResponsiveContainer>
           )}
@@ -127,10 +127,10 @@ export function Psychology() {
                 <CartesianGrid stroke={GRID} horizontal={false} />
                 <XAxis type="number" domain={[0, 10]} tick={TICK} tickLine={false} axisLine={{ stroke: GRID }} />
                 <YAxis type="category" dataKey="label" tick={TICK} tickLine={false} axisLine={false} width={104} />
-                <Tooltip contentStyle={TOOLTIP} labelStyle={{ color: '#b4cbd5' }} itemStyle={{ color: '#3ee6ff' }} cursor={{ fill: 'rgba(62,230,255,0.05)' }} />
+                <Tooltip contentStyle={TOOLTIP} labelStyle={{ color: '#bdb7ad' }} itemStyle={{ color: '#e9dfcb' }} cursor={{ fill: 'rgba(232, 220, 196,0.05)' }} />
                 <RBar dataKey="avg" name="Avg intensity" radius={[0, 3, 3, 0]} barSize={12}>
                   {averages.map((a) => (
-                    <Cell key={a.key} fill={POSITIVE.includes(a.key) ? '#4ff7c9' : '#4b8dff'} />
+                    <Cell key={a.key} fill={POSITIVE.includes(a.key) ? '#d6bd8a' : '#a89bd4'} />
                   ))}
                 </RBar>
               </BarChart>

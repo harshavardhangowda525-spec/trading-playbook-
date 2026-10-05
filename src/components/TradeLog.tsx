@@ -61,9 +61,9 @@ function ResultCell({ t }: { t: Trade }) {
 
 // ─── Chart styling ─────────────────────────────────────────────────────────
 
-export const tick = { fill: '#7f9aa7', fontSize: 11 };
-export const gridStroke = 'rgba(120,225,255,0.08)';
-export const tooltipStyle = { background: 'rgba(6,18,28,0.95)', border: '1px solid rgba(120,225,255,0.3)', borderRadius: 6, fontSize: 12 };
+export const tick = { fill: '#8f8a82', fontSize: 11 };
+export const gridStroke = 'rgba(214, 208, 198,0.08)';
+export const tooltipStyle = { background: 'rgba(20, 19, 23, 0.95)', border: '1px solid rgba(214, 208, 198,0.3)', borderRadius: 6, fontSize: 12 };
 
 // ─── Columns ───────────────────────────────────────────────────────────────
 
@@ -382,21 +382,21 @@ function EquityCurve({ stats }: { stats: TradeStats }) {
         <AreaChart data={data} margin={{ top: 8, right: 8, left: -18, bottom: 0 }}>
           <defs>
             <linearGradient id="tl-eq" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor="#3ee6ff" stopOpacity={0.45} />
-              <stop offset="100%" stopColor="#3ee6ff" stopOpacity={0} />
+              <stop offset="0%" stopColor="#e9dfcb" stopOpacity={0.45} />
+              <stop offset="100%" stopColor="#e9dfcb" stopOpacity={0} />
             </linearGradient>
           </defs>
           <CartesianGrid stroke={gridStroke} vertical={false} />
           <XAxis dataKey="n" tick={tick} tickLine={false} axisLine={{ stroke: gridStroke }} />
           <YAxis tick={tick} tickLine={false} axisLine={false} tickFormatter={(v: number) => `${v}R`} />
-          <ReferenceLine y={0} stroke="rgba(120,225,255,0.25)" strokeDasharray="4 4" />
+          <ReferenceLine y={0} stroke="rgba(214, 208, 198,0.25)" strokeDasharray="4 4" />
           <Tooltip
             contentStyle={tooltipStyle}
-            labelStyle={{ color: '#7f9aa7' }}
+            labelStyle={{ color: '#8f8a82' }}
             labelFormatter={(n) => (Number(n) === 0 ? 'Start' : `Trade ${n}`)}
             formatter={(v) => [`${Number(v).toFixed(2)}R`, 'Cumulative']}
           />
-          <Area type="monotone" dataKey="cum" stroke="#3ee6ff" strokeWidth={2} fill="url(#tl-eq)" dot={false} activeDot={{ r: 4 }} />
+          <Area type="monotone" dataKey="cum" stroke="#e9dfcb" strokeWidth={2} fill="url(#tl-eq)" dot={false} activeDot={{ r: 4 }} />
         </AreaChart>
       </ResponsiveContainer>
     </Panel>

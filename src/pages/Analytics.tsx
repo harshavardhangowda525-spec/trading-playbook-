@@ -39,18 +39,18 @@ import { addDays, formatLong, fromKey, rangeKeys } from '../lib/dates';
 import '../styles/analytics.css';
 
 // ─── Chart styling (shared brief) ──────────────────────────────────────────
-const CYAN = '#3ee6ff';
-const BLUE = '#4b8dff';
-const TEAL = '#4ff7c9';
-const TICK = { fill: '#7f9aa7', fontSize: 11 };
-const GRID = 'rgba(120,225,255,0.08)';
+const CYAN = '#e9dfcb';
+const BLUE = '#a89bd4';
+const TEAL = '#d6bd8a';
+const TICK = { fill: '#8f8a82', fontSize: 11 };
+const GRID = 'rgba(214, 208, 198,0.08)';
 const TOOLTIP = {
-  contentStyle: { background: 'rgba(6,18,28,0.95)', border: '1px solid rgba(120,225,255,0.3)', borderRadius: 6, fontSize: 12 },
-  labelStyle: { color: '#b4cbd5' },
-  itemStyle: { color: '#e6f6fb' },
-  cursor: { stroke: 'rgba(62,230,255,0.25)' },
+  contentStyle: { background: 'rgba(20, 19, 23, 0.95)', border: '1px solid rgba(214, 208, 198,0.3)', borderRadius: 6, fontSize: 12 },
+  labelStyle: { color: '#bdb7ad' },
+  itemStyle: { color: '#f1ece4' },
+  cursor: { stroke: 'rgba(232, 220, 196,0.25)' },
 };
-const LEGEND = { wrapperStyle: { fontSize: 11, color: '#7f9aa7' } };
+const LEGEND = { wrapperStyle: { fontSize: 11, color: '#8f8a82' } };
 const H = 240;
 
 type Range = '14' | '30' | '84';
@@ -382,8 +382,8 @@ export function Analytics() {
             <ResponsiveContainer width="100%" height={300}>
               <RadarChart data={radar} outerRadius="72%">
                 <ChartDefs id={ids.radar} colors={[CYAN]} />
-                <PolarGrid stroke="rgba(120,225,255,0.14)" />
-                <PolarAngleAxis dataKey="axis" tick={{ fill: '#b4cbd5', fontSize: 11, letterSpacing: 1.5 }} />
+                <PolarGrid stroke="rgba(214, 208, 198,0.14)" />
+                <PolarAngleAxis dataKey="axis" tick={{ fill: '#bdb7ad', fontSize: 11, letterSpacing: 1.5 }} />
                 <PolarRadiusAxis domain={[0, 100]} tick={false} axisLine={false} />
                 <Radar
                   dataKey="v"
@@ -580,9 +580,9 @@ export function Analytics() {
               <XAxis dataKey="setup" tick={TICK} axisLine={false} tickLine={false} interval={0} tickFormatter={(s: string) => (s.length > 10 ? s.slice(0, 9) + '…' : s)} />
               <YAxis yAxisId="r" tick={TICK} axisLine={false} tickLine={false} />
               <YAxis yAxisId="w" orientation="right" domain={[0, 100]} tick={TICK} axisLine={false} tickLine={false} />
-              <Tooltip {...TOOLTIP} cursor={{ fill: 'rgba(62,230,255,0.06)' }} />
+              <Tooltip {...TOOLTIP} cursor={{ fill: 'rgba(232, 220, 196,0.06)' }} />
               <Legend {...LEGEND} />
-              <ReferenceLine yAxisId="r" y={0} stroke="rgba(120,225,255,0.25)" />
+              <ReferenceLine yAxisId="r" y={0} stroke="rgba(214, 208, 198,0.25)" />
               <Bar yAxisId="r" dataKey="netR" name="Net R" fill={CYAN} fillOpacity={0.75} radius={[3, 3, 0, 0]} isAnimationActive={animate} />
               <Bar yAxisId="w" dataKey="winPct" name="Win rate %" fill={BLUE} fillOpacity={0.6} radius={[3, 3, 0, 0]} isAnimationActive={animate} />
             </BarChart>
@@ -637,7 +637,7 @@ export function Analytics() {
               <CartesianGrid stroke={GRID} vertical={false} />
               <XAxis dataKey="label" tick={TICK} axisLine={false} tickLine={false} />
               <YAxis allowDecimals={false} tick={TICK} axisLine={false} tickLine={false} />
-              <Tooltip {...TOOLTIP} cursor={{ fill: 'rgba(62,230,255,0.06)' }} labelFormatter={(l) => `R:R ${l}`} />
+              <Tooltip {...TOOLTIP} cursor={{ fill: 'rgba(232, 220, 196,0.06)' }} labelFormatter={(l) => `R:R ${l}`} />
               <Bar dataKey="trades" name="Trades" fill={`url(#${ids.rr}-g0)`} stroke={CYAN} strokeWidth={1} radius={[3, 3, 0, 0]} isAnimationActive={animate} />
             </BarChart>
           </ResponsiveContainer>
@@ -667,7 +667,7 @@ export function Analytics() {
               <XAxis dataKey="n" tick={TICK} axisLine={false} tickLine={false} minTickGap={16} />
               <YAxis tick={TICK} axisLine={false} tickLine={false} />
               <Tooltip {...TOOLTIP} labelFormatter={(l) => `Simulated trade #${l}`} formatter={(v) => [`${v}R`, 'Cumulative']} />
-              <ReferenceLine y={0} stroke="rgba(120,225,255,0.25)" />
+              <ReferenceLine y={0} stroke="rgba(214, 208, 198,0.25)" />
               <Area
                 type="monotone"
                 dataKey="cum"
@@ -707,7 +707,7 @@ export function Analytics() {
                 tickLine={false}
                 tickFormatter={(s: string) => (s.length > 18 ? s.slice(0, 17) + '…' : s)}
               />
-              <Tooltip {...TOOLTIP} cursor={{ fill: 'rgba(62,230,255,0.06)' }} />
+              <Tooltip {...TOOLTIP} cursor={{ fill: 'rgba(232, 220, 196,0.06)' }} />
               <Bar dataKey="count" name="Occurrences" fill={CYAN} fillOpacity={0.7} radius={[0, 3, 3, 0]} barSize={14} isAnimationActive={animate} />
             </BarChart>
           </ResponsiveContainer>

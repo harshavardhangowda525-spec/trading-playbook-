@@ -1,6 +1,6 @@
-# Quantum Core — Day Trading Playbook & Command Center
+# Obsidian — Personal Performance OS
 
-A futuristic, JARVIS-style personal trading **academy and journal** that replaces a physical trading notebook. Every day you learn, practice, journal, review — and get **1% better**.
+A calm, premium personal operating system — a trading **academy and journal** that replaces a physical trading notebook. Every day you learn, practice, journal, review — and get **1% better**.
 
 > Educational journaling application only. It is **not** financial advice, shows **no live market data**, and never generates trades, prices or results. Every statistic comes from what you enter, and starts at zero. Backtests, paper trades and the candle trainer are clearly labelled as simulated.
 

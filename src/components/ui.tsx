@@ -135,10 +135,10 @@ export function RingMeter({
   value,
   size = 64,
   stroke = 4,
-  color = 'var(--cyan)',
+  color,
   label,
   showValue = true,
-  ticks = true,
+  ticks = false,
   children,
   delay = 0,
 }: {
@@ -163,8 +163,8 @@ export function RingMeter({
         <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} style={{ display: 'block', transform: 'rotate(-90deg)' }}>
           <defs>
             <linearGradient id={`rg-${id}`} x1="0" y1="0" x2="1" y2="1">
-              <stop offset="0%" stopColor={color} stopOpacity="0.55" />
-              <stop offset="100%" stopColor={color} />
+              <stop offset="0%" stopColor={color ?? '#c4b9e6'} stopOpacity={color ? 0.6 : 0.95} />
+              <stop offset="100%" stopColor={color ?? '#ecdcb6'} />
             </linearGradient>
             <filter id={`rf-${id}`} x="-50%" y="-50%" width="200%" height="200%">
               <feGaussianBlur stdDeviation="2" result="b" />
@@ -180,12 +180,12 @@ export function RingMeter({
               cy={size / 2}
               r={size / 2 - 1.5}
               fill="none"
-              stroke="rgba(120,225,255,0.22)"
+              stroke="rgba(214, 208, 198,0.22)"
               strokeWidth="2"
               strokeDasharray={`1 ${(2 * Math.PI * (size / 2 - 1.5)) / 48 - 1}`}
             />
           )}
-          <circle cx={size / 2} cy={size / 2} r={r} fill="none" stroke="rgba(120,225,255,0.1)" strokeWidth={stroke} />
+          <circle cx={size / 2} cy={size / 2} r={r} fill="none" stroke="rgba(214, 208, 198,0.1)" strokeWidth={stroke} />
           <motion.circle
             cx={size / 2}
             cy={size / 2}
@@ -198,13 +198,13 @@ export function RingMeter({
             filter={`url(#rf-${id})`}
             initial={{ strokeDashoffset: reduce ? c * (1 - v) : c }}
             animate={{ strokeDashoffset: c * (1 - v) }}
-            transition={{ duration: reduce ? 0 : 1.4, delay: reduce ? 0 : delay, ease: [0.22, 1, 0.36, 1] }}
+            transition={{ duration: reduce ? 0 : 1.8, delay: reduce ? 0 : delay, ease: [0.22, 1, 0.36, 1] }}
           />
         </svg>
         <div style={{ position: 'absolute', inset: 0, display: 'grid', placeItems: 'center', textAlign: 'center' }}>
           {children ??
             (showValue && (
-              <span className="display" style={{ fontWeight: 700, fontSize: Math.max(12, size * 0.24), color: '#fff' }}>
+              <span className="display" style={{ fontWeight: 200, fontSize: Math.max(12, size * 0.26), color: 'var(--text)' }}>
                 <CountUp value={Math.round(v * 100)} />
                 <span style={{ fontSize: '0.6em', color: 'var(--muted)' }}>%</span>
               </span>
@@ -270,7 +270,7 @@ export function HoloCheck({
         onChange?.(!checked);
       }}
       whileTap={reduce ? undefined : { scale: 0.82 }}
-      animate={checked && !reduce ? { scale: [1, 1.18, 1] } : { scale: 1 }}
+      animate={checked && !reduce ? { scale: [1, 1.06, 1] } : { scale: 1 }}
       transition={{ duration: 0.35 }}
     >
       <svg viewBox="0 0 24 24" fill="none" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
@@ -285,9 +285,9 @@ export function HoloCheck({
         <motion.span
           key="burst"
           initial={{ opacity: 0.8, scale: 0.6 }}
-          animate={{ opacity: 0, scale: 2.2 }}
+          animate={{ opacity: 0, scale: 1.9 }}
           transition={{ duration: 0.6 }}
-          style={{ position: 'absolute', inset: 0, borderRadius: 6, border: '1px solid var(--cyan)', pointerEvents: 'none' }}
+          style={{ position: 'absolute', inset: 0, borderRadius: '50%', border: '1px solid rgba(236,228,214,0.6)', pointerEvents: 'none' }}
         />
       )}
     </motion.button>
@@ -644,10 +644,10 @@ export function PageFade({ children }: { children: ReactNode }) {
   const reduce = useReducedMotion();
   return (
     <motion.div
-      initial={reduce ? false : { opacity: 0, y: 10, filter: 'blur(4px)' }}
-      animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
-      exit={reduce ? undefined : { opacity: 0, y: -6, filter: 'blur(3px)', transition: { duration: 0.14 } }}
-      transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+      initial={reduce ? false : { opacity: 0, y: 18, scale: 0.985, filter: 'blur(8px)' }}
+      animate={{ opacity: 1, y: 0, scale: 1, filter: 'blur(0px)' }}
+      exit={reduce ? undefined : { opacity: 0, y: -10, scale: 1.01, filter: 'blur(6px)', transition: { duration: 0.22 } }}
+      transition={{ duration: 0.65, ease: [0.22, 1, 0.36, 1] }}
     >
       {children}
     </motion.div>

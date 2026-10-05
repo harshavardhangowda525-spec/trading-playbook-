@@ -19,8 +19,8 @@ const QUESTIONS = [
   { key: 'improvement', q: 'What will I improve tomorrow?', ph: 'One specific, 1% improvement…' },
 ] as const;
 
-const TICK = { fill: '#7f9aa7', fontSize: 11 };
-const TOOLTIP_STYLE = { background: 'rgba(6,18,28,0.95)', border: '1px solid rgba(120,225,255,0.3)', borderRadius: 6, fontSize: 12 };
+const TICK = { fill: '#8f8a82', fontSize: 11 };
+const TOOLTIP_STYLE = { background: 'rgba(20, 19, 23, 0.95)', border: '1px solid rgba(214, 208, 198,0.3)', borderRadius: 6, fontSize: 12 };
 
 // The 1.01^n learning curve across the full journey (pure math, not market data).
 const CURVE = Array.from({ length: TOTAL_DAYS + 1 }, (_, n) => ({ n, v: Math.round(Math.pow(1.01, n) * 1000) / 1000 }));
@@ -105,11 +105,11 @@ export function Engine() {
                 <AreaChart data={data} margin={{ top: 10, right: 8, bottom: 0, left: -18 }}>
                   <defs>
                     <linearGradient id="eng-fill" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="0%" stopColor="#3ee6ff" stopOpacity={0.45} />
-                      <stop offset="100%" stopColor="#3ee6ff" stopOpacity={0} />
+                      <stop offset="0%" stopColor="#e9dfcb" stopOpacity={0.45} />
+                      <stop offset="100%" stopColor="#e9dfcb" stopOpacity={0} />
                     </linearGradient>
                   </defs>
-                  <CartesianGrid stroke="rgba(120,225,255,0.08)" vertical={false} />
+                  <CartesianGrid stroke="rgba(214, 208, 198,0.08)" vertical={false} />
                   <XAxis dataKey="n" tick={TICK} tickLine={false} axisLine={false} ticks={[0, 14, 28, 42, 56, 70, 84]} />
                   <YAxis tick={TICK} tickLine={false} axisLine={false} domain={[1, 2.4]} tickFormatter={(v: number) => `${v}×`} />
                   <Tooltip
@@ -117,9 +117,9 @@ export function Engine() {
                     labelFormatter={(l) => `${l} lessons`}
                     formatter={(v) => [`${Number(v).toFixed(3)}×`, 'Learning factor']}
                   />
-                  <Area type="monotone" dataKey="v" stroke="rgba(120,225,255,0.3)" strokeDasharray="4 4" fill="none" isAnimationActive />
-                  <Area type="monotone" dataKey="done" stroke="#3ee6ff" strokeWidth={2} fill="url(#eng-fill)" connectNulls={false} isAnimationActive />
-                  <ReferenceDot x={completed} y={Math.round(factor * 1000) / 1000} r={5} fill="#3ee6ff" stroke="#c8f6ff" />
+                  <Area type="monotone" dataKey="v" stroke="rgba(214, 208, 198,0.3)" strokeDasharray="4 4" fill="none" isAnimationActive />
+                  <Area type="monotone" dataKey="done" stroke="#e9dfcb" strokeWidth={2} fill="url(#eng-fill)" connectNulls={false} isAnimationActive />
+                  <ReferenceDot x={completed} y={Math.round(factor * 1000) / 1000} r={5} fill="#e9dfcb" stroke="#f4eee3" />
                 </AreaChart>
               </ResponsiveContainer>
             </div>

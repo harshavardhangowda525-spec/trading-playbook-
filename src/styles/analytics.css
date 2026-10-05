@@ -15,11 +15,10 @@
 }
 .an-big {
   font-family: var(--font-display);
-  font-weight: 700;
+  font-weight: 400;
   font-size: 46px;
   line-height: 1;
   color: #fff;
-  text-shadow: 0 0 26px rgba(62, 230, 255, 0.4);
   display: flex;
   align-items: baseline;
   gap: 6px;
@@ -30,7 +29,7 @@
 }
 .an-big small {
   font-size: 0.36em;
-  font-weight: 600;
+  font-weight: 400;
   letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--muted);
@@ -63,7 +62,7 @@
 }
 .an-panel .recharts-polar-angle-axis-tick text {
   font-family: var(--font-display);
-  font-weight: 600;
+  font-weight: 400;
   text-transform: uppercase;
 }
 
@@ -75,7 +74,7 @@
   position: absolute;
   inset: 12% 22%;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(62, 230, 255, 0.1), transparent 70%);
+  background: radial-gradient(circle, rgba(232, 220, 196, 0.1), transparent 70%);
   pointer-events: none;
 }
 
@@ -148,7 +147,7 @@
   padding: 12px 14px;
   border-radius: var(--radius);
   border: 1px solid var(--line);
-  background: rgba(2, 8, 14, 0.75);
+  background: rgba(14, 13, 16, 0.75);
   color: var(--cyan-soft);
   overflow-x: auto;
   white-space: pre;
@@ -168,17 +167,16 @@
   font-family: var(--font-mono);
   font-size: 12px;
   color: var(--cyan-soft);
-  background: rgba(62, 230, 255, 0.07);
+  background: rgba(232, 220, 196, 0.07);
   padding: 1px 5px;
   border-radius: 4px;
 }
 .set-mode {
   font-family: var(--font-display);
-  font-weight: 700;
+  font-weight: 400;
   font-size: 26px;
   letter-spacing: 0.14em;
   color: #fff;
-  text-shadow: 0 0 22px rgba(62, 230, 255, 0.35);
 }
 .set-kv {
   display: grid;
@@ -190,7 +188,7 @@
 .set-kv > span:nth-child(odd) {
   font-family: var(--font-display);
   font-size: 11.5px;
-  font-weight: 600;
+  font-weight: 400;
   letter-spacing: 0.18em;
   text-transform: uppercase;
   color: var(--muted);

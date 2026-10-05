@@ -137,7 +137,7 @@ export function PlaybookPage() {
               <RingMeter value={completion} size={78} stroke={5} />
               <div className="col" style={{ gap: 2 }}>
                 <span className="stat-label">Completion</span>
-                <span className="display" style={{ fontSize: 22, fontWeight: 700 }}>
+                <span className="display" style={{ fontSize: 22, fontWeight: 400 }}>
                   <span className="num">{filledCount}</span> <span className="muted">/ 10</span>
                 </span>
                 <span className="tiny muted">sections</span>

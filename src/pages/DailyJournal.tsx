@@ -190,7 +190,7 @@ export function DailyJournal() {
             <div className="col" style={{ alignItems: 'center', gap: 18 }}>
               <RingMeter value={(score ?? 0) / 100} size={170} stroke={8}>
                 <div className="col" style={{ gap: 0, alignItems: 'center' }}>
-                  <span className="display" style={{ fontSize: 46, fontWeight: 700, color: '#fff', lineHeight: 1 }}>
+                  <span className="display" style={{ fontSize: 46, fontWeight: 400, color: '#fff', lineHeight: 1 }}>
                     {score == null ? <span className="dim">—</span> : <span className="num">{score}</span>}
                   </span>
                   <span className="tiny muted">/ 100</span>
@@ -210,7 +210,7 @@ export function DailyJournal() {
               <RingMeter value={ds.pct} size={70} stroke={5} />
               <div className="col" style={{ gap: 2 }}>
                 <span className="stat-label">Tasks complete</span>
-                <span className="display" style={{ fontSize: 22, fontWeight: 700 }}>
+                <span className="display" style={{ fontSize: 22, fontWeight: 400 }}>
                   <span className="num">{ds.done}</span> <span className="muted">/ {ds.total}</span>
                 </span>
                 <Link to="/my-day" className="tiny cyan">

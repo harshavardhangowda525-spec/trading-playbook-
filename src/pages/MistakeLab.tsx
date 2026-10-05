@@ -159,17 +159,17 @@ export function MistakeLab() {
                 <BarChart data={chartData} layout="vertical" margin={{ top: 4, right: 16, left: 0, bottom: 0 }}>
                   <defs>
                     <linearGradient id="ml-bar" x1="0" y1="0" x2="1" y2="0">
-                      <stop offset="0%" stopColor="#4b8dff" stopOpacity={0.5} />
-                      <stop offset="100%" stopColor="#3ee6ff" stopOpacity={0.95} />
+                      <stop offset="0%" stopColor="#a89bd4" stopOpacity={0.5} />
+                      <stop offset="100%" stopColor="#e9dfcb" stopOpacity={0.95} />
                     </linearGradient>
                   </defs>
                   <CartesianGrid stroke={gridStroke} horizontal={false} />
                   <XAxis type="number" allowDecimals={false} tick={tick} tickLine={false} axisLine={{ stroke: gridStroke }} />
                   <YAxis type="category" dataKey="label" width={150} tick={tick} tickLine={false} axisLine={false} />
-                  <Tooltip contentStyle={tooltipStyle} cursor={{ fill: 'rgba(62,230,255,0.05)' }} formatter={(v) => [v, 'Logged']} />
+                  <Tooltip contentStyle={tooltipStyle} cursor={{ fill: 'rgba(232, 220, 196,0.05)' }} formatter={(v) => [v, 'Logged']} />
                   <Bar dataKey="count" radius={[0, 4, 4, 0]} barSize={16}>
                     {chartData.map((d, i) => (
-                      <Cell key={d.label} fill={i === 0 ? '#3ee6ff' : 'url(#ml-bar)'} />
+                      <Cell key={d.label} fill={i === 0 ? '#e9dfcb' : 'url(#ml-bar)'} />
                     ))}
                   </Bar>
                 </BarChart>
