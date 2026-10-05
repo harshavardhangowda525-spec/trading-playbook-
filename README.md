@@ -6,9 +6,11 @@ A calm, premium personal operating system — a trading **academy and journal** 
 
 ## Features
 
+Navigation is a floating glass bar with six sections — Home, Trading, Journal, Playbook, Timetable, Analytics — each with its own tab row.
+
 | Area | Pages |
 | --- | --- |
-| **Core** | Command Center dashboard — holographic 1% core with orbital rings (Trading · Study · Business · Fitness · Discipline), Today's Mission, Next Task with countdown, streak, Trading Development meters, today's timetable, 84-day journey strip, quick actions, End-of-Day System Check |
+| **Home** | Hero, floating glass orb, Today's Objective, Next Action, aurora progress ring, vertical daily timeline, Trading Development rings, Today's 1% quote, streak and the flowing 84-day path |
 | **Schedule** | **My Day** (full daily routine, client-acquisition counters with targets, backup deep-work picker, activity log) · **Trading Schedule** (morning education + evening practice checklists, session timer) · **History** calendar · **Weekly Review** heatmaps |
 | **Learn** | **84-Day Journey** (12 phases built in) · daily **learning workspace** · **The 1% Engine** · **Final Evaluation** |
 | **Practice** | **Chart Practice** (practice log + synthetic Candle Trainer) · **Backtesting** journal · **Simulation** (paper trading) |
