@@ -16,7 +16,7 @@ import {
   C,
   computeStreak,
   emptyJournal,
-  isTaskDone,
+  blockDone,
   journeyState,
   type DayLog,
   type JournalEntry,
@@ -24,13 +24,13 @@ import {
 } from '../lib/domain';
 import '../styles/dashboard.css';
 
-const OBJECTIVE = ['trading_edu', 'client_acq', 'trading_practice', 'workout', 'daily_review'];
+const OBJECTIVE = ['trading_edu', 'calls', 'trading_review', 'workout', 'daily_review'];
 const TIMELINE = [
   { id: 'wake', label: 'Start Day' },
   { id: 'trading_edu', label: 'Trading Education' },
-  { id: 'client_acq', label: 'Client Acquisition' },
+  { id: 'calls', label: 'Client Acquisition' },
   { id: 'darwin', label: 'Darwin' },
-  { id: 'trading_practice', label: 'Trading Practice' },
+  { id: 'trading_review', label: 'Trading Review' },
   { id: 'workout', label: 'Workout' },
   { id: 'daily_review', label: 'Daily Review' },
 ];
@@ -52,10 +52,6 @@ const ease = [0.22, 1, 0.36, 1] as const;
 
 const block = (id: string) => BLOCKS.find((b) => b.id === id)!;
 
-function blockDone(log: DayLog, b: Block): boolean {
-  if (b.counters) return b.counters.every((c) => !!log.done[c.id]);
-  return isTaskDone(log, b.id);
-}
 
 /** First unfinished block whose window hasn't ended; else the earliest overdue one. */
 function findNext(log: DayLog, now: number) {

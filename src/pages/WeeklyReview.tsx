@@ -2,7 +2,7 @@ import { useMemo, useState } from 'react';
 import { motion } from 'framer-motion';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { Bar as RBar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
-import { CATEGORY_META, TASKS, type Category } from '../data/schedule';
+import { CATEGORY_META, type Category } from '../data/schedule';
 import { dayStats, type DayLog } from '../lib/domain';
 import { useDayLogs } from '../lib/data';
 import { addDays, formatLong, fromKey, rangeKeys, startOfWeek } from '../lib/dates';
@@ -16,8 +16,8 @@ const WEEKS = 12;
 const pct = (x: number) => Math.round(x * 100);
 const avg = (xs: number[]) => (xs.length ? xs.reduce((a, b) => a + b, 0) / xs.length : 0);
 
-function rowPct(log: DayLog | undefined, row: Category | 'overall') {
-  const s = dayStats(log);
+function rowPct(log: DayLog | undefined, row: Category | 'overall', date: string) {
+  const s = dayStats(log, date);
   return row === 'overall' ? s.pct : s.byCategory[row].pct;
 }
 
@@ -31,8 +31,8 @@ export function WeeklyReview() {
   const elapsed = useMemo(() => days.filter((k) => k <= today), [days, today]);
 
   const s = useMemo(() => {
-    const per = elapsed.map((k) => ({ k, st: dayStats(map.get(k)) }));
-    const total = TASKS.length * elapsed.length;
+    const per = elapsed.map((k) => ({ k, st: dayStats(map.get(k), k) }));
+    const total = per.reduce((a, p) => a + p.st.total, 0);
     const completed = per.reduce((a, p) => a + p.st.done, 0);
     const ranked = [...per].sort((a, b) => b.st.pct - a.st.pct);
     const cons = (c: Category) => avg(per.map((p) => p.st.byCategory[c].pct));
@@ -50,7 +50,7 @@ export function WeeklyReview() {
     };
   }, [elapsed, map]);
 
-  const chart = days.map((k, i) => ({ day: DOW[i], pct: k <= today ? pct(dayStats(map.get(k)).pct) : 0 }));
+  const chart = days.map((k, i) => ({ day: DOW[i], pct: k <= today ? pct(dayStats(map.get(k), k).pct) : 0 }));
   const dayName = (k: string) => fromKey(k).toLocaleDateString(undefined, { weekday: 'long' });
 
   // 12-week grid ending with the selected week.
@@ -85,7 +85,7 @@ export function WeeklyReview() {
 
       <motion.div variants={reveal} initial="hidden" animate="show" custom={0}>
         <div className="stat-grid">
-          <Stat label="Total tasks" value={<CountUp value={s.total} />} note={`${elapsed.length} day${elapsed.length === 1 ? '' : 's'} × ${TASKS.length}`} />
+          <Stat label="Total tasks" value={<CountUp value={s.total} />} note={`${elapsed.length} day${elapsed.length === 1 ? '' : 's'} on your timetable`} />
           <Stat label="Completed" value={<CountUp value={s.completed} />} />
           <Stat label="Missed" value={<CountUp value={s.missed} />} />
           <Stat label="Completion" value={<CountUp value={pct(s.pct)} suffix="%" />} />
@@ -161,7 +161,7 @@ export function WeeklyReview() {
             <div className="wk-year" style={{ gridTemplateColumns: `repeat(${WEEKS}, minmax(14px, 1fr))` }}>
               {gridDays.map((k) => {
                 const future = k > today;
-                const p = future ? 0 : dayStats(map.get(k)).pct;
+                const p = future ? 0 : dayStats(map.get(k), k).pct;
                 return (
                   <i
                     key={k}
@@ -186,7 +186,7 @@ function HeatRow({ row, days, today, map }: { row: Category | 'overall'; days: s
       <span className={cx('rl', overall && 'overall')}>{overall ? 'Overall' : CATEGORY_META[row].label}</span>
       {days.map((k, i) => {
         const future = k > today;
-        const p = future ? 0 : rowPct(map.get(k), row);
+        const p = future ? 0 : rowPct(map.get(k), row, k);
         return (
           <motion.span
             key={k}

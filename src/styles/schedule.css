@@ -778,3 +778,80 @@
     font-size: 0;
   }
 }
+
+/* ── Schedule v2: block checklists ── */
+.md-cl + .md-cl,
+.md-group + .md-cl,
+.md-cl + .md-group {
+  margin-top: 8px;
+}
+.md-desc {
+  display: block;
+  max-width: 620px;
+  line-height: 1.5;
+}
+.md-cl-body {
+  overflow: hidden;
+}
+.md-cl-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding: 2px 8px 6px 50px;
+}
+.md-cl-tasks {
+  list-style: none;
+  margin: 0;
+  padding: 0 4px 6px 36px;
+  display: grid;
+  gap: 1px;
+}
+.md-cl-task {
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 12px;
+  padding: 8px 12px;
+  font-size: 13.5px;
+  color: var(--text-2);
+}
+.md-cl-task .holo-check {
+  width: 18px;
+  height: 18px;
+}
+.md-cl-task.done .task-label {
+  color: var(--muted);
+}
+.md-cl-toggle {
+  width: 28px;
+  height: 28px;
+}
+.md-counter-icon {
+  width: 22px;
+  text-align: center;
+  color: var(--muted);
+}
+.md-cl .md-counter {
+  margin: 0 4px 4px 36px;
+}
+@media (max-width: 720px) {
+  .md-cl-tasks {
+    padding-left: 8px;
+  }
+  .md-cl-links,
+  .md-cl .md-counter {
+    padding-left: 8px;
+    margin-left: 0;
+  }
+}
+
+/* Long task names (schedule v2) wrap instead of widening the page. */
+.hx-list .tag {
+  white-space: normal;
+  height: auto;
+  min-height: 22px;
+  padding-top: 3px;
+  padding-bottom: 3px;
+  max-width: 100%;
+}
+.hx-list {
+  max-width: 100%;
+}
