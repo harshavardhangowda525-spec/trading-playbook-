@@ -2,8 +2,8 @@ import { JournalCTA } from '../components/journal/JournalCTA';
 import { useEffect, useMemo, useState } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
-import { Activity, ArrowRight, ChevronLeft, ChevronRight, Crosshair, Lock, Minus, Plus } from 'lucide-react';
-import { BACKUP_TASKS, BLOCKS, CATEGORY_META, CORE_CATEGORIES, SECTIONS, TASKS, type Block, type Counter } from '../data/schedule';
+import { Activity, ArrowRight, ChevronDown, ChevronLeft, ChevronRight, Crosshair, Lock, Minus, Plus } from 'lucide-react';
+import { CATEGORY_META, CORE_CATEGORIES, type Block, type Counter } from '../data/schedule';
 import { clientStats, dayStats, type DayLog } from '../lib/domain';
 import { useDayLog } from '../lib/daylog';
 import { useDayLogs } from '../lib/data';
@@ -19,8 +19,14 @@ type Day = ReturnType<typeof useDayLog>;
 /** Σdone ÷ Σtotal over the given dates (dates without a log count as 0 done). */
 function periodPct(keys: string[], map: Map<string, DayLog>): number {
   if (!keys.length) return 0;
-  const done = keys.reduce((a, k) => a + dayStats(map.get(k)).done, 0);
-  return done / (keys.length * TASKS.length);
+  let done = 0;
+  let total = 0;
+  for (const k of keys) {
+    const st = dayStats(map.get(k), k); // each day against its own schedule
+    done += st.done;
+    total += st.total;
+  }
+  return total ? done / total : 0;
 }
 
 export function MyDay() {
@@ -73,7 +79,7 @@ export function MyDay() {
       <PageHeader
         eyebrow={`${isToday ? 'TODAY · ' : ''}${formatHeaderDate(date)}`}
         title="MY DAY"
-        description="Your timetable for the day. Tick each block as you complete it."
+        description="Your timetable for the day. Tick each task as you complete it — or tick a block to complete all of its tasks."
         actions={
           <div className="md-nav">
             <button className="icon-btn" onClick={() => go(addDays(date, -1))} aria-label="Previous day">
@@ -150,9 +156,9 @@ export function MyDay() {
       </motion.div>
 
       <div className="md-sections">
-        {SECTIONS.map((sec, i) => {
-          const blocks = BLOCKS.filter((b) => b.section === sec.id);
-          const tasks = TASKS.filter((t) => blocks.some((b) => b.id === t.blockId));
+        {day.schedule.sections.map((sec, i) => {
+          const blocks = day.schedule.blocks.filter((b) => b.section === sec.id);
+          const tasks = day.schedule.tasks.filter((t) => blocks.some((b) => b.id === t.blockId));
           const done = tasks.filter((t) => day.isDone(t.id)).length;
           return (
             <motion.div key={sec.id} variants={reveal} initial="hidden" animate="show" custom={i + 1}>
@@ -210,6 +216,7 @@ function TimeRange({ block }: { block: Block }) {
 
 function BlockView({ block, day, nowMin, flash }: { block: Block; day: Day; nowMin: number; flash: string | null }) {
   const current = isCurrent(block, nowMin);
+  if (block.tasks?.length) return <ChecklistBlock block={block} day={day} current={current} flash={flash} />;
   if (block.counters) return <ClientBlock block={block} day={day} current={current} flash={flash} />;
 
   const done = day.isDone(block.id);
@@ -256,6 +263,86 @@ function BlockView({ block, day, nowMin, flash }: { block: Block; day: Day; nowM
   );
 }
 
+/** Schedule v2 block: header (ticks the whole block) + its task checklist. */
+function ChecklistBlock({ block, day, current, flash }: { block: Block; day: Day; current: boolean; flash: string | null }) {
+  const prog = day.blockProgress(block.id);
+  const done = prog.total > 0 && prog.done === prog.total;
+  const [open, setOpen] = useState(!done);
+  useEffect(() => {
+    if (current) setOpen(true);
+  }, [current]);
+  return (
+    <div id={`task-${block.id}`} className={cx('md-group md-cl', flash === block.id && 'sc-flash')}>
+      <motion.div className={cx('task-row md-block-row', done && 'done', current && 'current')} whileHover={{ x: 2 }}>
+        <HoloCheck checked={done} onChange={() => day.toggleTask(block.id)} disabled={!day.editable} label={`${block.label} — all tasks`} />
+        <div className="md-main">
+          <TimeRange block={block} />
+          <span className="row" style={{ gap: 8, flexWrap: 'wrap' }}>
+            <span className="task-label">{block.label}</span>
+            {current && !done && <span className="sc-now-tag">NOW</span>}
+          </span>
+          {block.description && <span className="tiny dim md-desc">{block.description}</span>}
+          {block.backup && day.log.backupTask && <span className="tiny cyan">Backup: {day.log.backupTask}</span>}
+        </div>
+        <div className="md-aside">
+          <span className="md-subdots" aria-label={`${prog.done} of ${prog.total} tasks`}>
+            {Array.from({ length: prog.total }, (_, i) => (
+              <i key={i} className={i < prog.done ? 'on' : ''} />
+            ))}
+          </span>
+          <span className="mono tiny">
+            {prog.done}/{prog.total}
+          </span>
+          <CatTag block={block} />
+          <button className="icon-btn md-cl-toggle" onClick={() => setOpen((o) => !o)} aria-expanded={open} aria-label={open ? 'Hide tasks' : 'Show tasks'}>
+            <ChevronDown size={14} style={{ transform: open ? 'rotate(180deg)' : undefined, transition: 'transform .3s' }} />
+          </button>
+        </div>
+      </motion.div>
+      <AnimatePresence initial={false}>
+        {open && (
+          <motion.div
+            className="md-cl-body"
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: 'auto' }}
+            exit={{ opacity: 0, height: 0 }}
+            transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+          >
+            {(block.tradingSession || block.links) && (
+              <div className="md-cl-links">
+                {block.tradingSession && (
+                  <Link to="/trading-schedule" className="btn btn-ghost btn-sm">
+                    Trading schedule <ArrowRight size={13} />
+                  </Link>
+                )}
+                {block.links?.map((l) => (
+                  <Link key={l.to} to={l.to} className="btn btn-ghost btn-sm">
+                    {l.label} <ArrowRight size={13} />
+                  </Link>
+                ))}
+                {block.tradingSession && <JournalCTA session={block.tradingSession} live={current} />}
+              </div>
+            )}
+            {block.counter && <CounterRow counter={block.counter} day={day} flash={flash === block.counter.id} checkable={false} />}
+            <ul className="md-cl-tasks">
+              {block.tasks!.map((t) => {
+                const tdone = day.isDone(t.id);
+                return (
+                  <li key={t.id} id={`task-${t.id}`} className={cx('task-row md-cl-task', tdone && 'done')}>
+                    <HoloCheck checked={tdone} onChange={() => day.toggleTask(t.id)} disabled={!day.editable} label={t.label} />
+                    <span className="task-label">{t.label}</span>
+                  </li>
+                );
+              })}
+            </ul>
+            {block.backup && <BackupPicker day={day} />}
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+}
+
 function BackupPicker({ day }: { day: Day }) {
   const on = day.log.backupTask !== undefined;
   return (
@@ -284,7 +371,7 @@ function BackupPicker({ day }: { day: Day }) {
               Backup deep-work task
             </div>
             <div className="row wrap" style={{ gap: 6 }}>
-              {BACKUP_TASKS.map((t) => (
+              {day.schedule.backupTasks.map((t) => (
                 <motion.button
                   key={t}
                   type="button"
@@ -330,7 +417,7 @@ function ClientBlock({ block, day, current, flash }: { block: Block; day: Day; c
   );
 }
 
-function CounterRow({ counter, day, flash }: { counter: Counter; day: Day; flash: boolean }) {
+function CounterRow({ counter, day, flash, checkable = true }: { counter: Counter; day: Day; flash: boolean; checkable?: boolean }) {
   const count = day.count(counter.id);
   const target = day.target(counter.id);
   const done = day.isDone(counter.id);
@@ -339,8 +426,12 @@ function CounterRow({ counter, day, flash }: { counter: Counter; day: Day; flash
   useEffect(() => setText(String(count)), [count]);
 
   return (
-    <div id={`task-${counter.id}`} className={cx('task-row md-counter', done && 'done', flash && 'sc-flash')}>
-      <HoloCheck checked={done} onChange={() => day.toggleTask(counter.id)} disabled={!day.editable} label={counter.label} />
+    <div id={`task-${counter.id}`} className={cx('task-row md-counter', checkable && done && 'done', !checkable && count >= target && 'done', flash && 'sc-flash')}>
+      {checkable ? (
+        <HoloCheck checked={done} onChange={() => day.toggleTask(counter.id)} disabled={!day.editable} label={counter.label} />
+      ) : (
+        <span className="md-counter-icon mono tiny">#</span>
+      )}
       <div className="md-main">
         <span className="task-label">{counter.label}</span>
         <span className="md-counter-meta">

@@ -2,12 +2,13 @@ import { useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
 import { BookOpen, CalendarCheck, ChevronLeft, ChevronRight, Flame, NotebookPen } from 'lucide-react';
-import { BLOCKS, CLIENT_COUNTERS, TASKS } from '../data/schedule';
+import { scheduleFor } from '../data/schedule';
 import {
   C,
   STREAK_META,
   computeStreak,
   counterTarget,
+  blockDone,
   dayStats,
   isTaskDone,
   journalScore,
@@ -118,7 +119,7 @@ export function HistoryPage() {
                 ))}
                 {days.map((k) => {
                   const future = k > today;
-                  const pct = future ? 0 : dayStats(map.get(k)).pct;
+                  const pct = future ? 0 : dayStats(map.get(k), k).pct;
                   const hasJournal = journalByDate.has(k);
                   const hasLesson = lessonDates.has(k);
                   return (
@@ -183,13 +184,19 @@ function DayDetail({
 }) {
   const { profile } = useProfile();
   const log = map.get(date);
-  const stats = dayStats(log);
+  const sched = scheduleFor(date, log);
+  const stats = dayStats(log, date);
   const past = date < today;
-  const completed = TASKS.filter((t) => isTaskDone(log, t.id));
-  const missed = TASKS.filter((t) => !isTaskDone(log, t.id));
-  const study = TASKS.filter((t) => t.category === 'study');
+  // Tasks of that day's schedule, labelled with their block so repeated names stay clear.
+  const tasks = sched.tasks.map((t) => {
+    const block = sched.blocks.find((b) => b.id === t.blockId);
+    return { ...t, label: sched.version === 2 && block ? `${block.short} · ${t.label}` : t.label };
+  });
+  const completed = tasks.filter((t) => isTaskDone(log, t.id, date));
+  const missed = tasks.filter((t) => !isTaskDone(log, t.id, date));
+  const study = sched.blocks.filter((b) => b.category === 'study');
   const score = journalScore(journal);
-  const workout = BLOCKS.find((b) => b.category === 'fitness');
+  const workout = sched.blocks.find((b) => b.id === 'workout') ?? sched.blocks.find((b) => b.category === 'fitness');
 
   return (
     <Panel hud title={formatHeaderDate(date)} sub={date === today ? 'Today' : undefined}>
@@ -210,11 +217,9 @@ function DayDetail({
       <div className="hx-detail-block mt-16">
         <div className="sc-kicker">Trading sessions</div>
         <div className="hx-kv">
-          {(['morning', 'evening'] as const).map((s) => {
-            const st = sessionStats(log, s);
-            return (
-              <SessionKV key={s} label={s === 'morning' ? 'Morning · Education' : 'Evening · Practice'} done={st.done} total={st.total} complete={st.complete} />
-            );
+          {sched.sessions.map((s) => {
+            const st = sessionStats(log, s.id, date);
+            return <SessionKV key={s.id} label={s.subtitle} done={st.done} total={st.total} complete={st.complete} />;
           })}
         </div>
       </div>
@@ -222,10 +227,10 @@ function DayDetail({
       <div className="hx-detail-block">
         <div className="sc-kicker">Study sessions · Workout</div>
         <div className="hx-kv">
-          {study.map((t) => (
-            <DoneKV key={t.id} label={t.label} done={isTaskDone(log, t.id)} past={past} />
+          {study.map((b) => (
+            <DoneKV key={b.id} label={b.label} done={blockDone(log, b, date)} past={past} />
           ))}
-          {workout && <DoneKV label={workout.label} done={isTaskDone(log, workout.id)} past={past} />}
+          {workout && <DoneKV label={workout.label} done={blockDone(log, workout, date)} past={past} />}
           <DoneKV label="Lesson completed" done={lessonDone} past={past} />
         </div>
       </div>
@@ -233,7 +238,7 @@ function DayDetail({
       <div className="hx-detail-block">
         <div className="sc-kicker">Client acquisition</div>
         <div className="hx-kv">
-          {CLIENT_COUNTERS.map((c) => {
+          {sched.counters.map((c) => {
             const n = log?.counts?.[c.id] ?? 0;
             const target = counterTarget(profile, c.id);
             return (

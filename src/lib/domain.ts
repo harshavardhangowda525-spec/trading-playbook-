@@ -1,9 +1,9 @@
 // Types for every stored collection + pure calculations.
 // Every statistic is derived from user-entered data; nothing is invented.
 
-import { BLOCKS, CATEGORY_META, CLIENT_COUNTERS, TASKS, TRADING_SESSIONS, type Category, type TradingSessionId } from '../data/schedule';
+import { CATEGORY_META, CLIENT_COUNTERS, SCHEDULE_V1, scheduleFor, type Block, type Category, type ScheduleDef, type TaskDef, type TradingSessionId } from '../data/schedule';
 import { LESSONS_BY_DAY, PHASES, TOTAL_DAYS } from '../data/curriculum';
-import { addDays, diffDays } from './dates';
+import { addDays, diffDays, todayKey } from './dates';
 
 // ─── Collection names ──────────────────────────────────────────────────────
 export const C = {
@@ -39,7 +39,7 @@ export function journeyDay(profile: Profile, today: string): number {
 }
 
 export function counterTarget(profile: Profile, counterId: string): number {
-  return profile.targets[counterId] ?? CLIENT_COUNTERS.find((c) => c.id === counterId)?.target ?? 1;
+  return profile.targets[counterId] ?? [...CLIENT_COUNTERS, ...SCHEDULE_V1.counters].find((c) => c.id === counterId)?.target ?? 1;
 }
 
 // ─── Day log (timetable completion) ────────────────────────────────────────
@@ -56,21 +56,45 @@ export interface DayLog {
   counts: Record<string, number>;
   backupTask?: string;
   activity: ActivityEvent[];
+  /** Schedule version the day is evaluated against (absent on older logs → derived from the date). */
+  version?: number;
 }
 
 export const emptyDayLog = (date: string): DayLog => ({ id: date, done: {}, counts: {}, activity: [] });
 
-export function sessionStats(log: DayLog | undefined, session: TradingSessionId) {
-  const s = TRADING_SESSIONS.find((x) => x.id === session)!;
+/** Schedule for a log (or for a date that has no log yet). */
+export function scheduleOf(log: DayLog | undefined, date?: string): ScheduleDef {
+  return scheduleFor(log?.id ?? date ?? todayKey(), log);
+}
+
+export function sessionStats(log: DayLog | undefined, session: TradingSessionId, date?: string) {
+  const s = scheduleOf(log, date).sessions.find((x) => x.id === session)!;
   const done = s.tasks.filter((t) => log?.done[t.id]).length;
   return { done, total: s.tasks.length, pct: done / s.tasks.length, complete: done === s.tasks.length };
 }
 
-export function isTaskDone(log: DayLog | undefined, taskId: string): boolean {
+/** A task (or, for composite blocks, a whole block) is done. */
+export function isTaskDone(log: DayLog | undefined, taskId: string, date?: string): boolean {
   if (!log) return false;
-  const block = BLOCKS.find((b) => b.id === taskId);
-  if (block?.tradingSession) return sessionStats(log, block.tradingSession).complete;
+  const sched = scheduleOf(log, date);
+  const block = sched.blocks.find((b) => b.id === taskId);
+  if (block) return blockDone(log, block, date);
   return !!log.done[taskId];
+}
+
+/** Every checklist item of a block is ticked. */
+export function blockDone(log: DayLog | undefined, block: Block, date?: string): boolean {
+  if (!log) return false;
+  if (block.tasks?.length) return block.tasks.every((t) => !!log.done[t.id]);
+  if (block.tradingSession) return sessionStats(log, block.tradingSession, date).complete;
+  if (block.counters) return block.counters.every((c) => !!log.done[c.id]);
+  return !!log.done[block.id];
+}
+
+/** Ticked / total checklist items of one block. */
+export function blockProgress(log: DayLog | undefined, block: Block): Ratio {
+  if (block.tasks?.length) return ratio(block.tasks.filter((t) => !!log?.done[t.id]).length, block.tasks.length);
+  return ratio(blockDone(log, block) ? 1 : 0, 1);
 }
 
 export interface Ratio {
@@ -84,19 +108,26 @@ export interface DayStats extends Ratio {
   byCategory: Record<Category, Ratio>;
 }
 
-export function dayStats(log: DayLog | undefined): DayStats {
+/** Day completion, measured against the schedule that applies to that day. */
+export function dayStats(log: DayLog | undefined, date?: string): DayStats {
+  const sched = scheduleOf(log, date);
+  const done = (t: TaskDef) => (sched.version === 1 ? isTaskDone(log, t.id, date) : !!log?.done[t.id]);
   const byCategory = Object.fromEntries(
     (Object.keys(CATEGORY_META) as Category[]).map((c) => {
-      const tasks = TASKS.filter((t) => t.category === c);
-      return [c, ratio(tasks.filter((t) => isTaskDone(log, t.id)).length, tasks.length)];
+      const tasks = sched.tasks.filter((t) => t.category === c);
+      return [c, ratio(tasks.filter(done).length, tasks.length)];
     }),
   ) as Record<Category, Ratio>;
-  const done = TASKS.filter((t) => isTaskDone(log, t.id)).length;
-  return { ...ratio(done, TASKS.length), byCategory };
+  return { ...ratio(sched.tasks.filter(done).length, sched.tasks.length), byCategory };
 }
 
-export function clientStats(log: DayLog | undefined): Ratio {
-  return ratio(CLIENT_COUNTERS.filter((c) => log?.done[c.id]).length, CLIENT_COUNTERS.length);
+/** Client-acquisition section completion for the day. */
+export function clientStats(log: DayLog | undefined, date?: string): Ratio {
+  const sched = scheduleOf(log, date);
+  if (sched.version === 1) return ratio(sched.counters.filter((c) => log?.done[c.id]).length, sched.counters.length);
+  const ids = new Set(sched.blocks.filter((b) => b.section === 'client').map((b) => b.id));
+  const tasks = sched.tasks.filter((t) => ids.has(t.blockId));
+  return ratio(tasks.filter((t) => log?.done[t.id]).length, tasks.length);
 }
 
 // ─── Streaks ───────────────────────────────────────────────────────────────
