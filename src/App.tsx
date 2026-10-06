@@ -17,6 +17,7 @@ import { ChartPractice } from './pages/ChartPractice';
 import { Backtesting } from './pages/Backtesting';
 import { Simulation } from './pages/Simulation';
 import { TradingJournal } from './pages/TradingJournal';
+import { PracticeLab } from './pages/PracticeLab';
 import { MistakeLab } from './pages/MistakeLab';
 import { StrategyLab } from './pages/StrategyLab';
 import { PlaybookPage } from './pages/Playbook';
@@ -51,6 +52,7 @@ export function App() {
             <Route path="backtesting" element={<Backtesting />} />
             <Route path="simulation" element={<Simulation />} />
             <Route path="trading-journal/*" element={<TradingJournal />} />
+            <Route path="trading/*" element={<PracticeLab />} />
             <Route path="mistakes" element={<MistakeLab />} />
             <Route path="strategy-lab" element={<StrategyLab />} />
             <Route path="playbook" element={<PlaybookPage />} />

@@ -1,0 +1,333 @@
+/* Practice Lab — precision replay chart */
+
+.pc-root {
+  position: relative;
+  width: 100%;
+  min-height: 240px;
+  border-radius: var(--radius, 14px);
+  overflow: hidden;
+  background: radial-gradient(120% 90% at 50% 0%, rgba(236, 228, 214, 0.025), transparent 60%), rgba(11, 11, 13, 0.55);
+  border: 1px solid var(--line, rgba(236, 228, 214, 0.08));
+  isolation: isolate;
+  touch-action: pan-y;
+}
+
+.pc-host {
+  position: absolute;
+  inset: 0;
+}
+
+.pc-root.is-drawing .pc-host,
+.pc-root.is-drawing .pc-host * {
+  cursor: crosshair !important;
+}
+
+/* ── Overlay ─────────────────────────────────────────────── */
+.pc-overlay {
+  position: absolute;
+  left: 0;
+  top: 0;
+  pointer-events: none;
+  overflow: hidden;
+  z-index: 2;
+}
+
+.pc-hit {
+  stroke: transparent;
+  stroke-width: 12;
+  pointer-events: stroke;
+  cursor: pointer;
+}
+
+.pc-shape .pc-line {
+  transition: stroke-width 0.2s ease, stroke-opacity 0.2s ease;
+}
+.pc-shape.is-sel .pc-line {
+  filter: drop-shadow(0 0 4px currentColor);
+}
+.pc-shape.is-preview .pc-line {
+  stroke-opacity: 0.6;
+}
+
+.pc-label {
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  opacity: 0.9;
+}
+
+/* Locked decision levels draw in from the price axis. */
+.pc-level {
+  transform-box: fill-box;
+  transform-origin: right center;
+  animation: pc-level-in 0.8s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+.pc-level .pc-label {
+  animation: pc-fade 0.5s 0.45s ease both;
+}
+@keyframes pc-level-in {
+  from {
+    transform: scaleX(0);
+    opacity: 0.2;
+  }
+  to {
+    transform: scaleX(1);
+    opacity: 1;
+  }
+}
+@keyframes pc-fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 0.9;
+  }
+}
+.pc-overlay.no-motion .pc-level,
+.pc-overlay.no-motion .pc-level .pc-label {
+  animation: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  .pc-level,
+  .pc-level .pc-label {
+    animation: none;
+  }
+}
+
+/* ── Delete chip ─────────────────────────────────────────── */
+.pc-del {
+  position: absolute;
+  z-index: 4;
+  display: grid;
+  place-items: center;
+  width: 20px;
+  height: 20px;
+  border-radius: 999px;
+  border: 1px solid rgba(236, 228, 214, 0.22);
+  background: rgba(20, 19, 23, 0.92);
+  color: var(--text-2);
+  cursor: pointer;
+  transition: color 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+}
+.pc-del:hover {
+  color: var(--bad, #d99c9c);
+  border-color: rgba(217, 156, 156, 0.5);
+}
+.pc-del:active {
+  transform: scale(0.94);
+}
+
+/* ── Toolbar ─────────────────────────────────────────────── */
+.pc-toolbar {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  padding: 3px;
+  border-radius: 999px;
+  background: rgba(20, 19, 23, 0.72);
+  border: 1px solid rgba(236, 228, 214, 0.1);
+  backdrop-filter: blur(14px) saturate(120%);
+  -webkit-backdrop-filter: blur(14px) saturate(120%);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+  max-width: calc(100% - 20px);
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.pc-toolbar::-webkit-scrollbar {
+  display: none;
+}
+.pc-tool-wrap {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+}
+.pc-sep {
+  width: 1px;
+  height: 16px;
+  margin: 0 3px;
+  background: rgba(236, 228, 214, 0.1);
+  flex-shrink: 0;
+}
+
+.pc-tool {
+  position: relative;
+  display: inline-grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 999px;
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--muted, #8f8a82);
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: color 0.25s ease, background 0.25s ease, border-color 0.25s ease, transform 0.15s ease;
+}
+.pc-tool:hover:not(:disabled) {
+  color: var(--text, #ece4d6);
+  background: rgba(255, 255, 255, 0.05);
+}
+.pc-tool:active:not(:disabled) {
+  transform: scale(0.94);
+}
+.pc-tool:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+.pc-tool.on {
+  color: #141317;
+  background: var(--text, #ece4d6);
+  border-color: transparent;
+}
+.pc-tool.on.pc-k-support {
+  background: #d6bd8a;
+}
+.pc-tool.on.pc-k-resistance {
+  background: #c4b9e6;
+}
+.pc-tool.on.pc-k-stop {
+  background: #d99c9c;
+}
+.pc-tool.on.pc-k-target {
+  background: #b9cfa8;
+}
+.pc-tool:focus-visible {
+  outline: 1px solid var(--gold-soft, #e9d8b2);
+  outline-offset: 1px;
+}
+
+.pc-clear.confirm {
+  width: auto;
+  padding: 0 10px;
+  color: var(--bad, #d99c9c);
+  border-color: rgba(217, 156, 156, 0.4);
+}
+.pc-clear-txt {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+/* Tooltips (hover-capable devices only) */
+@media (hover: hover) {
+  .pc-tool[data-tip]::after {
+    content: attr(data-tip);
+    position: absolute;
+    top: calc(100% + 8px);
+    left: 50%;
+    transform: translate(-50%, -3px);
+    white-space: nowrap;
+    padding: 4px 8px;
+    border-radius: 6px;
+    background: rgba(20, 19, 23, 0.95);
+    border: 1px solid rgba(236, 228, 214, 0.14);
+    color: var(--text-2, #cfc6b8);
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.18s ease, transform 0.18s ease;
+  }
+  .pc-tool[data-tip]:hover::after {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+}
+/* the toolbar scrolls horizontally, which would clip tooltips — let them show when it fits */
+@media (min-width: 560px) {
+  .pc-toolbar {
+    overflow: visible;
+  }
+}
+
+/* ── Readout ─────────────────────────────────────────────── */
+.pc-readout {
+  position: absolute;
+  top: 12px;
+  right: 76px;
+  z-index: 3;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 4px 10px;
+  max-width: calc(100% - 420px);
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  color: var(--muted, #8f8a82);
+  pointer-events: none;
+  font-variant-numeric: tabular-nums;
+  text-shadow: 0 1px 6px rgba(11, 11, 13, 0.9);
+}
+.pc-readout span {
+  white-space: nowrap;
+}
+.pc-readout i {
+  font-style: normal;
+  color: var(--dim, #5f5b55);
+  margin-right: 4px;
+}
+.pc-readout b {
+  font-weight: 500;
+}
+.pc-readout .up {
+  color: #e9e2d6;
+}
+.pc-readout .down {
+  color: #a59fb3;
+}
+.pc-ro-time {
+  color: var(--text-2, #cfc6b8);
+  opacity: 0.8;
+}
+
+.pc-hint {
+  position: absolute;
+  left: 50%;
+  bottom: 40px;
+  transform: translateX(-50%);
+  z-index: 4;
+  padding: 5px 12px;
+  border-radius: 999px;
+  background: rgba(20, 19, 23, 0.85);
+  border: 1px solid rgba(236, 228, 214, 0.12);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.06em;
+  color: var(--text-2, #cfc6b8);
+  white-space: nowrap;
+  pointer-events: none;
+  max-width: calc(100% - 24px);
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Below the toolbar on narrow / medium widths */
+@media (max-width: 900px) {
+  .pc-readout {
+    top: 50px;
+    left: 12px;
+    right: 70px;
+    max-width: none;
+    justify-content: flex-start;
+  }
+  .pc-root:not(:has(.pc-toolbar)) .pc-readout {
+    top: 12px;
+  }
+}
+@media (max-width: 480px) {
+  .pc-readout {
+    font-size: 9.5px;
+    gap: 2px 8px;
+  }
+  .pc-tool {
+    width: 26px;
+    height: 26px;
+  }
+}

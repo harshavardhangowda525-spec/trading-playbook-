@@ -1,3 +1,4 @@
+import { PracticeAnalytics } from '../components/practice/PracticeAnalytics';
 import { useId, useMemo, useState, type ReactNode } from 'react';
 import { motion, useReducedMotion } from 'framer-motion';
 import {
@@ -717,6 +718,10 @@ export function Analytics() {
       <p className="an-foot tiny dim">
         Educational analytics from your own records. Backtest and simulation figures are practice results, not real trading performance or financial advice.
       </p>
+      <section style={{ marginTop: 40 }}>
+        <div className="section-title">Practice Lab · skill development</div>
+        <PracticeAnalytics compact />
+      </section>
     </div>
   );
 }
