@@ -112,6 +112,9 @@ export interface JournalTradeEntry {
   // mistakes
   mistakes: MistakeKey[];
   otherMistake: string;
+  // Practice Lab link (entries saved from a replay session)
+  practiceId?: string;
+  processScore?: number | null;
 }
 
 export function blankEntry(date: string): Omit<JournalTradeEntry, 'id' | 'createdAt' | 'updatedAt'> {

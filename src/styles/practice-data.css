@@ -1,0 +1,440 @@
+/* Practice Lab — data import & data source picker */
+
+.pd-label {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.pd-badge-import {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 22px;
+  padding: 0 9px;
+  border-radius: 6px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--gold);
+  border: 1px solid rgba(214, 189, 138, 0.3);
+  background: rgba(214, 189, 138, 0.06);
+  white-space: nowrap;
+}
+
+/* ─── Import modal ─────────────────────────────────────────────────────── */
+
+.pd-import {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+  min-width: 0;
+}
+
+.pd-import-intro {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px 16px;
+}
+.pd-import-intro p {
+  margin: 0;
+  color: var(--text-2);
+  font-size: 13px;
+  line-height: 1.6;
+  max-width: 60ch;
+}
+
+.pd-drop {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  min-height: 170px;
+  padding: 28px 18px;
+  border-radius: var(--radius-lg);
+  border: 1px dashed var(--line-strong);
+  background:
+    radial-gradient(120% 90% at 50% 0%, rgba(196, 185, 230, 0.06), transparent 60%),
+    rgba(0, 0, 0, 0.18);
+  color: var(--text-2);
+  text-align: center;
+  cursor: pointer;
+  transition:
+    border-color 0.3s var(--ease),
+    background-color 0.3s var(--ease),
+    transform 0.3s var(--ease);
+}
+.pd-drop:hover,
+.pd-drop:focus-visible {
+  border-color: rgba(236, 228, 214, 0.35);
+  outline: none;
+}
+.pd-drop.over {
+  border-color: rgba(214, 189, 138, 0.6);
+  background-color: rgba(214, 189, 138, 0.05);
+  transform: translateY(-2px);
+}
+.pd-drop-title {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.24em;
+  color: var(--text);
+}
+.pd-drop-sub {
+  font-size: 12.5px;
+  color: var(--muted);
+}
+.pd-drop svg {
+  color: var(--silver);
+  opacity: 0.8;
+}
+.pd-drop input {
+  display: none;
+}
+
+.pd-formats {
+  font-size: 12px;
+  color: var(--muted);
+  line-height: 1.7;
+}
+.pd-formats code {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text-2);
+}
+
+.pd-report {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  padding: 20px;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.02);
+  min-width: 0;
+}
+.pd-report-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px 14px;
+}
+.pd-file {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+  color: var(--text);
+  font-size: 14px;
+}
+.pd-file span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.pd-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  gap: 16px 18px;
+}
+.pd-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+.pd-stat-value {
+  font-family: var(--font-display);
+  font-weight: 200;
+  font-size: 26px;
+  line-height: 1.1;
+  color: var(--text);
+}
+.pd-stat-value.sm {
+  font-size: 15px;
+  font-weight: 300;
+  line-height: 1.4;
+}
+.pd-stat-value.bad {
+  color: var(--bad);
+}
+.pd-stat-value.warn {
+  color: var(--warn);
+}
+
+.pd-note {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 11px 14px;
+  border-radius: 10px;
+  font-size: 12.5px;
+  line-height: 1.55;
+  color: var(--text-2);
+  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.02);
+}
+.pd-note svg {
+  flex: none;
+  margin-top: 2px;
+  color: var(--muted);
+}
+.pd-note.warn {
+  border-color: rgba(226, 205, 160, 0.25);
+  background: rgba(226, 205, 160, 0.04);
+}
+.pd-note.warn svg {
+  color: var(--warn);
+}
+.pd-note.bad {
+  border-color: rgba(214, 160, 160, 0.28);
+  background: rgba(214, 160, 160, 0.05);
+}
+.pd-note.bad svg {
+  color: var(--bad);
+}
+
+.pd-issues-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border: 0;
+  background: none;
+  padding: 0;
+  cursor: pointer;
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.pd-issues-toggle:hover {
+  color: var(--text);
+}
+.pd-issues-toggle svg {
+  transition: transform 0.3s var(--ease);
+}
+.pd-issues-toggle.open svg {
+  transform: rotate(90deg);
+}
+.pd-issues {
+  list-style: none;
+  margin: 10px 0 0;
+  padding: 0;
+  max-height: 200px;
+  overflow-y: auto;
+  border-top: 1px solid var(--line);
+}
+.pd-issues li {
+  display: flex;
+  gap: 14px;
+  padding: 7px 0;
+  border-bottom: 1px solid var(--line);
+  font-size: 12.5px;
+  color: var(--text-2);
+}
+.pd-issues li span:first-child {
+  flex: none;
+  width: 64px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--muted);
+}
+
+.pd-preview {
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+}
+.pd-preview td,
+.pd-preview th {
+  white-space: nowrap;
+}
+.pd-preview .pd-sep td {
+  text-align: center;
+  color: var(--dim);
+  letter-spacing: 0.3em;
+}
+
+.pd-form {
+  display: grid;
+  grid-template-columns: 1fr 1.4fr;
+  gap: 14px;
+}
+
+.pd-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.pd-saved {
+  font-size: 12.5px;
+  color: var(--good);
+}
+
+.pd-datasets {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.pd-ds {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 13px 16px;
+  border-radius: 12px;
+  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.02);
+  min-width: 0;
+}
+.pd-ds-main {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+.pd-ds-title {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  min-width: 0;
+  color: var(--text);
+  font-size: 14px;
+}
+.pd-ds-title strong {
+  font-weight: 400;
+  letter-spacing: 0.04em;
+}
+.pd-ds-title span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--muted);
+  font-size: 12.5px;
+}
+.pd-ds-meta {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--muted);
+  letter-spacing: 0.04em;
+}
+.pd-ds-actions {
+  display: flex;
+  flex: none;
+  gap: 6px;
+}
+
+/* ─── Source picker ────────────────────────────────────────────────────── */
+
+.pd-picker {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  min-width: 0;
+}
+.pd-picker-head {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.pd-source-line {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 10px;
+  font-size: 12px;
+  color: var(--muted);
+}
+.pd-picker-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 16px 18px;
+  align-items: end;
+}
+.pd-picker-grid .full {
+  grid-column: 1 / -1;
+}
+.pd-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.pd-chips .chip {
+  height: 28px;
+  padding: 0 11px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+}
+.pd-date-row {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+.pd-date-row .input {
+  flex: 1;
+  min-width: 0;
+}
+.pd-range {
+  font-size: 11.5px;
+  color: var(--muted);
+}
+.pd-load {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px 14px;
+}
+.pd-load .btn-primary {
+  min-width: 150px;
+  justify-content: center;
+}
+.pd-spin {
+  animation: pd-spin 0.9s linear infinite;
+}
+@keyframes pd-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .pd-spin {
+    animation: none;
+  }
+}
+
+.pd-unavailable {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+@media (max-width: 640px) {
+  .pd-form,
+  .pd-picker-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .pd-ds {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .pd-report {
+    padding: 16px;
+  }
+  .pd-stat-value {
+    font-size: 22px;
+  }
+}

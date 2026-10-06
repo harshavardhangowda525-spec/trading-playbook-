@@ -1,6 +1,6 @@
-import { useEffect, useState } from 'react';
-import { NavLink, useLocation, useNavigate, useOutlet } from 'react-router-dom';
-import { AnimatePresence, motion } from 'framer-motion';
+import { useEffect } from 'react';
+import { NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom';
+import { motion } from 'framer-motion';
 import { BarChart3, BookMarked, CalendarClock, Home, LineChart, LogOut, NotebookPen, Settings } from 'lucide-react';
 import { useAuth } from '../lib/auth';
 import { useDoc, useNow, useSyncStatus, useToday } from '../lib/hooks';
@@ -15,6 +15,10 @@ interface Section {
   label: string;
   icon: typeof Home;
   pages: { to: string; label: string }[];
+  /** Where the bottom-bar button lands (defaults to the first tab). */
+  home?: string;
+  /** Pages that belong to the section but have no tab of their own. */
+  hidden?: string[];
 }
 
 /** Six command sections; each groups related pages behind a quiet tab row. */
@@ -24,13 +28,15 @@ export const SECTIONS: Section[] = [
     id: 'trading',
     label: 'Trading',
     icon: LineChart,
+    home: '/trading',
     pages: [
-      { to: '/trading-schedule', label: 'Sessions' },
-      { to: '/backtesting', label: 'Backtest' },
-      { to: '/simulation', label: 'Simulation' },
-      { to: '/chart-practice', label: 'Chart Practice' },
-      { to: '/strategy-lab', label: 'Strategy Lab' },
+      { to: '/trading/learn', label: 'Learn' },
+      { to: '/trading', label: 'Practice' },
+      { to: '/trading/replay', label: 'Replay' },
+      { to: '/strategy-lab', label: 'Strategies' },
+      { to: '/trading/history', label: 'History' },
     ],
+    hidden: ['/backtesting', '/simulation', '/chart-practice'],
   },
   {
     id: 'journal',
@@ -61,6 +67,7 @@ export const SECTIONS: Section[] = [
     icon: CalendarClock,
     pages: [
       { to: '/my-day', label: 'My Day' },
+      { to: '/trading-schedule', label: 'Trading Schedule' },
       { to: '/history', label: 'History' },
       { to: '/weekly', label: 'Weekly Review' },
     ],
@@ -79,7 +86,11 @@ export const SECTIONS: Section[] = [
 function sectionFor(path: string): Section {
   if (path === '/') return SECTIONS[0];
   return (
-    SECTIONS.find((s) => s.pages.some((p) => p.to !== '/' && (path === p.to || path.startsWith(p.to + '/')))) ?? SECTIONS[0]
+    SECTIONS.find(
+      (s) =>
+        s.pages.some((p) => p.to !== '/' && (path === p.to || path.startsWith(p.to + '/'))) ||
+        s.hidden?.some((h) => path === h || path.startsWith(h + '/')),
+    ) ?? SECTIONS[0]
   );
 }
 
@@ -109,12 +120,6 @@ function TimerChip() {
   );
 }
 
-/** Keeps the outgoing page rendered during its exit transition. */
-function FrozenOutlet() {
-  const outlet = useOutlet();
-  const [frozen] = useState(outlet);
-  return frozen;
-}
 
 export function Layout() {
   const location = useLocation();
@@ -168,12 +173,10 @@ export function Layout() {
               ))}
             </nav>
           )}
-          <AnimatePresence mode="wait">
-            {/* One transition per top-level page; sub-routes (journal tabs, lessons) animate inside the page. */}
-            <PageFade key={location.pathname.split('/')[1] || 'home'}>
-              <FrozenOutlet />
-            </PageFade>
-          </AnimatePresence>
+          {/* Enter-only transition per top-level page: a new page never waits on the old one's exit. */}
+          <PageFade key={location.pathname.split('/')[1] || 'home'}>
+            <Outlet />
+          </PageFade>
         </main>
       </div>
 
@@ -181,7 +184,7 @@ export function Layout() {
         {SECTIONS.map((s) => {
           const active = s.id === section.id;
           return (
-            <NavLink key={s.id} to={s.pages[0].to} className={active ? 'active' : ''} end>
+            <NavLink key={s.id} to={s.home ?? s.pages[0].to} className={active ? 'active' : ''} end>
               {active && (
                 <motion.span layoutId="nav-pill" className="nav-pill" transition={{ type: 'spring', stiffness: 260, damping: 30 }} />
               )}

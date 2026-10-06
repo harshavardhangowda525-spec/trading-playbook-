@@ -25,6 +25,9 @@ import {
   type JournalTradeEntry,
   type Session,
 } from '../lib/journal';
+import { practiceToEntry } from '../lib/practiceJournal';
+import { SESSIONS_COL, type PracticeSession } from '../lib/practice';
+import { store } from '../lib/store';
 import '../styles/journal.css';
 
 const TABS = [
@@ -54,6 +57,9 @@ export function TradingJournal() {
 
   // Editor state lives in the URL so dashboard / timetable links can open it.
   const editId = params.get('edit');
+  const practiceId = params.get('practice');
+  const { items: practiceSessions } = useCollection<PracticeSession>(SESSIONS_COL);
+  const practiceSession = practiceId ? practiceSessions.find((p) => p.id === practiceId) : undefined;
   const dupId = params.get('duplicate');
   const isNew = params.get('new') === '1';
   const editing = editId ? items.find((e) => e.id === editId) : undefined;
@@ -66,9 +72,10 @@ export function TradingJournal() {
       void _u;
       return { ...rest, date: today };
     }
+    if (practiceSession) return practiceToEntry(practiceSession, null);
     const s = params.get('session');
     return s && SESSION_PARAM[s] ? { session: SESSION_PARAM[s] } : undefined;
-  }, [dupSource, params, today]);
+  }, [dupSource, params, today, practiceSession]);
   const editorOpen = isNew || !!editing || !!dupSource;
   const closeEditor = () => setParams({}, { replace: true });
 
@@ -133,6 +140,7 @@ export function TradingJournal() {
           base={editing ? undefined : base}
           onClose={closeEditor}
           onSaved={(e) => {
+            if (practiceSession) store.put(SESSIONS_COL, practiceSession.id, { ...practiceSession, journalEntryId: e.id, updatedAt: Date.now() });
             setParams({}, { replace: true });
             navigate(`/trading-journal/entry/${e.id}`);
           }}

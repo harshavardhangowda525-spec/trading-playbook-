@@ -97,6 +97,11 @@ export function JournalEntryView({ entry: e }: { entry: JournalTradeEntry }) {
             </Link>
           )}
           <span className="badge dim">Simulation</span>
+          {e.practiceId && (
+            <Link to={`/trading/replay?session=${e.practiceId}`} className="badge">
+              Practice Lab replay{e.processScore != null ? ` · process ${e.processScore}/100` : ''}
+            </Link>
+          )}
         </div>
       </motion.header>
 
