@@ -9,6 +9,7 @@ import { PracticeLearn } from '../components/practice/PracticeLearn';
 import { MistakeHeatmap } from '../components/practice/MistakeHeatmap';
 import { ReplayWorkspace } from '../components/practice/ReplayWorkspace';
 import { MarketsViewer } from '../components/practice/MarketsViewer';
+import { AssistantChat } from '../components/assistant/AssistantChat';
 import { useCollection, useDoc, useNow, useToday } from '../lib/hooks';
 import { useJourneyDay } from '../lib/data';
 import { celebrate } from '../lib/events';
@@ -30,7 +31,7 @@ const fade = (i = 0) => ({
   transition: { duration: 0.6, delay: i * 0.07, ease },
 });
 
-/** TRADING PRACTICE LAB — /trading, /trading/replay, /trading/markets, /trading/history, /trading/learn */
+/** TRADING PRACTICE LAB — /trading, /trading/replay, /trading/markets, /trading/ask, /trading/history, /trading/learn */
 export function PracticeLab() {
   const { pathname } = useLocation();
   const sub = pathname.replace(/^\/trading\/?/, '');
@@ -66,6 +67,10 @@ export function PracticeLab() {
           <PracticeLearn />
         ) : sub === 'markets' ? (
           <MarketsViewer />
+        ) : sub === 'ask' ? (
+          <div className="glass ai-page-wrap">
+            <AssistantChat variant="page" />
+          </div>
         ) : (
           <PracticeHome />
         )}

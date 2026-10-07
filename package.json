@@ -10,6 +10,7 @@
     "typecheck": "tsc -b --noEmit"
   },
   "dependencies": {
+    "@mlc-ai/web-llm": "^0.2.85",
     "@supabase/supabase-js": "^2.117.2",
     "framer-motion": "^14.0.0",
     "lightweight-charts": "^5.2.1",

@@ -74,7 +74,17 @@ export function TradingJournal() {
     }
     if (practiceSession) return practiceToEntry(practiceSession, null);
     const s = params.get('session');
-    return s && SESSION_PARAM[s] ? { session: SESSION_PARAM[s] } : undefined;
+    const fromSession = s && SESSION_PARAM[s] ? { session: SESSION_PARAM[s] } : undefined;
+    // Draft fields suggested by the AI assistant (reviewed in the editor before saving).
+    if (params.get('from') === 'assistant') {
+      const draft: Partial<JournalTradeEntry> = { ...fromSession };
+      for (const k of ['market', 'setup', 'timeframe', 'why', 'learned', 'improve'] as const) {
+        const v = params.get(k);
+        if (v) draft[k] = v;
+      }
+      return draft;
+    }
+    return fromSession;
   }, [dupSource, params, today, practiceSession]);
   const editorOpen = isNew || !!editing || !!dupSource;
   const closeEditor = () => setParams({}, { replace: true });
