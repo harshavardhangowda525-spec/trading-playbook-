@@ -19,6 +19,12 @@ export function loadLessonContent(day: number): Promise<LessonContent | undefine
   return entry ? entry[1]().then((m) => m.CONTENT[day]) : Promise.resolve(undefined);
 }
 
+/** Every lesson's content, keyed by day (loads all four chunks). */
+export async function loadAllLessonContent(): Promise<Chunk> {
+  const parts = await Promise.all(loaders.map(([, load]) => load()));
+  return Object.assign({}, ...parts.map((m) => m.CONTENT));
+}
+
 /** Lesson content for a day; `undefined` while loading, `null` if unavailable. */
 export function useLessonContent(day: number): LessonContent | null | undefined {
   const [state, setState] = useState<{ day: number; content: LessonContent | null } | null>(null);

@@ -9,6 +9,7 @@ import { useEnsureStartDate } from '../lib/data';
 import { C, DEFAULT_TIMER, timerElapsed, type TimerState } from '../lib/domain';
 import { TRADING_SESSIONS } from '../data/schedule';
 import { PageFade } from './ui';
+import { AssistantDock } from './assistant/AssistantDock';
 
 interface Section {
   id: string;
@@ -34,6 +35,7 @@ export const SECTIONS: Section[] = [
       { to: '/trading', label: 'Practice' },
       { to: '/trading/replay', label: 'Replay' },
       { to: '/trading/markets', label: 'Markets' },
+      { to: '/trading/ask', label: 'Ask AI' },
       { to: '/strategy-lab', label: 'Strategies' },
       { to: '/trading/history', label: 'History' },
     ],
@@ -180,6 +182,8 @@ export function Layout() {
           </PageFade>
         </main>
       </div>
+
+      <AssistantDock />
 
       <nav className="bottom-nav" aria-label="Primary">
         {SECTIONS.map((s) => {
