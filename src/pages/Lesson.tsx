@@ -1,8 +1,11 @@
 import { useMemo } from 'react';
 import { Link, Navigate, useNavigate, useParams } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
-import { BookOpen, ChevronLeft, ChevronRight, ExternalLink, Lock, NotebookPen, Sparkles, Undo2, Zap } from 'lucide-react';
+import { BookOpen, ChevronLeft, ChevronRight, ExternalLink, GraduationCap, Lock, NotebookPen, Sparkles, Undo2, Zap } from 'lucide-react';
 import { TOTAL_DAYS, lessonFor, phaseFor } from '../data/curriculum';
+import { lessonVideo, useLessonContent } from '../data/lessons';
+import { LessonGuide } from '../components/learn/LessonGuide';
+import { LessonVideoPanel } from '../components/learn/LessonVideoPanel';
 import { C, emptyJourneyDay, journeyState, type JourneyDay } from '../lib/domain';
 import { useJourney, useJourneyDay } from '../lib/data';
 import { useDoc, useToday } from '../lib/hooks';
@@ -31,6 +34,8 @@ function LessonDay({ day }: { day: number }) {
 
   const lesson = lessonFor(day);
   const phase = phaseFor(day);
+  const content = useLessonContent(day);
+  const video = lessonVideo(day);
   const state = journeyState(day, current, rec);
   const locked = day > current;
 
@@ -91,6 +96,18 @@ function LessonDay({ day }: { day: number }) {
         </motion.div>
 
         <motion.div variants={reveal} initial="hidden" animate="show" custom={1}>
+          <LessonVideoPanel day={day} title={lesson.title} curated={video} query={video?.query ?? `${lesson.title} trading explained for beginners`} />
+        </motion.div>
+
+        {content !== null && (
+          <motion.div variants={reveal} initial="hidden" animate="show" custom={2}>
+            <Panel title={<><GraduationCap size={14} style={{ verticalAlign: '-2px', marginRight: 8 }} />Full lesson</>} sub="Educational only · not financial advice">
+              {content ? <LessonGuide content={content} /> : <p className="small muted" style={{ margin: 0 }}>Loading lesson…</p>}
+            </Panel>
+          </motion.div>
+        )}
+
+        <motion.div variants={reveal} initial="hidden" animate="show" custom={3}>
           <Panel title={<><Zap size={14} style={{ verticalAlign: '-2px', marginRight: 8 }} />Today's 1% improvement</>}>
             {improvements.map((i) => (
               <div key={i.key} className={cx('improve-row', rec.checks[i.key] && 'done')}>
@@ -102,7 +119,7 @@ function LessonDay({ day }: { day: number }) {
           </Panel>
         </motion.div>
 
-        <motion.div variants={reveal} initial="hidden" animate="show" custom={2}>
+        <motion.div variants={reveal} initial="hidden" animate="show" custom={4}>
           <Panel title="Session notes">
             <div className="grid-2">
               <Field label="Notes">

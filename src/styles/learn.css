@@ -618,3 +618,234 @@
 .kind-bars .row {
   font-size: 13px;
 }
+
+/* ─── Full lesson reader ─────────────────────────────────────────────── */
+.lg {
+  display: grid;
+  gap: 26px;
+}
+.lg-section + .lg-section {
+  border-top: 1px solid var(--line);
+  padding-top: 22px;
+}
+.lg-h {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  margin: 0 0 12px;
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: 13px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--gold-soft);
+}
+.lg-body p {
+  margin: 0 0 12px;
+  font-size: 15px;
+  line-height: 1.75;
+  color: var(--text-2);
+}
+.lg-body p:last-child {
+  margin-bottom: 0;
+}
+.lg-steps {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: step;
+  display: grid;
+  gap: 10px;
+}
+.lg-steps li {
+  counter-increment: step;
+  display: grid;
+  grid-template-columns: 28px minmax(0, 1fr);
+  gap: 10px;
+  font-size: 14.5px;
+  line-height: 1.65;
+  color: var(--text-2);
+}
+.lg-steps li::before {
+  content: counter(step);
+  display: grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: 1px solid var(--line-strong);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--gold-soft);
+}
+.lg-example {
+  border: 1px solid var(--line);
+  border-left: 2px solid var(--violet);
+  border-radius: var(--radius);
+  background: rgba(157, 143, 202, 0.05);
+  padding: 14px 16px;
+  display: grid;
+  gap: 6px;
+}
+.lg-example-title {
+  font-family: var(--font-display);
+  font-size: 14px;
+  color: var(--violet-soft);
+  margin-bottom: 4px;
+}
+.lg-example-line {
+  font-family: var(--font-mono);
+  font-size: 12.5px;
+  line-height: 1.6;
+  color: var(--text-2);
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+.lg-mistakes {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 9px;
+}
+.lg-mistakes li {
+  position: relative;
+  padding-left: 18px;
+  font-size: 14.5px;
+  line-height: 1.6;
+  color: var(--text-2);
+}
+.lg-mistakes li::before {
+  content: '×';
+  position: absolute;
+  left: 0;
+  top: 0;
+  color: var(--bad);
+}
+.lg-quiz {
+  display: grid;
+  gap: 8px;
+}
+.lg-q {
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--glass);
+}
+.lg-q.open {
+  border-color: var(--line-strong);
+}
+.lg-q-btn {
+  width: 100%;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  background: none;
+  border: 0;
+  color: var(--text);
+  text-align: left;
+  font: inherit;
+  font-size: 14.5px;
+  cursor: pointer;
+}
+.lg-q-n {
+  font-size: 11px;
+  color: var(--gold-soft);
+}
+.lg-q-reveal {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+  color: var(--muted);
+  white-space: nowrap;
+}
+.lg-q.open .lg-q-reveal svg {
+  transform: rotate(180deg);
+}
+.lg-a {
+  padding: 0 14px 14px 36px;
+  font-size: 14px;
+  line-height: 1.65;
+  color: var(--good);
+}
+
+/* ─── Reference video ────────────────────────────────────────────────── */
+.lv-frame {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  border-radius: var(--radius);
+  overflow: hidden;
+  border: 1px solid var(--line);
+  background: #000;
+}
+.lv-frame iframe,
+.lv-poster {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+.lv-poster {
+  padding: 0;
+  background: #000;
+  cursor: pointer;
+}
+.lv-poster img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.78;
+  transition: opacity 0.3s var(--ease);
+}
+.lv-poster:hover img {
+  opacity: 0.95;
+}
+.lv-play {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  display: grid;
+  place-items: center;
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  color: var(--bg);
+  background: var(--gold-soft);
+  box-shadow: 0 10px 40px -8px rgba(0, 0, 0, 0.8);
+}
+.lv-meta {
+  display: grid;
+  gap: 2px;
+  margin-top: 12px;
+}
+.lv-title {
+  font-size: 14px;
+  color: var(--text);
+}
+.lv-actions {
+  gap: 8px;
+  margin-top: 14px;
+}
+.lv-form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+  margin-top: 12px;
+}
+.lv-form .input {
+  flex: 1 1 220px;
+  min-width: 0;
+}
+.lv-note {
+  margin: 12px 0 0;
+}
+@media (max-width: 560px) {
+  .lg-a {
+    padding-left: 14px;
+  }
+}
