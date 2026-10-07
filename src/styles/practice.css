@@ -613,3 +613,102 @@
     grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   }
 }
+
+/* ─── Markets (TradingView viewer) ──────────────────────────────────── */
+.mv {
+  display: grid;
+  gap: 16px;
+}
+.mv-picker {
+  display: grid;
+  gap: 14px;
+}
+.mv-group {
+  display: grid;
+  gap: 8px;
+}
+.mv-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.mv-chip {
+  height: 30px;
+  padding: 0 12px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: var(--glass);
+  color: var(--text-2);
+  font: inherit;
+  font-size: 13px;
+  cursor: pointer;
+  transition: border-color 0.2s, color 0.2s, background 0.2s;
+}
+.mv-chip:hover {
+  border-color: var(--line-strong);
+  color: var(--text);
+}
+.mv-chip.on {
+  border-color: var(--gold);
+  color: var(--gold-soft);
+  background: rgba(212, 181, 124, 0.08);
+}
+.mv-custom {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.mv-custom .input {
+  flex: 1;
+  min-width: 0;
+}
+.mv-chart-wrap {
+  padding: 14px;
+  display: grid;
+  gap: 12px;
+  min-width: 0;
+}
+.mv-bar {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+}
+.mv-name {
+  font-family: var(--font-display);
+  font-size: 18px;
+}
+.mv-chart {
+  position: relative;
+  height: min(68vh, 640px);
+  min-height: 380px;
+  border-radius: var(--radius);
+  overflow: hidden;
+  border: 1px solid var(--line);
+  background: var(--bg-2);
+}
+.mv-chart .tradingview-widget-container {
+  position: absolute;
+  inset: 0 0 22px;
+}
+.mv-credit {
+  position: absolute;
+  left: 10px;
+  bottom: 3px;
+}
+.mv-credit a {
+  color: inherit;
+}
+.mv-failed {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 20px;
+  text-align: center;
+}
+.mv-foot {
+  margin: 0;
+  line-height: 1.6;
+}

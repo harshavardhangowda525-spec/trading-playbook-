@@ -33,6 +33,7 @@ export const SECTIONS: Section[] = [
       { to: '/trading/learn', label: 'Learn' },
       { to: '/trading', label: 'Practice' },
       { to: '/trading/replay', label: 'Replay' },
+      { to: '/trading/markets', label: 'Markets' },
       { to: '/strategy-lab', label: 'Strategies' },
       { to: '/trading/history', label: 'History' },
     ],
