@@ -3,6 +3,7 @@ import { ExternalLink, Search } from 'lucide-react';
 import { useDoc } from '../../lib/hooks';
 import { C } from '../../lib/domain';
 import { cx } from '../ui';
+import { ETFS } from '../../lib/etf/universe';
 
 // View-only market charts through TradingView's free embeddable chart widget.
 // The data is TradingView's; nothing here is stored, simulated or scored.
@@ -15,33 +16,12 @@ interface MarketDef {
 
 const GROUPS: { title: string; markets: MarketDef[] }[] = [
   {
-    title: 'Global indices',
-    markets: [
-      { symbol: 'FOREXCOM:SPXUSD', label: 'S&P 500', note: 'US 500 index CFD that tracks the S&P 500' },
-      { symbol: 'FOREXCOM:NSXUSD', label: 'Nasdaq 100', note: 'US Tech 100 CFD that tracks the Nasdaq-100' },
-      { symbol: 'FOREXCOM:DJI', label: 'Dow Jones', note: 'US 30 CFD that tracks the Dow Jones Industrial Average' },
-      { symbol: 'FOREXCOM:UKXGBP', label: 'FTSE 100', note: 'UK 100 CFD that tracks the FTSE 100' },
-      { symbol: 'INDEX:NKY', label: 'Nikkei 225' },
-      { symbol: 'XETR:DAX', label: 'DAX' },
-    ],
+    title: 'India · NSE ETFs',
+    markets: ETFS.filter((e) => e.exchange === 'NSE').map((e) => ({ symbol: e.tv, label: e.symbol, note: `${e.name} · tracks ${e.benchmark}` })),
   },
   {
-    title: 'India',
-    markets: [
-      { symbol: 'NSE:NIFTY', label: 'Nifty 50' },
-      { symbol: 'NSE:BANKNIFTY', label: 'Bank Nifty' },
-      { symbol: 'BSE:SENSEX', label: 'Sensex' },
-    ],
-  },
-  {
-    title: 'ETFs',
-    markets: [
-      { symbol: 'AMEX:SPY', label: 'SPY', note: 'SPDR S&P 500 ETF' },
-      { symbol: 'NASDAQ:QQQ', label: 'QQQ', note: 'Invesco QQQ (Nasdaq-100) ETF' },
-      { symbol: 'AMEX:DIA', label: 'DIA', note: 'SPDR Dow Jones Industrial Average ETF' },
-      { symbol: 'AMEX:IWM', label: 'IWM', note: 'iShares Russell 2000 ETF' },
-      { symbol: 'NSE:NIFTYBEES', label: 'NIFTYBEES', note: 'Nippon India Nifty 50 BeES ETF' },
-    ],
+    title: 'US ETFs',
+    markets: ETFS.filter((e) => e.exchange === 'US').map((e) => ({ symbol: e.tv, label: e.symbol, note: `${e.name} · tracks ${e.benchmark}` })),
   },
 ];
 
@@ -58,7 +38,7 @@ interface MarketsPrefs {
   symbol: string;
   interval: string;
 }
-const DEFAULT_PREFS: MarketsPrefs = { id: 'marketsViewer', symbol: 'FOREXCOM:SPXUSD', interval: 'D' };
+const DEFAULT_PREFS: MarketsPrefs = { id: 'marketsViewer', symbol: 'NSE:NIFTYBEES', interval: '5' };
 
 const tvUrl = (symbol: string) => `https://www.tradingview.com/chart/?symbol=${encodeURIComponent(symbol)}`;
 
@@ -101,10 +81,10 @@ export function MarketsViewer() {
           <Search size={14} className="muted" />
           <input
             className="input"
-            placeholder="Any symbol, e.g. NSE:NIFTYIT or AMEX:EFA"
+            placeholder="Another ETF, e.g. NSE:MOM100 or AMEX:EFA"
             value={custom}
             onChange={(e) => setCustom(e.target.value)}
-            aria-label="Chart symbol"
+            aria-label="ETF symbol"
           />
           <button type="submit" className="btn btn-sm" disabled={!custom.trim()}>
             Show
@@ -133,11 +113,7 @@ export function MarketsViewer() {
       </div>
 
       <p className="small muted mv-foot">
-        Real market charts provided by TradingView, view-only and possibly delayed. Use them to study structure, levels and indicators;
-        nothing here places orders, and it is not financial advice. Some exchange data (for example certain NSE/BSE indices) is only
-        licensed on TradingView's own site — if the chart says so, use “Open on TradingView”. For candle-by-candle replay with a scored
-        decision, import that market's history as a CSV in Replay.
-      </p>
+        Real ETF charts provided by TradingView — view-only and possibly delayed (never treat them as a live feed). Use them to study context and price behaviour; nothing here places orders, and it is not financial advice. Some NSE ETF data is only licensed on TradingView’s own site — if the chart says so, use “Open on TradingView”. For backtests and paper trading, import or fetch that ETF’s history. </p>
     </div>
   );
 }

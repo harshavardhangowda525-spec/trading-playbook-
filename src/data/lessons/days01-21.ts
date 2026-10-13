@@ -1,924 +1,931 @@
 import type { LessonContent } from './types';
 
-// Full lesson content for days 1–21 (Foundations, Candlesticks, Support & Resistance).
+// Full lesson content for days 1-21 (ETF Foundations, Reading ETF Charts, Market Context).
 // Educational / simulation content only — not financial advice. All numbers are hypothetical.
 
 export const CONTENT: Record<number, LessonContent> = {
   1: {
     what: [
-      "Day trading means buying and selling a financial instrument (such as a stock) within the same trading session. A 'position' is simply a trade you currently hold. A day trader opens a position and closes it before the market closes, so nothing is held overnight. This is different from investing, where people hold for months or years based on the long-term value of a business.",
-      "Day traders try to profit from short-term price movement — moves that might last minutes or hours. Because those moves are small and noisy, nobody can know for sure what the next candle will do. Instead of predicting, skilled traders think in probabilities: 'In this situation, price has tended to do X more often than Y, so I will risk a small, fixed amount to find out.'",
-      "That makes risk control the core skill. 'Risk' here means the amount of money you could lose on a trade if you are wrong. A trader who is right only 45% of the time can still do well over many trades if the losses are kept small and the wins are allowed to be larger. A trader who is right 70% of the time can still fail if a few losses are huge.",
-      "It is important to be honest about the odds: most beginners who day trade with real money lose money. That is why this 84-day journey is built around education, structure and simulated practice. Nothing here is a recommendation to trade with real money, and no lesson promises profit."
+      "An ETF (exchange-traded fund) is an investment fund that holds a basket of assets — for example the 50 companies in the Nifty 50 index, or physical gold — and divides ownership of that basket into 'units'. The units are listed on a stock exchange such as the NSE (National Stock Exchange of India), so you can buy and sell them during market hours just like a share. One unit gives you a small slice of the whole basket.",
+      "Most ETFs in India are 'passive': they aim to track an index (a rule-based list of securities, such as the Nifty 50) or a commodity price (such as gold) rather than having a manager pick investments. The fund house that runs the ETF is called an AMC (asset management company). It charges an annual fee called the expense ratio, which is taken out of the fund's assets a little each day.",
+      "Day trading means opening and closing a position (a trade you currently hold) within the same trading session, so nothing is held overnight. This curriculum studies day trading using ETFs only — not individual company shares, derivatives, currencies or crypto. ETFs are a sensible learning vehicle because a broad index ETF is diversified and cannot be moved much by one company's news, but they still carry real risk: prices can fall quickly, and costs eat into small intraday moves.",
+      "Be honest about the odds from day one. Most people who day trade with real money lose money. Everything in this journey is educational and simulated — historical replay, backtests and paper trading with virtual money. Nothing here is financial advice, and no lesson promises profit. The goal is understanding and disciplined process, measured in simulation."
     ],
     why: [
-      "Understanding what day trading really is — a repetitive, rules-based process of managing risk under uncertainty — protects you from the most common beginner belief: that success comes from finding a magic prediction method. If you start with the correct mental model, every later lesson (candles, levels, setups, psychology) fits into a framework of 'how do I take small, controlled risks with a repeatable edge?'",
-      "It also sets expectations. Skill-building takes months of deliberate practice in simulation. Treating the first weeks as study time, not money-making time, lets you learn without the pressure that causes bad decisions."
+      "If you do not know what an ETF actually is, you cannot understand why its price moves. A NIFTYBEES chart moves because the 50 Nifty companies move; a GOLDBEES chart moves because gold and the rupee move. Every later lesson — iNAV, tracking, liquidity, costs, setups — builds on the idea that an ETF is a wrapper around a basket.",
+      "It also sets your mental model for trading: a repetitive process of taking small, controlled, simulated risks under uncertainty. Patterns you learn later describe probabilities, never certainties. Starting with that expectation protects you from the belief that some method can predict the next candle."
     ],
     how: [
-      "Write a one-paragraph definition of day trading in your own words in the Trading Journal, including the phrase 'no positions held overnight'.",
-      "List three differences between day trading and long-term investing (time horizon, reason for entering, how risk is managed).",
-      "Open the Trading Practice Lab historical replay, pick any session and simply watch price move for 15 minutes without trading — notice how often direction changes.",
-      "Write down a personal rule in your Playbook: 'All trades during this journey are simulated. No real money until I have a tested plan and a long simulated track record.'",
-      "In the Psychology journal, note why you are interested in trading and what you expect — then reread it at the end of each week.",
-      "Save a short note in the Knowledge Vault: 'Trading is probability plus risk control, not prediction.'"
+      "In the Trading Journal, write a one-paragraph definition of an ETF in your own words, including the words 'basket', 'units' and 'exchange'.",
+      "Open Trading → Markets and view the NIFTYBEES chart, then the Nifty 50 index chart. Do not trade — just notice that the two lines move together.",
+      "Open Trading → Learn and skim the introduction of the ETF Strategy Course so you know the five modules you will meet later (Trend, Breakout, Pullback, Range, Risk).",
+      "Write a first Playbook rule: 'All trades during this journey are simulated. ETFs only. No real money.'",
+      "In the Psychology journal, write why you want to learn ETF day trading and what you expect from it. You will reread this on every review day.",
+      "Ask the AI Coach in Trading → Ask AI to explain the difference between an index and an ETF, then check its answer against this lesson."
     ],
     example: {
-      title: "Hypothetical example: why risk control beats being right",
+      title: "Hypothetical example: what one ETF unit represents",
       lines: [
-        "Hypothetical Trader A: wins 6 of 10 simulated trades, average win $50, average loss $150.",
-        "Trader A result: (6 × $50) − (4 × $150) = $300 − $600 = −$300.",
-        "Hypothetical Trader B: wins 4 of 10 simulated trades, average win $150, average loss $50.",
-        "Trader B result: (4 × $150) − (6 × $50) = $600 − $300 = +$300.",
-        "Lesson: B was 'wrong' more often but controlled losses, so B came out ahead in this example.",
-        "These numbers are invented to show the math; real results vary and can be negative for everyone."
+        "A hypothetical index ETF holds shares of all 50 index companies in index weights, worth ₹50,00,00,000 in total.",
+        "It has 2,00,00,000 units outstanding, so each unit represents ₹50,00,00,000 ÷ 2,00,00,000 = ₹250 of the basket.",
+        "If the basket rises 1% during the day, each unit's underlying value rises to about ₹252.50.",
+        "You buy one unit for roughly ₹250 on the exchange; you never deal with the 50 shares individually.",
+        "The expense ratio (say a hypothetical 0.05% a year) is deducted gradually from the fund, not charged per trade.",
+        "All figures are invented for illustration and do not describe any real ETF."
       ]
     },
     mistakes: [
-      "Treating day trading as a way to get rich quickly, which leads to oversized positions and fast, large losses.",
-      "Focusing on being right instead of on how much is lost when wrong, which lets one bad trade erase many good ones.",
-      "Jumping into real money before practising in simulation, so expensive mistakes happen that could have been free lessons.",
-      "Holding a losing day trade overnight 'hoping it comes back', which turns a planned short-term trade into an unplanned long-term risk.",
-      "Believing any method can predict the next move with certainty, when price action only offers probabilities."
+      "Thinking an ETF is a single company share, which leads to misreading what drives its price.",
+      "Assuming a diversified ETF cannot fall sharply in a day, when a broad market sell-off moves the whole basket.",
+      "Treating ETF day trading as a quick way to make money, which encourages oversized positions and ignores costs.",
+      "Skipping simulation and jumping to real money, turning free learning mistakes into expensive ones.",
+      "Believing a chart pattern can tell you what happens next with certainty, when it only shifts the odds."
     ],
     quiz: [
-      { q: "What makes a trade a day trade?", a: "The position is opened and closed within the same trading session, so nothing is held overnight." },
-      { q: "Why is day trading described as a probability game?", a: "No one can know the next move for certain; traders act on situations that have tended to work more often than not and accept that individual trades will lose." },
-      { q: "Can a trader who is right less than half the time still have positive results?", a: "Yes, if their average winning trade is sufficiently larger than their average losing trade — which is why risk control matters more than being right." }
+      { q: "What does one ETF unit represent?", a: "A small proportional slice of the whole basket of assets the fund holds." },
+      { q: "What is a day trade?", a: "A position opened and closed within the same trading session, with nothing held overnight." },
+      { q: "What is an expense ratio?", a: "The ETF's annual management fee, deducted gradually from the fund's assets rather than charged per trade." }
     ]
   },
 
   2: {
     what: [
-      "A stock (also called a share or equity) is a small piece of ownership in a single company. When you buy one share, you own a tiny fraction of that business. Stock prices move as buyers and sellers change their opinion of what the company is worth, and in the short term also because of news, earnings reports and overall market mood.",
-      "An index is a measurement of a group (a 'basket') of stocks. It is a number, not something you own directly. Examples include the S&P 500 (about 500 large US companies), the NASDAQ-100 (100 large non-financial companies on the Nasdaq exchange) and the NIFTY 50 (50 large companies in India). When people say 'the market is up today', they usually mean a major index is up.",
-      "An ETF (exchange-traded fund) is a fund that holds a collection of assets and trades on an exchange just like a stock. Many ETFs are designed to track an index, so buying one share of an index ETF gives you exposure to the whole basket in a single trade. ETFs exist for indices, sectors (like technology or banks), commodities and more.",
-      "Because indices summarise the broad market, they act like the 'weather'. On a day when the main indices are falling sharply, most individual stocks are pulled down too, even ones with good news. Individual stocks can move independently, but they usually feel the influence of the overall market."
+      "ETF units change hands in two places. The secondary market is the NSE itself, where ordinary traders buy units from and sell units to each other through brokers during market hours. The primary market is where new units are created or existing units are redeemed (cancelled) directly with the AMC. Most traders only ever use the secondary market.",
+      "Creation and redemption happen in large blocks called creation units and are carried out by authorised participants (APs) — large institutions approved by the AMC — and by market makers. To create units, an AP delivers the basket of securities (or cash) to the AMC and receives new ETF units. To redeem, it returns units and gets the basket or cash back. This mechanism lets the supply of units expand or shrink with demand.",
+      "A market maker is a firm, often appointed by the AMC, that continuously posts both a bid (a price it will buy at) and an ask (a price it will sell at) on the exchange. This adds liquidity, meaning there is usually someone to trade with. If the ETF's price drifts far above or below the value of its basket, APs and market makers have an incentive to create or redeem units and trade against the gap (arbitrage), which tends to pull the price back toward fair value.",
+      "The NAV (net asset value) is the value of the fund's holdings per unit, officially calculated at the end of the day. The iNAV (indicative NAV) is an estimate of that value published repeatedly during the session, based on live prices of the underlying basket. Comparing the ETF's traded price with its iNAV tells you whether units are trading at fair value, at a premium (above) or at a discount (below)."
     ],
     why: [
-      "Knowing the difference tells you what you are actually looking at on a chart. A single stock can jump on company-specific news, while an index or index ETF reflects the combined behaviour of many companies and tends to move more smoothly.",
-      "Checking the broad market before looking at a single stock gives context. A buy setup on a stock is working against the tide if the whole market is selling off, and many traders use the index direction as a filter for which side to favour."
+      "Knowing who is on the other side of your trade explains a lot of ETF behaviour. When market makers are active, spreads are tight and the price hugs iNAV. When they step back — at the open, in fast markets or in thinly traded ETFs — spreads widen and the price can drift from fair value, which directly affects your fills in simulation.",
+      "iNAV also gives you a sanity check no single stock offers: you can see roughly what the units are 'worth' right now. Buying well above iNAV means paying extra for nothing."
     ],
     how: [
-      "In the Knowledge Vault, write one-line definitions for stock, index and ETF in your own words.",
-      "In the Trading Practice Lab historical replay, open an index or index-tracking chart and a single stock chart for the same session if available, and compare their direction through the day.",
-      "Note three moments where the stock moved with the index and one where it moved against it.",
-      "Before any simulated trade from now on, add a 'market context' line to your Trading Journal: index trending up, down or sideways.",
-      "Add a Playbook rule draft: 'Check the broad market direction before looking for setups on individual stocks.'",
-      "Look up (in your broker's education pages or the index provider's site) which companies are the largest members of one major index, to understand what drives it."
+      "Open Trading → Markets and place NIFTYBEES and the Nifty 50 index side by side on the same timeframe.",
+      "Note the percentage change of each from the previous close at three times of day; they should be close, not identical.",
+      "Find where your data source or the AMC website publishes iNAV for the ETF, and note how often it updates.",
+      "Write the formula in your Trading Journal: premium/discount % = (traded price - iNAV) ÷ iNAV × 100.",
+      "Ask the AI Coach in Trading → Ask AI to explain creation units in two sentences, then rewrite its answer in your own words.",
+      "Record three observations about how closely the ETF tracked its index today."
     ],
     example: {
-      title: "Hypothetical example: the market pulls a stock along",
+      title: "Hypothetical example: arbitrage pulling price back to iNAV",
       lines: [
-        "Hypothetical index 'IDX' falls from 1,000 to 985 in the first hour (−1.5%).",
-        "Hypothetical stock XYZ had positive news overnight and opened at $50.00.",
-        "Despite the news, XYZ slides to $49.10 during the same hour as buyers step back market-wide.",
-        "When IDX stabilises and bounces to 992, XYZ recovers to $50.40.",
-        "Takeaway: XYZ's own news mattered, but the index mood dominated the first hour.",
-        "All names and prices here are invented for illustration."
+        "Hypothetical ETF iNAV: ₹250.00. A burst of buying pushes the traded price to ₹251.25.",
+        "Premium = (251.25 - 250.00) ÷ 250.00 × 100 = 0.5%.",
+        "A market maker can sell units at ₹251.25 and buy the underlying basket worth ₹250.00.",
+        "It later delivers the basket to the AMC for new units (creation) to cover what it sold.",
+        "That selling pressure tends to pull the price back toward ₹250 — a tendency, not a guarantee.",
+        "All prices are hypothetical and simplified (costs ignored)."
       ]
     },
     mistakes: [
-      "Ignoring the broad market and taking buy trades in individual stocks while the major indices are falling hard, which lowers the odds of follow-through.",
-      "Thinking an index can be bought directly, when in practice people use ETFs, futures or other products that track it.",
-      "Assuming every ETF tracks an index perfectly, when some use leverage or have tracking differences that change their behaviour.",
-      "Trading thinly traded stocks without realising how much more erratic they are than a liquid index ETF.",
-      "Believing good company news guarantees a rising price, when overall market mood can outweigh it on the day."
+      "Assuming you trade with the AMC, when retail traders buy and sell on the exchange with other participants.",
+      "Ignoring iNAV and paying a premium without realising it, which raises your effective entry cost.",
+      "Thinking market makers guarantee a fair price at all times, when they can widen quotes or pause in fast markets.",
+      "Confusing end-of-day NAV with intraday iNAV, which leads to comparing today's price with yesterday's value.",
+      "Expecting the ETF to match its index to the paisa, when costs and timing always create small differences."
     ],
     quiz: [
-      { q: "What is the difference between a stock and an index?", a: "A stock is ownership in one company; an index is a number that measures the combined performance of a basket of stocks." },
-      { q: "What is an ETF?", a: "An exchange-traded fund — a fund holding a basket of assets that trades like a stock, often designed to track an index." },
-      { q: "Why check the index before trading a single stock?", a: "Most stocks are influenced by the overall market, so the index direction provides context for whether a setup is with or against the broad tide." }
+      { q: "Who creates and redeems ETF units in large blocks?", a: "Authorised participants (and market makers) dealing with the AMC in creation units." },
+      { q: "What is iNAV?", a: "An indicative, intraday estimate of the value of the ETF's basket per unit, updated during the session." },
+      { q: "If the traded price is above iNAV, is the ETF at a premium or a discount?", a: "A premium." }
     ]
   },
 
   3: {
     what: [
-      "Every market has two sides at any moment. The bid is the highest price that a buyer is currently willing to pay. The ask (also called the offer) is the lowest price that a seller is currently willing to accept. These are live quotes that change constantly as orders arrive and are cancelled.",
-      "The spread is the difference between them: spread = ask − bid. If the bid is $20.00 and the ask is $20.03, the spread is $0.03. If you buy immediately you generally pay the ask, and if you sell immediately you generally receive the bid. So a round trip (buy then sell straight away with no price change) loses the spread.",
-      "That makes the spread a hidden cost on every trade, separate from any commission. It is easy to overlook because it never appears as a fee line, but it reduces every result.",
-      "Liquidity describes how easily something can be bought or sold without moving the price — usually because there are many buyers and sellers and lots of shares trading. Highly liquid instruments (large-company stocks, major index ETFs) tend to have tight spreads of a cent or two. Illiquid ones (small, thinly traded stocks) can have wide spreads, and the quoted size at each price may be small."
+      "Broad-market index ETFs track a wide index. In India the classic examples are NIFTYBEES (tracking the Nifty 50, India's 50 large companies) and JUNIORBEES (tracking the Nifty Next 50, the next 50 by size). They are usually the most liquid ETFs and move with the overall market mood.",
+      "Sector ETFs track one industry, such as BANKBEES (Nifty Bank), ITBEES (Nifty IT) or PSUBNKBEES (public-sector banks). Thematic ETFs track a theme, such as CPSEETF (central public-sector enterprises). Because they hold fewer, more similar companies, they are less diversified and can move much more than the broad market on sector news.",
+      "Commodity ETFs, such as GOLDBEES and SILVERBEES, hold physical gold or silver (or closely linked instruments) and follow precious-metal prices converted into rupees, not Indian company earnings. International ETFs, such as MON100 (tracking the US Nasdaq-100), hold overseas shares and depend on foreign markets and the exchange rate. Liquid and debt ETFs hold short-term government or money-market instruments and barely move intraday, so they are unsuitable for day trading practice.",
+      "A useful habit: before looking at any ETF chart, ask 'what does it hold, and what moves that?' The answer tells you which news, which hours and which other charts matter. Note that US ETFs such as SPY or QQQ follow the same ideas; this course uses NSE ETFs by default."
     ],
     why: [
-      "Day trades often aim for small moves, so costs matter. A $0.10 spread on a trade targeting a $0.30 move gives away a third of the potential gain before the trade even starts. Understanding the spread helps you pick instruments where your edge is not eaten by costs.",
-      "It also explains why your simulated fill might look slightly 'worse' than the last traded price: you are crossing from one side of the quote to the other."
+      "Different ETF families behave differently intraday. A broad index ETF tends to move smoothly with the market; a sector ETF can swing sharply; a gold ETF may rise on a day the Nifty falls; an international ETF may gap because of moves while India was asleep. Choosing practice ETFs without knowing this leads to confusing results.",
+      "It also helps with risk. Concentrated sector and thematic ETFs can move further and are often less liquid, so position size and spread checks matter even more."
     ],
     how: [
-      "Write the formula spread = ask − bid in the Knowledge Vault, with a note that buying at market usually pays the ask and selling at market usually receives the bid.",
-      "In your Paper-trade/Simulation log, add a column for 'spread at entry' and record it for every simulated trade.",
-      "Compare two instruments in a quote screen or the Trading Practice Lab (where quote data is available): one heavily traded and one lightly traded; note their typical spreads.",
-      "Calculate spread as a percentage of your planned target: spread ÷ target distance. If it is a large fraction, consider skipping that instrument.",
-      "Add a Playbook filter: 'Only practise on liquid instruments with tight spreads relative to my target.'",
-      "Watch how spreads behave in the first minutes after the open versus mid-session, and journal what you see."
+      "List these ETFs in your Trading Journal and label each with its family: NIFTYBEES, JUNIORBEES, BANKBEES, ITBEES, PSUBNKBEES, CPSEETF, GOLDBEES, SILVERBEES, MON100.",
+      "For each, write one line on what drives its price (for example 'BANKBEES — large Indian bank shares').",
+      "In Trading → Markets, view NIFTYBEES, BANKBEES and GOLDBEES on the same day and compare their direction.",
+      "Open Trading → Practice and run the ETF eligibility check on two ETFs from different families; note what it flags.",
+      "Choose one broad index ETF as your main learning instrument for the coming weeks and record it in the Playbook.",
+      "Write a Playbook rule: 'Liquid and debt ETFs are excluded from intraday practice.'"
     ],
     example: {
-      title: "Hypothetical stock XYZ: the cost of the spread",
+      title: "Hypothetical example: same day, three ETF families",
       lines: [
-        "Quote for hypothetical XYZ: bid $20.00 / ask $20.04 → spread $0.04.",
-        "Buy 100 shares at market → filled at the ask, $20.04 (cost $2,004).",
-        "Price does not move. Sell 100 at market → filled at the bid, $20.00 ($2,000).",
-        "Result: −$4 (the spread × 100 shares), before any commission.",
-        "If your target was a $0.20 move, the spread used up 20% of it.",
-        "A wider hypothetical spread of $0.15 would have used up 75% — a much worse deal."
+        "Hypothetical session: the broad market falls 0.8% on weak global cues.",
+        "Hypothetical broad index ETF: -0.8%, moving almost in step with its index.",
+        "Hypothetical bank ETF: -1.6%, because bank shares fell more than the overall market.",
+        "Hypothetical gold ETF: +0.4%, because gold rose overseas and the rupee weakened slightly.",
+        "Lesson: the same 'market day' looked very different depending on what each ETF holds.",
+        "All moves are invented for illustration and are not historical data."
       ]
     },
     mistakes: [
-      "Ignoring the spread when planning targets, so trades that looked profitable on paper barely break even.",
-      "Trading illiquid stocks with wide spreads, where getting in and out costs far more than expected.",
-      "Assuming the last traded price is the price you will get, when market orders fill at the bid or ask instead.",
-      "Not noticing that spreads can widen around the open, close and news events, raising costs at exactly the busiest times.",
-      "Only counting commissions as trading costs and forgetting that the spread is paid on every round trip."
+      "Treating every ETF as 'the market', when sector, gold and international ETFs follow different drivers.",
+      "Practising on a thin thematic ETF first, where wide spreads and erratic candles make lessons hard to read.",
+      "Trying to day trade liquid or debt ETFs, which barely move and offer nothing to learn about intraday price action.",
+      "Ignoring exchange-rate effects on international and gold ETFs, which can move them even when the underlying is flat.",
+      "Assuming a sector ETF is as diversified as a broad index ETF, which understates how far it can move."
     ],
     quiz: [
-      { q: "What are the bid and the ask?", a: "The bid is the highest price buyers are currently willing to pay; the ask is the lowest price sellers are currently willing to accept." },
-      { q: "If the bid is $10.00 and the ask is $10.05, what is the spread?", a: "$0.05 (ask minus bid)." },
-      { q: "How does liquidity affect the spread?", a: "More liquid instruments usually have tighter spreads; illiquid ones tend to have wider spreads that raise trading costs." }
+      { q: "Which ETF family tends to be most liquid and smoothest intraday?", a: "Broad-market index ETFs such as NIFTYBEES." },
+      { q: "What mainly drives a gold ETF's price?", a: "The international gold price and the rupee-dollar exchange rate, not Indian company earnings." },
+      { q: "Why are liquid ETFs unsuitable for day trading practice?", a: "They hold short-term debt instruments and barely move intraday, so there is little price action to study." }
     ]
   },
 
   4: {
     what: [
-      "An order is an instruction to your broker to buy or sell. The two basic types are market orders and limit orders. A market order says 'fill me now at the best available price'. It almost always fills quickly, but you do not control the exact price.",
-      "A limit order says 'fill me only at this price or better'. A buy limit at $30.00 will only buy at $30.00 or lower; a sell limit at $31.00 will only sell at $31.00 or higher. You control the price, but the order may never fill if the market does not reach your price — or only partly fill.",
-      "Slippage is the difference between the price you expected and the price you actually got. It happens most with market orders in fast-moving or thin markets, because the best price can change between the moment you click and the moment the order is filled.",
-      "A stop order sits inactive until a trigger price (the stop price) is reached. Once triggered it becomes a market order (a stop-market) or a limit order (a stop-limit). A stop-loss is a stop order placed to exit a losing trade automatically — for example, a sell stop below your entry on a long trade. Stop-market orders can suffer slippage in fast moves; stop-limit orders can fail to fill if price jumps past the limit."
+      "The NSE regular trading session runs from 09:15 to 15:30 IST (Indian Standard Time), Monday to Friday, except exchange holidays. Before it, a pre-open session from 09:00 to 09:15 collects orders and helps determine an opening price where it applies. After the close there are short post-close sessions, but intraday trading in this course happens only in the 09:15-15:30 window. Always check the exchange's current calendar and timings, because they can change.",
+      "A market order buys or sells immediately at the best available price. It favours speed, but in a thin or fast-moving ETF it can fill worse than the price you saw — this difference is called slippage. A limit order buys or sells only at your chosen price or better. It controls price, but it may not fill at all if the market never reaches your price.",
+      "A stop-loss order (SL) waits until a trigger price trades, then sends an order to exit. A stop-loss limit order then becomes a limit order (controlled price, but may not fill in a fast drop); a stop-loss market order (SL-M) becomes a market order (fills, but at an uncertain price). Which types your broker offers, and for which products, varies — the app's Paper tool supports market and limit entries with stop-loss and take-profit exits.",
+      "Intraday positions (often called MIS or intraday product) must be closed the same day. Brokers typically square off (automatically close) open intraday positions some minutes before 15:30, and charge for doing so. Exchanges also set price bands — limits on how far price can move in a day — and orders outside them are rejected. Rules and cut-off times differ by broker, so in simulation we set our own earlier exit time."
     ],
     why: [
-      "Choosing the right order type decides whether you prioritise speed or price. Using market orders everywhere can quietly add slippage costs; using limit orders everywhere can mean missing exits when you most need them.",
-      "Stop orders are the mechanical backbone of risk control. Knowing how they behave — including their weaknesses in gaps and fast markets — lets you plan realistic worst-case losses."
+      "Order type is part of your risk, not a technical detail. A market order in a thin ETF can cost more than the move you hoped to capture; a limit order you forgot about can leave you out of the trade or in one you no longer want. Knowing the session clock tells you when liquidity is normal and when it is unusual.",
+      "Planning your exit before entering — including a hard 'flat by' time — prevents the most avoidable intraday error: being stuck in a position near the close."
     ],
     how: [
-      "In the Knowledge Vault, create a small table: order type, what it guarantees, what it does not guarantee.",
-      "In the Trading Practice Lab historical replay, place one simulated market entry and one limit entry on the same setup; compare the fill prices.",
-      "On every simulated trade, write the expected price and the actual fill in the Paper-trade/Simulation log to measure your slippage.",
-      "Practise placing a stop-loss at the same time as each simulated entry so it becomes an automatic habit.",
-      "Add a Playbook rule: which order type you use for entries, which for targets, which for stops — and why.",
-      "Replay a fast-moving moment (such as just after the open) and observe how far price moves in a few seconds to understand where slippage comes from."
+      "Write the session timetable in your Playbook: pre-open 09:00-09:15, regular 09:15-15:30 IST, plus your personal 'no new entries after' and 'flat by' times (for example 15:00 and 15:15).",
+      "In Trading → Paper, load a replayed historical session and place a small market buy in a liquid ETF, then note the fill versus the last price.",
+      "Place a limit buy slightly below the current price and watch whether it fills; note how long it waits.",
+      "Attach a stop-loss and a take-profit to a paper position and watch which one triggers first.",
+      "In the Trading Journal, write one sentence for each order type: when you would use it and its main risk.",
+      "Ask the AI Coach in Trading → Ask AI: 'When might a stop-loss limit order fail to fill?' and summarise the answer."
     ],
     example: {
-      title: "Hypothetical stock XYZ: three order types",
+      title: "Hypothetical example: market vs limit in a thin moment",
       lines: [
-        "Hypothetical XYZ quote: bid $30.00 / ask $30.02, moving fast.",
-        "Market buy 100 shares → expected $30.02, filled at $30.05 → slippage $0.03 per share.",
-        "Buy limit at $29.95 → price dips only to $29.97 and rises → order never fills (missed trade).",
-        "After a fill at $30.05, sell stop placed at $29.75 → if price trades at $29.75 it becomes a market order.",
-        "In a sudden drop, that stop might fill at $29.70 → slippage of $0.05 beyond the stop.",
-        "Planned risk: $0.30/share; realistic risk including slippage: about $0.35/share."
+        "Hypothetical ETF quote: best bid ₹99.90 (500 units), best ask ₹100.00 (300 units), next ask ₹100.10.",
+        "A market buy for 600 units fills 300 at ₹100.00 and 300 at ₹100.10 — average ₹100.05.",
+        "Slippage versus the ₹100.00 you saw: ₹0.05 × 600 = ₹30.",
+        "A limit buy at ₹100.00 for 600 units fills 300 now and waits for the rest — which may never fill.",
+        "Neither choice is 'right'; each trades speed against price control.",
+        "All quotes are hypothetical and simplified."
       ]
     },
     mistakes: [
-      "Using market orders in thin or fast markets without expecting slippage, so fills are worse than planned.",
-      "Thinking a stop-loss guarantees the exact exit price, when a stop-market can fill lower in a gap or fast move.",
-      "Using a stop-limit as a stop-loss without realising it may not fill at all if price jumps past the limit.",
-      "Chasing a limit order higher and higher after it fails to fill, which turns a disciplined entry into an impulsive one.",
-      "Entering trades without placing the protective stop at the same time, leaving the position unprotected if attention slips."
+      "Using market orders in thinly traded ETFs, which can create large slippage on entry and exit.",
+      "Leaving forgotten limit orders working, which can open unwanted positions later in the session.",
+      "Not knowing the broker's intraday square-off time, which leads to forced exits at poor prices plus extra charges.",
+      "Placing a stop-loss limit with no gap between trigger and limit, so it fails to fill in a fast move.",
+      "Trading in the first seconds after 09:15 without a plan, when spreads and volatility are often at their highest."
     ],
     quiz: [
-      { q: "What is the main trade-off between market and limit orders?", a: "A market order prioritises getting filled but not the price; a limit order controls the price but may not be filled." },
-      { q: "What is slippage?", a: "The difference between the price you expected and the price you actually received, common in fast or thin markets." },
-      { q: "How does a stop order work?", a: "It stays inactive until a trigger price trades, then becomes a market (or limit) order — commonly used as a stop-loss to exit losing trades." }
+      { q: "What are the NSE regular session hours?", a: "09:15 to 15:30 IST, with a pre-open session from 09:00 to 09:15." },
+      { q: "What is slippage?", a: "The difference between the price you expected and the price you actually got, common with market orders in thin or fast markets." },
+      { q: "What is the main trade-off between a market and a limit order?", a: "A market order gives speed but no price control; a limit order gives price control but may not fill." }
     ]
   },
 
   5: {
     what: [
-      "A candlestick chart shows price as a series of 'candles'. Each candle summarises everything that happened during one fixed period of time — one minute, five minutes, one day and so on. The period is called the timeframe.",
-      "Each candle records four prices, often called OHLC: the Open (first traded price of the period), the High (highest price reached), the Low (lowest price reached) and the Close (last traded price of the period).",
-      "The thick part of the candle is the body. It spans from the open to the close. The thin lines above and below the body are the wicks (also called shadows or tails). The top of the upper wick marks the high; the bottom of the lower wick marks the low.",
-      "Colour shows direction. If the close is above the open, the period went up — usually drawn green or white (bullish). If the close is below the open, the period went down — usually red or black (bearish). Colours vary between platforms, so always check your chart settings."
+      "Liquidity is how easily you can buy or sell without moving the price much. You judge it with volume (how many units traded), traded value (volume × price, in rupees), market depth (the quantities waiting at each price in the order book — NSE shows the best five bid and ask levels) and how consistently market makers quote. Many NSE ETFs are thinly traded, so this check is not optional.",
+      "The spread is the best ask minus the best bid. If you buy at the ask and sell at the bid, you lose the spread on a round trip even if the 'price' never moves. Spread is easiest to compare as a percentage: spread % = (ask - bid) ÷ mid-price × 100, where the mid-price is the average of bid and ask. In liquid ETFs the spread may be one tick (the smallest price step); in thin ETFs it can be many ticks.",
+      "Premium or discount compares the traded price with iNAV. A premium means you are paying more than the basket is estimated to be worth; a discount means less. In liquid broad index ETFs this gap is usually small; in thin, international or restricted ETFs it can be large and can change quickly — for example, international ETFs have at times traded at notable premiums when the creation of new units was restricted.",
+      "These three ideas are linked. Low liquidity usually means wider spreads, and wider spreads make larger premiums and discounts possible. An ETF can look attractive on a chart and still be a poor practice instrument because of its trading quality."
     ],
     why: [
-      "Candles are the language of the chart. Every concept that follows — levels, breakouts, momentum, rejection, setups — is read from candles. A trader who can quickly glance at a candle and know its open, high, low and close can 'read' what buyers and sellers did without needing indicators.",
-      "A line chart only shows closes; a candle shows the whole fight within the period, including attempts that failed, which is far more informative."
+      "For intraday trading, the moves you aim to capture are small. A 0.3% spread plus a 0.3% premium can swallow the whole idea before price moves at all. Checking liquidity first is the cheapest risk control available.",
+      "Thin ETFs also produce misleading charts — sudden spikes on a single small order, long flat periods and gaps — so the patterns you study in later phases are less reliable on them."
     ],
     how: [
-      "Open the Chart Practice candle trainer and complete a set of drills identifying open, high, low and close on single candles.",
-      "Draw one bullish and one bearish candle by hand in your notebook and label O, H, L, C, body and wicks.",
-      "In the Trading Practice Lab replay, pause on 10 random candles and say out loud whether each was bullish or bearish and which wick was longer.",
-      "Check your chart colour settings so you know which colour means up and which means down.",
-      "Write a Knowledge Vault entry: 'Body = open to close; wicks = high and low extremes.'",
-      "Log in your Trading Journal one candle that surprised you and what you think happened inside it."
+      "Open Trading → Practice and run the ETF eligibility check on NIFTYBEES and on one sector or thematic ETF.",
+      "Record for each: typical traded value, a sample bid/ask, spread in rupees and in percent.",
+      "Calculate premium/discount % against iNAV at one moment for each ETF.",
+      "Set personal thresholds in your Playbook, for example 'minimum traded value' and 'maximum spread %', and treat ETFs below them as no-trade.",
+      "In Trading → Markets, look at a thin ETF on a 1-minute chart and note the gaps and spikes compared with NIFTYBEES.",
+      "Write in the Trading Journal which ETFs pass your checks and which do not."
     ],
     example: {
-      title: "Hypothetical 5-minute candle on stock XYZ",
+      title: "Hypothetical example: two ETFs, same chart move, different quality",
       lines: [
-        "Open $40.00 → price first dips to $39.80 (the low).",
-        "Buyers push it up to $40.60 (the high).",
-        "It settles back and the period ends at $40.40 (the close).",
-        "Close $40.40 > Open $40.00 → bullish (green) candle.",
-        "Body spans $40.00 to $40.40; upper wick $40.40 → $40.60; lower wick $40.00 → $39.80.",
-        "All prices are hypothetical, for learning only."
+        "Hypothetical ETF A: bid ₹249.98, ask ₹250.00, mid ₹249.99 — spread ~ 0.008%. iNAV ₹249.97 — premium ~ 0.01%.",
+        "Hypothetical ETF B: bid ₹49.70, ask ₹50.00, mid ₹49.85 — spread ~ 0.6%. iNAV ₹49.60 — premium at the ask ~ 0.8%.",
+        "Buying B at the ask and immediately selling at the bid loses about 0.6% before any move.",
+        "Paying B's ask also means paying roughly 0.8% above the estimated basket value.",
+        "In this example ETF A passes a liquidity check; ETF B does not.",
+        "All quotes are hypothetical, not real market data."
       ]
     },
     mistakes: [
-      "Confusing the body with the full range of the candle, which hides how far price actually travelled.",
-      "Assuming green always means buyers 'won big', when a small green body with long wicks shows a contested period.",
-      "Reading a candle before it has closed, when its final shape can change completely by the end of the period.",
-      "Not checking platform colour settings and misreading up candles as down candles.",
-      "Studying single candles in isolation without considering what came before them."
+      "Judging an ETF only by its chart and ignoring spread, which hides an immediate cost on every round trip.",
+      "Comparing ETFs by unit volume instead of traded value, which overrates low-priced ETFs.",
+      "Buying at a large premium to iNAV, which can disappear and cause a loss even if the underlying index rises.",
+      "Assuming liquidity is constant, when spreads often widen at the open, near the close and during sharp moves.",
+      "Practising strategies on thin ETFs, where erratic candles teach misleading lessons."
     ],
     quiz: [
-      { q: "What four prices does a candle show?", a: "Open, high, low and close (OHLC) for one time period." },
-      { q: "What does the body of a candle represent?", a: "The range between the open and the close." },
-      { q: "How do you know if a candle is bullish?", a: "Its close is above its open; it is usually drawn green or white." }
+      { q: "How do you calculate spread as a percentage?", a: "(ask - bid) ÷ mid-price × 100, where mid-price is the average of bid and ask." },
+      { q: "Why is traded value better than volume for comparing ETFs?", a: "Unit prices vary widely, so rupee value traded is a fairer measure of activity than a count of units." },
+      { q: "What does a discount to iNAV mean?", a: "The ETF is trading below the estimated value of its basket per unit." }
     ]
   },
 
   6: {
     what: [
-      "A timeframe is the length of time each candle represents. On a 1-minute chart every candle is one minute; on a daily chart every candle is one whole trading day. The underlying market is the same — only the zoom level changes.",
-      "Higher timeframes (such as 1-hour or daily) smooth out noise. They show the bigger picture: the overall direction, called the trend, and the important price areas, called key levels. Lower timeframes (1-minute, 5-minute) show the detail inside those bigger candles, which helps with precise entries and exits.",
-      "One daily candle contains many smaller candles. A big green daily candle may have included pullbacks on the 5-minute chart. A pattern that looks dramatic on a 1-minute chart might be a tiny wiggle on the 1-hour chart.",
-      "A practical approach is to pick one primary timeframe (where you look for setups and entries) and one higher timeframe for context. Adding many more timeframes rarely adds clarity — usually it adds conflicting signals and hesitation."
+      "An intraday ETF round trip (one buy plus one sell) pays several charges. Typical components in India are: brokerage (many discount brokers charge the lower of ₹20 or 0.03% per executed order); STT (securities transaction tax) of 0.025% on the sell side for intraday trades in equity ETFs, while gold and liquid ETFs have no STT; an NSE transaction charge of around 0.00297% of turnover; a SEBI fee of ₹10 per crore of turnover; stamp duty of 0.003% on the buy side; and GST at 18% on brokerage plus exchange and SEBI charges.",
+      "These rates change from time to time and differ between brokers. Treat the figures here as illustrative and keep the app's cost model up to date — the cost settings in the Backtest and Paper tools are configurable, and you should set them to match your own assumptions.",
+      "There are also costs that never appear on a contract note. The spread (Day 5) is paid every time you cross it, and slippage (Day 4) adds more in thin or fast markets. Together with charges, these define your break-even move: how far price must move in your favour just to finish at zero.",
+      "Turnover means the total value traded — buy value plus sell value. Percentage charges are computed on turnover, so trading more often or in larger size raises costs proportionally, while flat brokerage hurts small trades most."
     ],
     why: [
-      "Timeframe confusion is one of the most common causes of beginner losses: entering on a 1-minute signal while the 1-hour chart is heading the opposite way, or panicking at normal lower-timeframe noise.",
-      "Using a consistent pair of timeframes makes your analysis repeatable, which is essential for journaling and backtesting — you cannot compare trades fairly if each was judged on a different chart."
+      "Intraday ETF moves are often fractions of a percent. If a round trip costs around 0.1% of position value, a strategy that averages 0.08% per trade before costs is a losing strategy after costs. Many simulated results look good only because costs were left out.",
+      "Knowing your break-even move gives you a simple filter for later lessons: if the realistic move in a setup is not clearly larger than your costs, it is not worth taking — even in simulation."
     ],
     how: [
-      "In the Trading Practice Lab replay, view the same session on daily, 1-hour, 15-minute and 5-minute charts and note how the story changes.",
-      "Choose a primary timeframe (many beginners start with 5-minute) and a context timeframe (such as 1-hour or daily) and write both in your Playbook.",
-      "Before each simulated trade, write one sentence about the context timeframe: trending up, down or sideways, and the nearest key level.",
-      "Mark the previous day's high and low from the daily chart and see how price reacts to them on your primary timeframe.",
-      "In the Chart Practice candle trainer, practise mentally combining several small candles into one larger candle (the first open, the highest high, the lowest low, the last close).",
-      "Journal any trade where the two timeframes disagreed and what happened."
+      "Write the cost stack in your Trading Journal with the rates you will assume, and the date you checked them.",
+      "Price a hypothetical round trip (see the example) by hand: brokerage, STT, exchange charge, SEBI fee, stamp duty, GST, then spread.",
+      "Divide total cost by position value to get cost as a percentage; divide by units to get the break-even move per unit.",
+      "Repeat for a gold ETF (no STT) and for a smaller position, and note how flat brokerage changes the percentage.",
+      "Open the cost settings in Trading → Backtest or Trading → Paper and confirm they match your assumptions.",
+      "Add a Playbook rule: 'Every simulated result is judged after costs.'"
     ],
     example: {
-      title: "Hypothetical stock XYZ on two timeframes",
+      title: "Hypothetical example: costing one intraday round trip",
       lines: [
-        "1-hour chart (context): hypothetical XYZ rising for three days, now near $52, with a prior high at $53.",
-        "5-minute chart (primary): XYZ pulls back from $52.20 to $51.70 in the last 30 minutes.",
-        "On its own, the 5-minute chart looks bearish.",
-        "With context: it is a small pullback inside a larger uptrend, just below a key level at $53.",
-        "Plan: watch for buyers to return on the 5-minute chart, while noting $53 as a likely area of selling.",
-        "Prices are hypothetical; the pullback could also keep going — context improves odds, it does not guarantee outcomes."
+        "Hypothetical equity ETF at ₹250; buy and sell 400 units at about the same price → buy ₹1,00,000, sell ₹1,00,000, turnover ₹2,00,000.",
+        "Brokerage: lower of ₹20 or 0.03% (₹30) → ₹20 × 2 orders = ₹40. STT 0.025% of sell value = ₹25.",
+        "Exchange charge 0.00297% × ₹2,00,000 ~ ₹5.94. SEBI fee ₹10/crore ~ ₹0.20. Stamp duty 0.003% of buy ~ ₹3.",
+        "GST 18% × (₹40 + ₹5.94 + ₹0.20) ~ ₹8.31. Charges total ~ ₹82.45.",
+        "Add a one-tick hypothetical spread of ₹0.05 × 400 = ₹20 → all-in ~ ₹102, about 0.10% of position.",
+        "Break-even move ~ ₹102 ÷ 400 ~ ₹0.26 per unit. For a gold ETF, remove STT (~ ₹77 all-in).",
+        "Rates are illustrative and change over time; set your own in the app's cost model."
       ]
     },
     mistakes: [
-      "Flipping between many timeframes until one confirms what you already want to do, which is bias, not analysis.",
-      "Trading lower-timeframe signals against a clear higher-timeframe trend without a specific reason.",
-      "Changing timeframes in the middle of a trade and then reacting to noise that was never part of the plan.",
-      "Using a very low timeframe (like seconds or 1-minute) as a beginner, where noise and speed overwhelm decision-making.",
-      "Forgetting that a large candle on a higher timeframe contains many back-and-forth moves on a lower one."
+      "Ignoring costs when judging a simulated trade, which makes losing ideas look profitable.",
+      "Forgetting the spread and slippage because they are not on the contract note, which understates true cost.",
+      "Using outdated rates, which quietly distorts every backtest and paper result.",
+      "Taking many tiny trades where flat brokerage is a large share of each position, which inflates cost percentage.",
+      "Assuming all ETFs carry the same charges, when gold and liquid ETFs have no STT and brokers differ."
     ],
     quiz: [
-      { q: "What is a timeframe on a chart?", a: "The length of time each candle represents, such as 1 minute, 5 minutes or 1 day." },
-      { q: "What is the main job of a higher timeframe?", a: "To give context — the overall direction and the key levels — rather than precise entries." },
-      { q: "Why not use five or six timeframes at once?", a: "More timeframes usually create conflicting signals and hesitation; one primary plus one context timeframe is clearer and more repeatable." }
+      { q: "On which side is STT charged for intraday equity ETF trades, and at what illustrative rate?", a: "On the sell side, at 0.025% (gold and liquid ETFs have no STT); rates can change." },
+      { q: "What is a break-even move?", a: "The price move in your favour needed to cover all costs, including charges, spread and slippage, so the trade finishes at zero." },
+      { q: "Which charges is GST applied to?", a: "Brokerage plus exchange transaction charges and the SEBI fee, at 18%." }
     ]
   },
 
   7: {
     what: [
-      "Day trading (Day 1): opening and closing positions within the same session. It is a probability game of small, controlled risks repeated over time — not prediction — and most beginners lose money, which is why this journey uses simulation first.",
-      "Stocks, indices and ETFs (Day 2): a stock is part-ownership of one company; an index measures a basket of stocks; an ETF is a fund that trades like a stock and often tracks an index. The broad market strongly influences most individual charts. Bid, ask and spread (Day 3): the bid is the best buyer price, the ask is the best seller price, and the spread (ask − bid) is a cost paid on every round trip — smaller in liquid instruments.",
-      "Order types (Day 4): market orders favour speed but can slip; limit orders control price but may not fill; stop orders trigger at a set price and are the basis of a stop-loss. Candlesticks (Day 5): each candle shows open, high, low and close for one period — the body runs open to close, the wicks mark the extremes, and colour shows direction.",
-      "Timeframes (Day 6): higher timeframes give context and key levels, lower timeframes give entry detail. Use one primary and one context timeframe. Today's job is to consolidate: re-read your journal, find your weakest concept, rewrite the ideas from memory and keep the best insights in the Knowledge Vault."
+      "What an ETF is (Day 1): a fund holding a basket of assets, divided into units that trade on an exchange. Most Indian ETFs track an index or a commodity price. Day trading means opening and closing within one session, and this journey does it only in simulation. How ETFs trade (Day 2): units trade between participants on the NSE; authorised participants create and redeem units with the AMC in large blocks; market makers quote bids and asks; iNAV estimates fair value intraday.",
+      "ETF families (Day 3): broad index (NIFTYBEES, JUNIORBEES), sector (BANKBEES, ITBEES, PSUBNKBEES), thematic (CPSEETF), commodity (GOLDBEES, SILVERBEES), international (MON100) and liquid/debt. Each moves for different reasons. Session and orders (Day 4): pre-open 09:00-09:15, regular 09:15-15:30 IST; market orders trade speed for price, limit orders the reverse; stop-loss orders trigger at a set price; intraday positions must be closed the same day.",
+      "Liquidity and fair value (Day 5): check traded value, depth and spread before anything else, and compare price with iNAV to see premium or discount. Costs (Day 6): brokerage, STT (not on gold/liquid ETFs), exchange charge, SEBI fee, stamp duty and GST, plus spread and slippage, set a break-even move every trade must beat. Rates change, so keep the app's cost model current.",
+      "Today's job is consolidation: recall each topic from memory, check yourself against the lessons, find your weakest concept, rewrite it and turn the week into a short set of Playbook rules."
     ],
     why: [
-      "Everything in the coming weeks builds on these foundations. If 'spread', 'stop order' or 'close' is still fuzzy, later lessons on breakouts and risk management will be harder. Review is where short-term memory turns into real understanding — the act of recalling and rewriting is what makes knowledge stick."
+      "Everything ahead — charts, setups, backtests, paper trading — assumes you understand what you are trading and what it costs. A shaky idea of iNAV or spread now becomes a confusing backtest result later. Recalling and rewriting is what turns a week of reading into usable understanding."
     ],
     how: [
-      "Re-read every Trading Journal and Psychology journal entry from Days 1–6 without editing them.",
-      "On a blank page, write each of the six topics from memory in two or three sentences — no notes.",
-      "Compare your answers with the lessons; mark any topic where you were vague or wrong as your 'weakest concept'.",
-      "Rewrite the weakest concept in your own words with a hypothetical example, and save it to the Knowledge Vault.",
-      "Do a 10-minute Chart Practice candle trainer session to keep OHLC reading sharp.",
-      "Update your Playbook with the rules drafted this week (simulation only, check market context, liquid instruments, stops placed with entries, fixed timeframes).",
-      "Write one sentence in the Psychology journal on how your expectations of trading have changed since Day 1."
+      "Re-read your Trading Journal and Psychology journal entries from Days 1-6 without editing them.",
+      "On a blank page, explain each of the six topics from memory in two or three sentences.",
+      "Compare with the lessons and mark your weakest concept; rewrite it in your own words with a hypothetical example.",
+      "In Trading → Practice, run the ETF eligibility check on three ETFs from different families and record pass/fail with reasons.",
+      "Recompute the hypothetical round-trip cost from Day 6 without looking, then check your numbers.",
+      "Update the Playbook with this week's rules: simulation only, ETFs only, liquidity thresholds, session times, judge results after costs.",
+      "Answer the AI Coach's quiz on ETF basics in Trading → Ask AI, and note any question you got wrong."
     ],
     example: {
       title: "Hypothetical self-review walkthrough",
       lines: [
-        "Step 1: Recall test → I could explain candles and timeframes, but stumbled on stop-limit vs stop-market.",
-        "Step 2: Weakest concept = stop orders.",
-        "Step 3: Rewrite → 'A stop waits until a trigger price trades. Stop-market then fills at whatever is available; stop-limit only fills at my limit or better and might not fill.'",
-        "Step 4: Hypothetical example → long XYZ at $25.00, sell stop $24.70; a fast drop could fill a stop-market at $24.65.",
-        "Step 5: Saved to Knowledge Vault; Playbook updated: 'Protective stops are stop-market orders in simulation.'",
-        "Step 6: Next week's focus noted: read candles more slowly."
+        "Step 1: Recall test → explained ETF families and session times well; stumbled on premium vs discount.",
+        "Step 2: Weakest concept = premium/discount to iNAV.",
+        "Step 3: Rewrite → 'Premium = price above iNAV, I overpay for the basket; discount = price below iNAV.'",
+        "Step 4: Hypothetical check → price ₹101.00, iNAV ₹100.50 → (101.00 - 100.50) ÷ 100.50 ~ 0.5% premium.",
+        "Step 5: Playbook updated → 'Skip entries when premium/discount exceeds my threshold.'",
+        "Step 6: Next week's focus noted → read charts slowly and always check spread first."
       ]
     },
     mistakes: [
-      "Skipping review days because they feel less exciting, which lets gaps in the basics carry into harder topics.",
-      "Re-reading lessons passively instead of recalling from memory first, which creates an illusion of understanding.",
-      "Only reviewing strong topics because it feels good, while avoiding the weakest one that most needs work.",
-      "Editing old journal entries to look better, which destroys their value as an honest record of your learning.",
-      "Collecting notes without rewriting them in your own words, so they never become usable knowledge."
+      "Skipping the review day because it feels less exciting, which carries gaps into harder topics.",
+      "Re-reading passively instead of recalling first, which creates an illusion of understanding.",
+      "Reviewing only strong topics and avoiding the weakest one that most needs work.",
+      "Editing old journal entries to look better, which destroys their value as an honest record.",
+      "Leaving rules in your head instead of writing them in the Playbook, where they can be followed and checked."
     ],
     quiz: [
-      { q: "Why is the spread considered a cost?", a: "Buying at market usually pays the ask and selling at market usually receives the bid, so an immediate round trip loses the spread." },
-      { q: "Which order type controls price but may not fill?", a: "A limit order." },
-      { q: "What is the recommended timeframe setup from this week?", a: "One primary timeframe for entries plus one higher timeframe for context." }
+      { q: "Name two checks to run before practising on any ETF.", a: "Liquidity (traded value, depth, spread) and premium/discount to iNAV." },
+      { q: "Which ETF family pays no STT on intraday trades?", a: "Gold ETFs (and liquid ETFs)." },
+      { q: "Who keeps an ETF's price close to its basket value, and how?", a: "Market makers and authorised participants, by arbitrage — creating or redeeming units and trading against price gaps from iNAV." }
     ]
   },
 
   8: {
     what: [
-      "The open is the first traded price of a candle's period. The close is the last traded price of that period. On a daily chart, the open is the first trade of the session and the close is the last trade before the market closes; on a 5-minute chart they are the first and last trades of each five-minute window.",
-      "The close is generally treated as the most important price of the candle. While the period is live, price can swing anywhere, but the close is the 'final verdict' — where buyers and sellers ended up agreeing when time ran out. Many traders only act on information from closed candles for this reason.",
-      "Comparing the close with the open gives the direction of the candle. Close above open = bullish period (buyers made net progress). Close below open = bearish period (sellers made net progress). Close equal or nearly equal to open = indecision, often called a doji.",
-      "Where a candle closes relative to an important price area matters a lot. A candle that pokes above a level but closes back below it tells a very different story from one that closes clearly above it."
+      "A candlestick shows four prices for one period: the open (first traded price), the high (highest), the low (lowest) and the close (last traded price) — together called OHLC. The thick part, the body, runs from open to close. The thin lines above and below, the wicks (or shadows), show how far price reached beyond the body. If the close is above the open the candle is usually drawn green (or hollow); if below, red (or filled).",
+      "Candle shape describes the battle inside that period. A long body with small wicks means one side controlled the period. A long upper wick means price went up but was pushed back down before the close; a long lower wick means the reverse. A doji — open and close almost equal — shows indecision in that period.",
+      "ETF candles reflect two things at once: the movement of the underlying basket, and the quality of trading in the ETF's own units. In a liquid ETF like NIFTYBEES, candles look much like the index's. In a thinly traded ETF, a single small order can print a long wick, and some minutes may have no trades at all, leaving flat or missing candles. That is a trading-quality effect, not a signal about the basket.",
+      "A single candle is a clue, not a signal. Its meaning depends on where it appears — near a key level, after a long move, or in the middle of a quiet range — and on volume. Patterns describe what has tended to happen, never what must happen."
     ],
     why: [
-      "Using closes rather than live, unfinished movement filters out a lot of noise and false signals. It forces patience: you wait for the market to 'confirm' before acting. This habit becomes essential later for judging breakouts, breakdowns and false breakouts."
+      "Candles are the alphabet of every chart you will read in this course. If you can describe each candle accurately — who controlled it, where it closed relative to its range — later concepts like VWAP, structure and breakouts become much easier.",
+      "Knowing that thin ETFs print misleading candles protects you from reading meaning into noise caused by one order."
     ],
     how: [
-      "In the Chart Practice candle trainer, run a drill identifying only open and close on 20 candles, ignoring the wicks.",
-      "In the Trading Practice Lab replay, pick a level (such as a previous high) and step candle by candle; note each close relative to that level.",
-      "Watch a candle form live in replay and write down how its colour changed during the period before it closed.",
-      "Add a Playbook rule draft: 'Signals are judged on closed candles of my primary timeframe.'",
-      "In your Trading Journal, record one example where the close told a different story from the intrabar movement.",
-      "Save to the Knowledge Vault: 'Close vs open = direction; close vs level = verdict.'"
+      "Open Trading → Replay with NIFTYBEES on a 5-minute chart and step through 20 candles one at a time.",
+      "For each candle, say aloud: open, high, low, close, body size and which wick is longer.",
+      "Write three candles in words in the Trading Journal, for example 'small green body, long lower wick — sellers pushed down, buyers recovered'.",
+      "In Trading → Markets, compare a 1-minute chart of a thin ETF with NIFTYBEES and note spikes or flat candles.",
+      "Lock a No-Trade decision in Replay for each candle you study — today is reading practice only.",
+      "Ask the AI Coach in Trading → Ask AI to quiz you on describing five candles."
     ],
     example: {
-      title: "Hypothetical stock XYZ: same move, different closes",
+      title: "Hypothetical example: reading one 5-minute candle",
       lines: [
-        "Hypothetical key level: $60.00.",
-        "Candle A: opens $59.70, trades up to $60.30, closes $59.80 → bullish (close > open) but closed back below $60.",
-        "Candle B: opens $59.70, trades up to $60.30, closes $60.25 → bullish and closed above $60.",
-        "Both touched $60.30, but only B shows buyers holding price above the level at the end of the period.",
-        "Waiting for the close avoided treating Candle A as a successful push through $60.",
-        "Numbers are hypothetical; even B's close is evidence, not a guarantee."
+        "Hypothetical ETF candle: open ₹250.10, high ₹250.60, low ₹249.70, close ₹250.45.",
+        "Body: ₹250.10 → ₹250.45 = ₹0.35, green because the close is above the open.",
+        "Upper wick: ₹250.60 - ₹250.45 = ₹0.15. Lower wick: ₹250.10 - ₹249.70 = ₹0.40.",
+        "Story: sellers pushed price down early, buyers took it back and closed near the high.",
+        "Context still needed: where is this candle relative to the day's levels and VWAP?",
+        "All prices are hypothetical."
       ]
     },
     mistakes: [
-      "Acting on a candle before it closes, then watching it reverse and close with the opposite meaning.",
-      "Treating a green candle as strong even when it closed far below its high, which hides that sellers pushed back.",
-      "Ignoring where the close sits relative to key levels and only looking at colour.",
-      "Assuming the daily open always equals the previous close, when gaps between sessions are common.",
-      "Constantly watching live ticks inside a candle, which increases emotional, impulsive decisions."
+      "Reading a single candle as a buy or sell signal without context, which ignores where it formed.",
+      "Treating spikes in thin ETFs as meaningful when they may be one small order hitting an empty order book.",
+      "Confusing a candle's colour with the day's direction, when a green 5-minute candle can occur in a falling day.",
+      "Ignoring wicks and looking only at bodies, which hides where price was rejected.",
+      "Memorising pattern names instead of understanding what the open, high, low and close say about buyers and sellers."
     ],
     quiz: [
-      { q: "What is the close of a candle?", a: "The last traded price of that candle's time period." },
-      { q: "Why is the close often considered the most important price?", a: "It is the final verdict of the period — where price settled when time ran out — so it filters out intrabar noise." },
-      { q: "What does a close below the open tell you?", a: "Sellers made net progress during the period, so it is a bearish candle." }
+      { q: "What four prices does a candlestick show?", a: "Open, high, low and close (OHLC) for one period." },
+      { q: "What does a long upper wick suggest?", a: "Price moved up during the period but was pushed back down before the close." },
+      { q: "Why can thin ETFs show misleading candles?", a: "Few trades and a sparse order book mean single small orders can create spikes or gaps that do not reflect the basket's movement." }
     ]
   },
 
   9: {
     what: [
-      "The high is the highest price traded during a candle's period, and the low is the lowest. Together they form the candle's range (range = high − low). They are shown by the tips of the wicks — or by the body edges if there is no wick.",
-      "The high shows the furthest buyers were able to push price before running out of strength. The low shows the furthest sellers were able to push price. If a candle reaches a high and then closes well below it, buyers tried to go higher and failed. If it reaches a low and then closes well above it, sellers tried and failed.",
-      "Those failed attempts are valuable information. A price that was reached and quickly rejected is a price where the other side showed up. Traders often watch these extremes to see whether they are revisited and what happens there next time.",
-      "When you connect highs and lows across many candles, you get market structure. Higher highs and higher lows describe an uptrend; lower highs and lower lows describe a downtrend; roughly equal highs and lows describe a range (sideways market)."
+      "A timeframe is the period each candle covers. On a 1-minute (1m) chart each candle is one minute; on a 5-minute (5m) chart, five minutes; on a 15-minute (15m) chart, fifteen. The NSE regular session of 375 minutes (09:15-15:30) produces 375 one-minute candles, 75 five-minute candles or 25 fifteen-minute candles.",
+      "Lower timeframes show more detail but also more noise — random wiggles that mean little. Higher timeframes smooth that noise and show the session's structure: the main swings, levels and direction. The same move can look like a trend on 15m and like chaos on 1m.",
+      "A common approach is to use one primary timeframe for decisions and one higher context timeframe for the bigger picture — for example 5m primary with 15m context. The daily chart adds further context: prior day high, low and close. In this app, Trading → Replay and Trading → Backtest support 1m, 5m and 15m data.",
+      "For ETFs, liquidity affects the best timeframe choice. A thin ETF's 1-minute chart may be full of empty or one-trade candles; a 5m or 15m chart of the same ETF is easier to read. Liquid broad index ETFs read cleanly on all three."
     ],
     why: [
-      "Highs and lows are the raw material of almost every technical concept: support and resistance, trends, breakouts and stop placement. A common practice is to place a stop-loss just beyond a recent high or low, because if price moves past that extreme, the idea behind the trade is likely wrong."
+      "Switching timeframes until a chart 'looks right' is a way of finding the answer you wanted rather than the one the chart gives. A fixed pair keeps practice consistent, makes journal entries comparable and makes backtest results meaningful later.",
+      "Timeframe also sets how far your stops and targets will be. On 1m charts moves are small and costs (Day 6) take a bigger share; on 15m charts moves are larger but trades are fewer."
     ],
     how: [
-      "In the Chart Practice candle trainer, drill identifying the high, low and range of single candles.",
-      "In the Trading Practice Lab replay, mark the session's high and low as they form and note when each was set.",
-      "Label the last five swing highs and swing lows (turning points) on your primary timeframe and decide whether structure is up, down or sideways.",
-      "Find two candles where the high or low was clearly rejected (closed far away from it) and journal what happened next.",
-      "Mark the previous day's high and low in replay and watch how price reacts when it reaches them.",
-      "Add to the Knowledge Vault: 'Higher highs + higher lows = uptrend; lower highs + lower lows = downtrend.'"
+      "In Trading → Replay, open one NIFTYBEES session on 1m, then 5m, then 15m, and write one sentence about what each shows.",
+      "Count how many direction changes you see in the first hour on each timeframe.",
+      "Choose a primary and context timeframe (for example 5m and 15m) and record them in the Playbook.",
+      "Compare the typical 1m and 15m candle size against your Day 6 break-even move.",
+      "Repeat the 1m view on a thinner ETF and note any empty or spiky candles.",
+      "Write a Playbook rule: 'Decisions on my primary timeframe; context from the higher one; no switching mid-trade.'"
     ],
     example: {
-      title: "Hypothetical stock XYZ: highs and lows build structure",
+      title: "Hypothetical example: one hour, three timeframes",
       lines: [
-        "Hypothetical swing lows: $10.00 → $10.40 → $10.70 (each higher).",
-        "Hypothetical swing highs: $10.80 → $11.10 → $11.35 (each higher).",
-        "Higher highs + higher lows → uptrend structure.",
-        "Next pullback falls to $10.55, below the last swing low of $10.70 → first lower low.",
-        "Structure warning: the uptrend may be weakening (not certain — it is one data point).",
-        "All prices hypothetical."
+        "Hypothetical ETF, 09:15-10:15: starts at ₹250.00 and ends at ₹251.00 (+0.4%).",
+        "15m view: four candles, three green — a steady upward hour.",
+        "5m view: twelve candles with two small pullbacks — still a clear rise.",
+        "1m view: sixty candles, many red, several ₹0.10 swings — looks choppy.",
+        "Average 1m candle range of ₹0.12 is below a ₹0.26 break-even move; 15m ranges are larger.",
+        "All prices are hypothetical."
       ]
     },
     mistakes: [
-      "Looking only at closes and ignoring highs and lows, which hides where buyers or sellers failed.",
-      "Labelling every small wiggle as a swing high or low, which makes structure look random and confusing.",
-      "Placing stops exactly at an obvious high or low instead of with some room beyond it, where normal noise can trigger them.",
-      "Declaring a trend change from a single lower low or higher high without further confirmation.",
-      "Forgetting that the previous day's high and low are levels many other traders are watching."
+      "Hopping between timeframes until one supports your idea, which is confirmation bias in action.",
+      "Trading 1m charts of thin ETFs, where noise and gaps dominate.",
+      "Ignoring the higher timeframe and taking trades straight into a level visible on 15m or daily charts.",
+      "Using a timeframe where typical moves are smaller than your costs, which makes profitable trades nearly impossible.",
+      "Changing your timeframe in the middle of a trade to justify holding a loser."
     ],
     quiz: [
-      { q: "What does a candle's high represent?", a: "The furthest buyers were able to push price during that period." },
-      { q: "What do higher highs and higher lows indicate?", a: "An uptrend structure." },
-      { q: "Why do failed extremes matter?", a: "A high or low that was reached and rejected shows where the other side stepped in, which can matter when price returns there." }
+      { q: "How many 5-minute candles are in a full NSE regular session?", a: "75 (375 minutes ÷ 5)." },
+      { q: "What does a higher context timeframe provide?", a: "The bigger picture — main swings, levels and direction — with less noise." },
+      { q: "Why might a thin ETF be easier to read on 5m or 15m than on 1m?", a: "Its 1-minute chart can have empty or single-trade candles; longer candles combine more trades and reduce noise." }
     ]
   },
 
   10: {
     what: [
-      "A candle has two parts: the body (open to close) and the wicks (from the body to the high and low). The relationship between them tells the story of the period.",
-      "A large body with small wicks means one side controlled most of the period — price moved steadily in one direction and closed near the extreme. A large green body means buyers were in control; a large red body means sellers were.",
-      "A long wick means price travelled to an extreme but was pushed back before the close. A long upper wick shows prices higher up were rejected (sellers stepped in); a long lower wick shows prices lower down were rejected (buyers stepped in).",
-      "A small body with wicks on both sides means price moved up and down but ended near where it started — indecision. Neither side won the period. A very small body with wicks is often called a doji or spinning top. The body-to-wick ratio (how big the body is compared to the full range) is a quick way to summarise control versus rejection."
+      "Volume is the number of ETF units traded in a period, usually shown as bars under the price chart. Traded value (or turnover) is volume multiplied by price, measured in rupees. Because ETF unit prices range from a few rupees to thousands, traded value is the fairer way to compare activity between ETFs: a million units of a ₹10 ETF is less activity than 100,000 units of a ₹250 ETF.",
+      "Volume shows participation. A price move on rising volume suggests many participants are involved; the same move on very low volume may be one or two orders and is less trustworthy. Relative volume compares current volume with what is normal for that time of day, since volume is naturally higher near the open and the close.",
+      "ETF volume has a twist: much of it can come from market makers and arbitrage rather than from directional traders. A spike in volume can reflect creation/redemption activity or a large block, not a change of opinion. And the volume of the ETF is not the same as the volume of its index's shares — the index's underlying market can be very active while the ETF itself is quiet.",
+      "Volume is also part of your liquidity check from Day 5: an ETF with tiny daily traded value can be difficult to enter and exit at fair prices regardless of what the chart shows."
     ],
     why: [
-      "Reading body and wicks lets you understand who was in control without any indicators. It helps you judge whether a move is strong (big bodies), stalling (shrinking bodies, growing wicks) or being rejected (long wicks at a level). This becomes the basis of momentum and rejection candles later in the week."
+      "Volume and traded value help you separate meaningful moves from noise and decide which ETFs are worth studying at all. Later strategies — breakouts in particular — use volume confirmation, so learning to read it now saves confusion later.",
+      "It also keeps you realistic: if your simulated position would be a large share of a typical minute's traded value, real-world fills would likely be worse than the simulation assumes."
     ],
     how: [
-      "In the Chart Practice candle trainer, classify 20 candles as 'control', 'rejection' or 'indecision'.",
-      "Calculate body-to-range ratio for five candles: |close − open| ÷ (high − low). Above roughly 0.7 suggests control; below roughly 0.3 suggests indecision or rejection (these cut-offs are rough guides, not rules).",
-      "In the Trading Practice Lab replay, find a move where bodies shrank and wicks grew before a reversal and journal it.",
-      "Note where long wicks appear — at prior highs/lows, round numbers or nowhere special.",
-      "Add a Knowledge Vault entry with a small sketch of each type: big body, long upper wick, long lower wick, doji.",
-      "Write in your Trading Journal one candle you misread today and what you now think it meant."
+      "In Trading → Markets, view volume bars for NIFTYBEES, BANKBEES, GOLDBEES and one thin ETF on the same session.",
+      "Estimate the session's traded value for each (volume × approximate price) and rank them.",
+      "In Trading → Replay, step through a session and mark every candle where volume is at least double the recent average.",
+      "For each marked candle, note whether price moved strongly or barely moved.",
+      "Compare your planned simulated position size with a typical 5-minute traded value for that ETF.",
+      "Record the most and least active ETF in your Trading Journal, with traded value figures."
     ],
     example: {
-      title: "Hypothetical candles on stock XYZ",
+      title: "Hypothetical example: volume vs traded value",
       lines: [
-        "Candle 1: O $15.00 H $15.85 L $14.95 C $15.80 → body $0.80 of $0.90 range (~0.89) → buyers in control.",
-        "Candle 2: O $15.80 H $16.40 L $15.75 C $15.90 → upper wick $0.50 → prices near $16.40 rejected.",
-        "Candle 3: O $15.90 H $16.10 L $15.70 C $15.92 → body $0.02 of $0.40 range → indecision.",
-        "Story: strong buying, then rejection higher up, then neither side in control.",
-        "This sequence can precede a pause or a reversal — but it can also resolve upward. It is a clue, not a certainty.",
-        "All prices are hypothetical."
+        "Hypothetical ETF X: price ₹10, 20,00,000 units traded → traded value ₹2,00,00,000 (₹2 crore).",
+        "Hypothetical ETF Y: price ₹250, 2,00,000 units traded → traded value ₹5,00,00,000 (₹5 crore).",
+        "By volume X looks ten times busier; by traded value Y is 2.5 times more active.",
+        "In ETF Y, a 5-minute candle rising ₹0.80 on triple normal volume shows broad participation.",
+        "A similar rise on one-tenth normal volume might be a single order — less reliable.",
+        "All figures are hypothetical."
       ]
     },
     mistakes: [
-      "Judging candles only by colour, which ignores whether the body was strong or the wicks showed rejection.",
-      "Treating every long wick as a reversal signal, even when it appears in the middle of a range with no meaningful level nearby.",
-      "Comparing candle sizes across different timeframes or instruments as if they were equivalent.",
-      "Reading a single indecision candle as a prediction rather than as a pause that could resolve either way.",
-      "Forgetting that wicks on a candle that has not closed yet can still disappear or grow."
+      "Comparing ETFs by unit volume, which overstates the activity of low-priced ETFs.",
+      "Treating every volume spike as directional conviction, when ETF volume can come from arbitrage or block trades.",
+      "Ignoring time-of-day effects and calling normal opening volume 'unusual'.",
+      "Assuming a busy index means a busy ETF, when the ETF's own units may trade thinly.",
+      "Sizing a simulated position larger than the ETF realistically trades, which makes paper fills unrealistic."
     ],
     quiz: [
-      { q: "What does a large body with small wicks suggest?", a: "One side controlled most of the period and price closed near the extreme." },
-      { q: "What does a long upper wick indicate?", a: "Price traded higher but was pushed back down before the close — those higher prices were rejected." },
-      { q: "What does a small body with wicks on both sides show?", a: "Indecision — price moved both ways but ended close to where it opened." }
+      { q: "How is traded value calculated?", a: "Volume (units traded) × price, giving a rupee value." },
+      { q: "Why can ETF volume spikes be misleading?", a: "They may come from market makers, arbitrage or block trades rather than directional buying or selling." },
+      { q: "What is relative volume?", a: "Current volume compared with the normal volume for that time of day." }
     ]
   },
 
   11: {
     what: [
-      "A bullish candle is one that closes above its open: buyers made net progress during the period. On most charts it is drawn green or white.",
-      "Not all bullish candles are equally strong. A strong bullish candle closes near its high and has a small upper wick, meaning there was little selling pressure at the end of the period — buyers held their gains into the close. A bullish candle with a long upper wick closed well below its high, so sellers pushed back even though the candle is still green.",
-      "A small lower wick on a strong bullish candle means the price barely dipped below the open; a long lower wick means sellers pushed price down first and buyers then recovered it.",
-      "Context — where the candle appears — gives it meaning. A strong bullish candle at a support area (a price zone where declines have stopped before) suggests buyers are defending that area. The same candle in the middle of nowhere, far from any level, carries much less information."
+      "VWAP (volume-weighted average price) is the average price at which an ETF has traded during the session so far, weighted by how many units traded at each price. For each candle, a typical price is often taken as (high + low + close) ÷ 3; VWAP = the running sum of (typical price × volume) ÷ the running sum of volume. It starts fresh at the open each day.",
+      "Because it is weighted by volume, VWAP reflects where most of the session's business has been done. When price is above VWAP, the average buyer today is in profit and buyers have broadly had the upper hand so far; when price is below VWAP, the reverse. Many institutions use VWAP as a benchmark for execution quality, which is one reason intraday traders watch it.",
+      "VWAP often acts as a reference level: price may pull back toward it and react, or cross it repeatedly on indecisive days. A session where price stays on one side of VWAP for hours is often trending; one where price crosses VWAP again and again is often ranging or choppy. These are tendencies, not rules.",
+      "VWAP is not the same as iNAV. iNAV estimates the basket's value right now; VWAP is a history of where the ETF's units have traded today. Early in the session VWAP is based on few trades and moves a lot; later it becomes steadier."
     ],
     why: [
-      "Bullish candles are the building blocks of buy setups. Learning to separate strong bullish candles from weak ones, and meaningful locations from random ones, helps you avoid buying into exhaustion and focus on evidence of genuine buying interest. Remember: even a strong candle at a good location only improves the odds; it does not guarantee the next candle goes up."
+      "VWAP gives you a single, objective line to judge the session: who has been in control, whether price is stretched far from the day's average, and whether conditions look trending or choppy. It reappears in the pullback and trend strategies later.",
+      "It is also a reality check on fills: buying far above VWAP means paying more than most participants did today."
     ],
     how: [
-      "In the Chart Practice candle trainer, sort 20 green candles into 'strong' (closes near the high) and 'weak' (long upper wick).",
-      "Use a simple test: where did the close land within the range? Close in the top quarter of the range = strong; below the middle = weak.",
-      "In the Trading Practice Lab replay, find three strong bullish candles at prior lows or support and three in the middle of a range; journal what followed each.",
-      "In your Backtesting journal, start a tally: strong bullish candle at support — next 3 candles up, down or sideways.",
-      "Draft a Playbook note: 'A bullish candle only counts as a signal if it appears at a level I marked beforehand.'",
-      "Save your best example screenshots or notes to the Knowledge Vault."
+      "In Trading → Replay, open a NIFTYBEES 5-minute session with VWAP shown.",
+      "Step through candle by candle and record the time of each VWAP cross.",
+      "At 10:15, 12:00 and 14:30, note whether price is above or below VWAP and by how much in percent.",
+      "Calculate VWAP by hand for the first three candles of a hypothetical session (see example) to understand the formula.",
+      "Classify the session: 'held one side of VWAP' or 'crossed often'.",
+      "Write the number of VWAP crosses and your classification in the Trading Journal."
     ],
     example: {
-      title: "Hypothetical stock XYZ: strong vs weak bullish candles",
+      title: "Hypothetical example: VWAP over three candles",
       lines: [
-        "Hypothetical support zone: $24.80–$25.00 (price bounced there twice earlier).",
-        "Candle A at support: O $24.90 H $25.45 L $24.85 C $25.40 → close in top 10% of range → strong.",
-        "Candle B mid-range: O $25.60 H $26.10 L $25.55 C $25.70 → long upper wick → weak, sellers pushed back.",
-        "Candle A combines strength + location → more meaningful evidence of buyers.",
-        "Candle B is green but tells you sellers are active higher up.",
-        "All values hypothetical; outcomes after either candle are not certain."
+        "Candle 1: typical price ₹250.00, volume 10,000 → price × volume ₹25,00,000.",
+        "Candle 2: typical price ₹250.50, volume 5,000 → ₹12,52,500.",
+        "Candle 3: typical price ₹251.00, volume 5,000 → ₹12,55,000.",
+        "VWAP = (₹25,00,000 + ₹12,52,500 + ₹12,55,000) ÷ 20,000 = ₹250.375.",
+        "The simple average would be ₹250.50; VWAP is lower because more volume traded at ₹250.",
+        "All figures are hypothetical."
       ]
     },
     mistakes: [
-      "Treating every green candle as a buy signal regardless of strength or location.",
-      "Ignoring a long upper wick on a green candle, which can signal selling pressure despite the colour.",
-      "Buying after several large bullish candles in a row far from support, which often means chasing an extended move.",
-      "Forgetting to check the broader market and higher timeframe, where a bullish candle may be fighting a downtrend.",
-      "Expecting a strong bullish candle to always be followed by more upside, when it is only a probability."
+      "Treating VWAP as a guaranteed support or resistance line, when price can cut through it easily.",
+      "Giving early-session VWAP the same weight as later VWAP, when it is based on few trades and unstable.",
+      "Confusing VWAP with iNAV, which mixes up 'where units have traded' with 'what the basket is worth'.",
+      "Carrying yesterday's VWAP into today, when standard VWAP resets each session.",
+      "Using VWAP on a very thin ETF, where a few trades dominate the calculation."
     ],
     quiz: [
-      { q: "What defines a bullish candle?", a: "Its close is above its open." },
-      { q: "What does a small upper wick on a bullish candle suggest?", a: "Little selling pressure at the end of the period — it closed near its high." },
-      { q: "Why does location matter for a bullish candle?", a: "At support it suggests buyers defending a known area; in the middle of nowhere it carries much less meaning." }
+      { q: "What does price above VWAP suggest?", a: "Buyers have broadly been in control so far today, and the average buyer is in profit." },
+      { q: "When does standard VWAP reset?", a: "At the start of every trading session." },
+      { q: "How does VWAP differ from iNAV?", a: "VWAP is the volume-weighted average of today's traded prices; iNAV is an estimate of the basket's current value per unit." }
     ]
   },
 
   12: {
     what: [
-      "A bearish candle is one that closes below its open: sellers made net progress during the period. On most charts it is drawn red or black.",
-      "A strong bearish candle closes near its low and has a small lower wick, meaning there was little buying pressure at the end of the period — sellers kept control into the close. A bearish candle with a long lower wick closed well above its low, showing buyers pushed back even though the candle is red.",
-      "Bearish candles are the mirror image of bullish candles: everything you learned about strength (where the close sits in the range) and wicks applies in reverse.",
-      "Location again gives the candle meaning. Resistance is a price area where rallies have stalled before. A strong bearish candle at resistance is meaningful evidence that sellers are active there. A bearish candle far from any level tells you much less."
+      "The opening range is the high and low of the first part of the session — commonly the first 15 or 30 minutes after 09:15. It captures the market's first reaction to overnight news and the pre-open. Later in the day, price often returns to or reacts around the opening range high and low, and a move beyond them is a reference point several strategies (such as opening-range breakouts in Phase 6) use.",
+      "The session tends to pass through phases. The open (roughly 09:15-10:00) is often the most volatile, with wider spreads in some ETFs while market makers settle quotes. Mid-morning can bring the day's clearest directional moves. Midday (roughly 11:30-13:30) is often quieter, with lower volume and more choppy, overlapping candles. The final part (roughly 14:30-15:30) can pick up again as participants close positions; intraday positions are squared off before the close.",
+      "These phases are tendencies seen across many sessions, not a timetable. News, global markets and event days can change the pattern completely. The closing price on the NSE is calculated from trading in the last part of the session, not simply the very last trade, so the final minutes can look different from the 'official' close.",
+      "For ETFs, session phases also affect trading quality. Spreads may be wider in the first minutes and in thin ETFs during midday, which raises costs exactly when price action is least clear."
     ],
     why: [
-      "Recognising strong bearish candles helps in two ways: it highlights possible short (sell-first) setups in simulation, and, just as importantly, it warns you not to buy into strong selling. Many beginners only look for reasons to buy; reading bearish strength keeps you out of trades that are fighting sellers."
+      "Knowing the opening range gives you two objective levels for the rest of the day. Knowing the session phases tells you when to expect clean movement and when to expect noise — which helps you decide when not to trade at all.",
+      "Many beginner losses come from trading the first frantic minutes or forcing trades in a dead midday market. A time-of-day plan prevents both."
     ],
     how: [
-      "In the Chart Practice candle trainer, sort 20 red candles into 'strong' (closes near the low) and 'weak' (long lower wick).",
-      "Apply the close-location test: close in the bottom quarter of the range = strong bearish; above the middle = weak.",
-      "In the Trading Practice Lab replay, find three strong bearish candles at prior highs or resistance and journal what followed.",
-      "Add a column to your Backtesting journal: strong bearish candle at resistance — next 3 candles up, down or sideways.",
-      "Before any simulated buy, check whether the last few candles show strong bearish closes; if so, note it in the Trading Journal as a caution.",
-      "Write a Knowledge Vault entry comparing a strong bullish and a strong bearish candle side by side."
+      "In Trading → Replay, open a 5-minute session and mark the 15-minute opening range (the high and low of the first three candles).",
+      "Step forward and record each time price returns to or breaks the opening range high or low.",
+      "Split the session into open, mid-morning, midday and close, and write one line on each phase's behaviour.",
+      "Note average candle size and volume in each phase.",
+      "Repeat on two more sessions and look for what was similar and what was different.",
+      "Add a Playbook draft rule: 'No entries in the first 5 minutes; extra caution midday; no new entries after my cut-off time.'"
     ],
     example: {
-      title: "Hypothetical stock XYZ: bearish candle at resistance",
+      title: "Hypothetical example: opening range in a replayed session",
       lines: [
-        "Hypothetical resistance zone: $48.00–$48.20 (rallies stalled there twice).",
-        "Price rallies into $48.10.",
-        "Candle: O $48.05 H $48.15 L $47.40 C $47.45 → close in bottom 7% of range → strong bearish.",
-        "Small lower wick ($0.05) → little buying pressure into the close.",
-        "Reading: sellers active at a known level; a simulated buyer should be cautious here.",
-        "Values hypothetical; price could still recover — this improves odds, it is not a certainty."
+        "Hypothetical ETF, 09:15-09:30: high ₹251.20, low ₹249.80 → opening range ₹1.40 wide.",
+        "10:05: price breaks above ₹251.20 on rising volume and reaches ₹252.10 by 11:00.",
+        "11:30-13:30: price drifts in a ₹0.40 band between ₹251.60 and ₹252.00 on low volume.",
+        "14:45: activity picks up; price slips back to ₹251.40 into the close.",
+        "Takeaway: one session's phases — another session could look entirely different.",
+        "All prices are hypothetical."
       ]
     },
     mistakes: [
-      "Treating every red candle as a reason to sell, regardless of strength or location.",
-      "Missing a long lower wick on a red candle, which can show buyers stepping in.",
-      "Only studying bullish setups and ignoring bearish evidence that should keep you out of buys.",
-      "Selling after a long series of large red candles far from resistance, which often means chasing an exhausted move.",
-      "Assuming short selling works exactly like buying, without learning its extra risks — practise only in simulation."
+      "Trading the first minutes after 09:15 without a plan, when spreads and volatility are often highest.",
+      "Treating session phases as fixed rules, when news and global markets can override them.",
+      "Forcing trades in quiet midday sessions, where small moves rarely cover costs.",
+      "Using a different opening range length every day, which makes observations impossible to compare.",
+      "Holding trades into the broker's square-off window, which risks forced exits at poor prices."
     ],
     quiz: [
-      { q: "What defines a bearish candle?", a: "Its close is below its open." },
-      { q: "What makes a bearish candle strong?", a: "It closes near its low with a small lower wick, showing little buying pressure into the close." },
-      { q: "Why is a bearish candle at resistance meaningful?", a: "It shows sellers active at a price area where rallies have already stalled, adding evidence of seller interest." }
+      { q: "What is the opening range?", a: "The high and low of the first part of the session, commonly the first 15 or 30 minutes after 09:15." },
+      { q: "Which session phase is often quietest?", a: "Midday, roughly 11:30-13:30, though this is a tendency, not a rule." },
+      { q: "Why can the opening minutes be costly for ETF traders?", a: "Spreads can be wider and volatility higher while market makers settle their quotes." }
     ]
   },
 
   13: {
     what: [
-      "Momentum candles have large bodies and small wicks. They show urgency: one side was so dominant that price moved steadily and closed near the extreme. Momentum candles often appear at the start of new moves or when price pushes through an important level.",
-      "Rejection candles have a long wick into a price level and a relatively small body. They show that a price was tested and refused. Common names include the pin bar (any candle with one very long wick), the hammer (long lower wick, small body near the top, appearing after a decline) and the shooting star (long upper wick, small body near the bottom, appearing after a rise).",
-      "A hammer suggests sellers pushed price lower but buyers rejected those prices and pushed it back up. A shooting star suggests buyers pushed price higher but sellers rejected those prices. In both cases, the length of the wick and the level it touched are what matter most.",
-      "Neither type is a guaranteed signal. Momentum can fade right after a big candle, and rejection candles can be followed by price breaking through anyway. They are pieces of evidence that are most useful when they appear at a meaningful level and agree with the broader context."
+      "A gap occurs when the session opens at a price different from the previous session's close, leaving empty space on the chart. A gap up opens above the prior close; a gap down opens below it. Gap size is usually measured in percent: (open - previous close) ÷ previous close × 100.",
+      "ETFs gap mainly because their underlying assets change value while the NSE is closed. For Indian index ETFs, overnight moves in global markets, news and events change expectations for the basket. Gold and silver ETFs follow international metal prices, which trade nearly around the clock, plus the exchange rate. International ETFs such as MON100 follow overseas markets that trade during Indian night hours.",
+      "After a gap, price can 'fill' it (move back toward the previous close), hold near the open, or extend further in the gap direction. Which happens varies; no outcome is reliable enough to treat as certain. Larger gaps on major news are often treated differently from small routine gaps.",
+      "Because ETF prices are anchored to iNAV, a gap in the ETF usually reflects a gap in the basket's value. If the ETF opens well away from iNAV — a bigger premium or discount than normal — that is a separate trading-quality issue that market makers usually correct, not a signal about the market."
     ],
     why: [
-      "These two candle types sum up the main questions a trader asks at any level: is someone pushing urgently through it (momentum), or is it being refused (rejection)? Being able to tell them apart quickly is central to breakouts, retests and reversals later in the program."
+      "Gaps change the starting conditions of the day: the prior close is no longer where price is, levels are skipped, and the opening range is often wider. Knowing why an ETF gapped helps you decide whether the gap is likely to matter.",
+      "Gaps are also the main reason intraday traders close positions before the end of the session: overnight moves cannot be controlled by a stop-loss."
     ],
     how: [
-      "In the Chart Practice candle trainer, run a drill labelling candles as momentum, rejection or neither.",
-      "Define your own simple criteria in the Playbook, for example: momentum = body at least 70% of range; rejection = wick at least twice the body length, touching a marked level.",
-      "In the Trading Practice Lab replay, find five hammers or shooting stars at levels and five in random spots; compare what happened next.",
-      "Record outcomes in the Backtesting journal so you can see the actual hit rate rather than assuming.",
-      "Watch for momentum candles that break through levels and journal whether the next candles continued or reversed.",
-      "Save annotated examples of each type to the Knowledge Vault."
+      "In Trading → Replay, find five sessions with gaps in a broad index ETF and record each gap size in percent.",
+      "For each, note what happened in the first hour: filled, held or extended.",
+      "Do the same for a gold ETF and compare how often it gaps relative to the index ETF.",
+      "At the open of each replayed gap day, compare price with iNAV if available.",
+      "Write a Playbook draft rule for gap days, for example 'wait for the opening range to form before any entry'.",
+      "Record gap sizes and outcomes in the Trading Journal; avoid conclusions from a handful of examples."
     ],
     example: {
-      title: "Hypothetical stock XYZ: rejection then momentum",
+      title: "Hypothetical example: measuring and following a gap",
       lines: [
-        "Hypothetical support: $32.00, after a decline from $33.50.",
-        "Candle 1 (hammer): O $32.30 H $32.40 L $31.85 C $32.35 → lower wick $0.45 vs body $0.05 → prices below $32 rejected.",
-        "Candle 2 (momentum): O $32.35 H $32.95 L $32.30 C $32.90 → body $0.55 of $0.65 range → urgent buying.",
-        "Reading: rejection showed refusal at support; momentum showed buyers acting with urgency.",
-        "A simulated plan might note a stop below $31.85 (the hammer's low), where the idea would be wrong.",
-        "Hypothetical values; the same pattern can fail, which is why the stop exists."
+        "Hypothetical ETF previous close ₹250.00; today's open ₹252.50.",
+        "Gap = (252.50 - 250.00) ÷ 250.00 × 100 = +1.0% gap up.",
+        "First 30 minutes: price dips to ₹251.30, then recovers to ₹252.80.",
+        "The gap partly filled (₹1.20 of ₹2.50) but did not close completely.",
+        "On another hypothetical day, a similar gap might fill fully or extend — outcomes vary.",
+        "All prices are hypothetical."
       ]
     },
     mistakes: [
-      "Calling any candle with a wick a rejection candle, even when the wick is short or not at a level.",
-      "Buying immediately after a huge momentum candle far from any level, often near the end of the move.",
-      "Ignoring the trend context, such as treating a hammer in a strong downtrend with no support as a reliable reversal.",
-      "Treating pattern names as signals on their own instead of combining them with location and confirmation.",
-      "Not tracking outcomes, so beliefs about how well a pattern works are based on memory rather than data."
+      "Assuming every gap will fill, which treats a possibility as a certainty.",
+      "Chasing a large gap at the open, when spreads and volatility are at their highest.",
+      "Ignoring why the ETF gapped, missing that a gold or international ETF is following overseas markets.",
+      "Holding an intraday position overnight 'to catch the gap', which turns a day trade into an uncontrolled risk.",
+      "Drawing firm conclusions from a few gap examples, which is far too small a sample."
     ],
     quiz: [
-      { q: "What does a momentum candle look like and show?", a: "A large body with small wicks; it shows urgency and control by one side." },
-      { q: "What is a shooting star?", a: "A candle with a long upper wick and a small body near the bottom, after a rise, showing higher prices were rejected." },
-      { q: "Are rejection candles guaranteed reversal signals?", a: "No — they are evidence that improves odds at a meaningful level, but price can still break through." }
+      { q: "How do you measure gap size?", a: "(open - previous close) ÷ previous close × 100, in percent." },
+      { q: "Why do gold ETFs often gap?", a: "International gold prices and exchange rates keep moving while the NSE is closed." },
+      { q: "Name three things price can do after a gap.", a: "Fill the gap, hold near the open, or extend in the gap direction — none is certain." }
     ]
   },
 
   14: {
     what: [
-      "Open and close (Day 8): the open is the first price of the period and the close is the last. The close is the period's 'final verdict', and close versus open defines direction. Where a candle closes relative to a key level matters more than where it traded during the period. High and low (Day 9): the extremes show how far buyers and sellers pushed — and where they failed. Connecting highs and lows creates market structure: higher highs and higher lows (uptrend), lower highs and lower lows (downtrend) or flat (range).",
-      "Body and wicks (Day 10): a big body shows control, a long wick shows rejection of that price, and a small body with wicks on both sides shows indecision. The body-to-range ratio summarises the story. Bullish candles (Day 11): close above open; strong ones close near the high with small upper wicks. Location such as support gives them meaning.",
-      "Bearish candles (Day 12): close below open; strong ones close near the low with small lower wicks, and are most meaningful at resistance. Momentum and rejection candles (Day 13): momentum candles (big body, small wicks) show urgency; rejection candles (long wick into a level — pin bars, hammers, shooting stars) show refusal.",
-      "The common thread: candles describe a fight between buyers and sellers, and they are probabilities, not certainties. Location and context turn a candle from noise into evidence. Today, consolidate this week by re-reading your journal, finding your weakest concept and rewriting it from memory."
+      "Candlesticks (Day 8): each candle shows open, high, low and close; bodies and wicks show who controlled the period. Thin ETFs can print misleading candles. Timeframes (Day 9): 1m shows detail and noise, 15m shows structure; use one fixed primary and one context timeframe.",
+      "Volume and traded value (Day 10): volume counts units; traded value (volume × price) compares activity fairly across ETFs. ETF volume can come from arbitrage, so spikes are not always conviction. VWAP (Day 11): the volume-weighted average price for the session, resetting each day; price above or below it shows who has been in control so far.",
+      "Opening range and phases (Day 12): the first 15-30 minutes set two reference levels; the open is volatile, midday often quiet, the close active again — as tendencies. Gaps (Day 13): ETFs gap because their underlying moves overnight; gaps may fill, hold or extend.",
+      "Today you combine all of this to read a full session and describe it in words — what happened and how — without predicting what comes next."
     ],
     why: [
-      "Candle reading is the core visual skill for every later lesson. Support and resistance, breakouts and retests all depend on quickly reading closes, wicks and bodies at levels. Locking it in now through deliberate review makes next week's material far easier to absorb."
+      "Reading a chart fluently is the foundation for every strategy in later phases. If you can tell the story of a session — gap, opening range, VWAP behaviour, volume, phases — you will recognise conditions that suit a strategy and, just as importantly, conditions that suit none."
     ],
     how: [
-      "Re-read your Trading Journal, Backtesting journal and Psychology journal entries for Days 8–13.",
-      "Without notes, describe from memory: open/close, high/low, body/wicks, strong bullish, strong bearish, momentum and rejection.",
-      "Check against the lessons and choose your weakest concept.",
-      "Rewrite it in your own words with a hypothetical example and save it to the Knowledge Vault.",
-      "Do a 20-candle mixed session in the Chart Practice candle trainer and record your accuracy.",
-      "Review your Backtesting journal tallies: how often did candles at levels actually lead to follow-through? Note the sample size.",
-      "Update your Playbook candle definitions so they are precise and repeatable."
+      "Re-read your journal entries from Days 8-13 and write each concept from memory in two sentences.",
+      "In Trading → Replay, choose a NIFTYBEES session on your chosen timeframe and step through it from 09:15 to 15:30.",
+      "At each phase, note: candle character, volume, position versus VWAP and the opening range.",
+      "Lock a No-Trade decision throughout — the aim is narration, not trading — and review the process score.",
+      "Write the session's story in six lines in the Trading Journal.",
+      "Identify your weakest chart concept and rewrite it with a hypothetical example.",
+      "Add the week's rules to the Playbook (fixed timeframes, no first-minutes entries, gap-day caution)."
     ],
     example: {
-      title: "Hypothetical self-review walkthrough",
+      title: "Hypothetical self-review walkthrough: narrating a session",
       lines: [
-        "Recall test: confident on open/close and bullish/bearish; unsure how to tell a hammer from a random long-wick candle.",
-        "Weakest concept = rejection candles.",
-        "Rewrite: 'A rejection candle needs a long wick INTO a level I marked beforehand, and a small body. Location is part of the definition.'",
-        "Hypothetical example: support at $18.00; candle O $18.20 H $18.25 L $17.80 C $18.22 → valid hammer at support.",
-        "Trainer score: 16/20 → misread two small-bodied candles as momentum.",
-        "Backtesting tally (hypothetical, small sample of 12): 7 continued, 5 failed → not enough data to conclude anything yet.",
-        "Saved to Knowledge Vault; Playbook rejection definition updated."
+        "Gap: opened 0.4% above the prior close (hypothetical).",
+        "Opening range: first 15 minutes formed a ₹1.10 range with high volume.",
+        "Mid-morning: broke above the range high; held above VWAP with rising volume.",
+        "Midday: small overlapping candles, volume faded, price stayed above VWAP.",
+        "Close: slipped back toward VWAP in the final hour. Weakest concept noted: relative volume.",
+        "Rewrite saved; next week's focus: market context. All details hypothetical."
       ]
     },
     mistakes: [
-      "Memorising candle pattern names without understanding the buyer-seller story behind them.",
-      "Drawing conclusions from very small backtest samples, which can make a pattern look much better or worse than it is.",
-      "Reviewing only by re-reading instead of recalling from memory and testing yourself.",
-      "Ignoring the location requirement and treating candle shapes as signals anywhere on the chart.",
-      "Skipping the review because candles feel 'easy', leaving subtle misreadings uncorrected."
+      "Narrating with hindsight ('it obviously went up'), which hides how unclear the chart was in real time.",
+      "Skipping volume and VWAP in the review, leaving the story incomplete.",
+      "Turning a review session into trading practice and losing the focus on reading.",
+      "Reviewing only sessions that trended nicely, which builds a biased picture of what normal looks like.",
+      "Not recording the weakest concept, so the same confusion returns next week."
     ],
     quiz: [
-      { q: "Why is the close considered the most important price of a candle?", a: "It is the final agreed price of the period, so it reflects the outcome rather than temporary moves." },
-      { q: "What is the difference between a momentum candle and a rejection candle?", a: "A momentum candle has a large body and small wicks (urgency); a rejection candle has a long wick into a level and a small body (refusal)." },
-      { q: "What turns a candle shape into useful evidence?", a: "Its location and context — such as appearing at a marked support or resistance level in line with the broader direction." }
+      { q: "Which is better for comparing activity across ETFs: volume or traded value?", a: "Traded value, because unit prices differ widely." },
+      { q: "What does price staying above VWAP for most of a session suggest?", a: "Buyers were broadly in control, and the session may have been trending — a description, not a prediction." },
+      { q: "Why do ETFs gap?", a: "Their underlying assets change value while the NSE is closed, for example through global markets, news or overseas metal prices." }
     ]
   },
 
   15: {
     what: [
-      "Support is a price area where buying interest has repeatedly stopped declines. When price falls into this area, buyers tend to step in (or sellers stop selling), and the decline pauses or reverses. On a chart it appears as a zone where several lows cluster.",
-      "Support is best drawn as a zone, not a razor-thin line. Price rarely turns at exactly the same cent; it might bounce at $19.95 one time and $20.08 the next. A zone (for example $19.95–$20.10) reflects that reality and stops you from treating small overshoots as failures.",
-      "The more clearly and more often price has reacted at an area, the more traders are likely watching it — and the more significant it becomes. Sharp, obvious bounces count for more than vague, slow drifts.",
-      "Recent levels usually matter more than very old ones, because the traders who acted there are more likely to still care. On intraday charts, common support areas include the previous day's low, the current session's low and recent swing lows. Support is an area of probability, not a floor — it can and does break."
+      "An index ETF aims to match the return of its index, but never does so perfectly. Tracking difference is the gap between the ETF's return and the index's return over a period (ETF return - index return); it is usually slightly negative because of the expense ratio, cash held in the fund and trading costs. Tracking error is the variability of that difference over time — how consistently the ETF follows the index. Lower is better for both.",
+      "NIFTYBEES and the Nifty 50 illustrate this. The index is a number published from the prices of its 50 companies; NIFTYBEES is a fund whose units trade on the NSE. The unit price is a fraction of the index level, so the rupee move of a unit and the point move of the index are not comparable — always compare percentage moves.",
+      "Intraday, two extra effects appear. First, the ETF's traded price can drift above or below its iNAV (premium/discount) because of order flow and market-maker activity. Second, the index and the iNAV update continuously from live share prices, while the ETF price only changes when its units trade — so in a quiet moment the ETF can appear to 'lag'. These gaps are normally small and short-lived in liquid ETFs.",
+      "Because the index is the underlying driver, many intraday traders watch the index chart for context while trading the ETF, and use the ETF's own chart for exact levels, volume and costs."
     ],
     why: [
-      "Support gives you a reference point for decisions. It tells you where a buy idea might have better odds and, just as importantly, where your idea would be wrong (a decisive move below the zone). That makes it a natural place to plan entries and stop-losses in simulation."
+      "Knowing how closely your ETF follows its index tells you whether index-based analysis applies to it. If an ETF tracks poorly or trades at shifting premiums, a 'perfect' setup on the index chart can produce a disappointing result in the ETF.",
+      "It also prevents a common confusion: a ₹0.30 move in a unit and a large point move in the index can be the same percentage move."
     ],
     how: [
-      "In the Trading Practice Lab replay, before pressing play, mark the previous day's low and the two most obvious recent swing lows on your context timeframe.",
-      "Draw each as a zone covering the cluster of lows and their nearby candle bodies, not a single line.",
-      "Rate each zone: number of clear reactions, how sharp they were, how recent.",
-      "Press play and record in your Trading Journal how price behaves on each visit: bounce, pause or break.",
-      "Look for the candle types from last week (hammers, strong bullish closes) appearing in the zone.",
-      "Add a Playbook step: 'Mark support zones before the session; do not draw new lines mid-trade to justify a position.'"
+      "In Trading → Markets, open NIFTYBEES and the Nifty 50 side by side on 5-minute charts for the same session.",
+      "Record each one's percentage change from the previous close at 09:30, 11:30, 13:30 and 15:15.",
+      "Calculate the intraday difference at each time and note where it was largest.",
+      "If iNAV is available, record the ETF's premium/discount at those same times.",
+      "From the AMC's factsheet, note the expense ratio and published tracking error for the ETF.",
+      "In the Trading Journal, describe where the ETF and index diverged and give a possible reason (spread, quiet trading, premium)."
     ],
     example: {
-      title: "Hypothetical stock XYZ: marking a support zone",
+      title: "Hypothetical example: tracking difference over a year",
       lines: [
-        "Hypothetical lows over two days: $20.05, $19.97, $20.10 — each followed by a bounce of $0.40 or more.",
-        "Support zone drawn: $19.95–$20.10.",
-        "Today price falls into $20.02 and prints a hammer that closes at $20.25.",
-        "Reading: buyers defended the zone again — evidence, not proof.",
-        "Invalidation: a decisive close below $19.95 would suggest the support has broken.",
-        "All prices hypothetical."
+        "Hypothetical index return over one year: +12.00%.",
+        "Hypothetical index ETF return over the same year: +11.90%.",
+        "Tracking difference = 11.90% - 12.00% = -0.10% (roughly the cost of running the fund).",
+        "Intraday: index +0.50% at 11:30; ETF last traded +0.46% because its units had not traded for a minute.",
+        "A minute later the ETF trades again at +0.50% — the gap closed. Such gaps are usually small in liquid ETFs.",
+        "All figures are hypothetical, not real ETF or index data."
       ]
     },
     mistakes: [
-      "Drawing support as an exact line and treating a tiny overshoot as a failure.",
-      "Marking too many levels until the chart is covered in lines and every price looks like support.",
-      "Assuming support will always hold, when every level eventually breaks.",
-      "Using very old levels that few traders still watch while ignoring recent obvious ones.",
-      "Buying the instant price touches support without waiting for evidence, such as a rejection or strong close."
+      "Comparing rupee moves in the ETF with point moves in the index, instead of comparing percentages.",
+      "Assuming an ETF tracks its index perfectly, which ignores costs, cash and premiums.",
+      "Mistaking a momentary lag in a quiet ETF for a trading signal.",
+      "Using the index chart for exact entry levels, when the ETF's own price, spread and volume determine your fills.",
+      "Ignoring tracking error when choosing which ETF to study, which can make results noisier than necessary."
     ],
     quiz: [
-      { q: "What is support?", a: "A price area where buying interest has repeatedly stopped declines." },
-      { q: "Why draw support as a zone instead of a line?", a: "Price rarely reverses at the exact same price, so a zone captures the real area of interest and avoids false 'failures'." },
-      { q: "What makes a support level more significant?", a: "Multiple clear, sharp reactions there — especially recent ones — because more traders are likely watching it." }
+      { q: "What is tracking difference?", a: "The ETF's return minus the index's return over a period — usually slightly negative due to costs." },
+      { q: "Why compare percentage moves rather than rupee or point moves?", a: "The ETF unit price is a fraction of the index level, so only percentages are comparable." },
+      { q: "Why can a quiet ETF appear to lag its index intraday?", a: "The index updates continuously from its shares, while the ETF price only changes when its units trade." }
     ]
   },
 
   16: {
     what: [
-      "Resistance is the opposite of support: a price area where selling interest has repeatedly stopped advances. When price rises into the area, sellers tend to step in (or buyers stop buying), and the rally pauses or reverses. Like support, it is best drawn as a zone.",
-      "Role reversal is a key idea: once support breaks, it often acts as resistance later, and once resistance breaks, it often acts as support. The reasoning is that traders who bought at old support and are now losing may sell when price returns to their entry, adding selling pressure at the same area.",
-      "Round numbers (such as $50.00 or $100.00) often act as levels, because many people place orders at them. They are not magic, but they are psychologically visible.",
-      "For day traders, the previous day's high and low are especially important reference levels, along with the current session's high and the opening price. These are widely watched, so reactions there are common — though never guaranteed."
+      "Support is a price area where a falling price has tended to stop and turn up, because buyers became more willing than sellers there. Resistance is a price area where a rising price has tended to stall or turn down. They are zones — a band a few ticks wide — not exact lines, because different participants act at slightly different prices.",
+      "Common sources of intraday levels for ETFs are: the previous day's high, low and close; the current day's opening range high and low (Day 12); prior swing highs and lows on the chart; VWAP (Day 11); and round numbers such as ₹250.00. Levels visible on a higher timeframe (15m or daily) usually carry more weight than ones seen only on 1m.",
+      "A level becomes more relevant the more clearly price has reacted to it — for example two or three clean turns with visible volume. When support breaks decisively, it often acts as resistance on a later retest, and broken resistance may become support. This 'role reversal' is a tendency, not a law.",
+      "For index ETFs, it is sensible to note levels on the ETF's own chart (where your orders fill) and to check whether the index has a level at the equivalent percentage point. When both agree, the zone is often more widely watched."
     ],
     why: [
-      "Resistance tells a buyer where gains may stall — a natural area to plan a target — and tells a seller where a short idea may have better odds. Knowing role reversal means a level does not disappear once broken; it changes jobs, which sets up the retest concept later this week."
+      "Support and resistance give structure to your decisions: they suggest where a move may pause, where a setup is invalidated and where a target is realistic. Almost every strategy in later phases uses them to place entries, stops and targets.",
+      "Marking levels before the session also reduces impulsive decisions — you already know where you care about price, instead of reacting to every tick."
     ],
     how: [
-      "Before each replay session in the Trading Practice Lab, mark the previous day's high, previous day's low and any nearby round number.",
-      "Mark recent swing highs where rallies stalled and draw them as zones.",
-      "Find one example of role reversal (old support acting as resistance) in replay and journal it with a description.",
-      "In your Backtesting journal, track how often price reacts (pauses or reverses) at the previous day's high on first touch.",
-      "When planning a simulated buy, write the nearest resistance as a potential target or caution area.",
-      "Save a Knowledge Vault note: 'Broken support → resistance; broken resistance → support.'"
+      "Before replaying a session in Trading → Replay, mark the previous day's high, low and close for your ETF.",
+      "Add any clear swing highs and lows from the 15-minute chart of the prior two sessions, drawn as zones, not lines.",
+      "Step through the session and note at each level: held, broke, or broke and retested.",
+      "After the opening range forms, add its high and low as levels.",
+      "Record which levels mattered and which were ignored in the Trading Journal.",
+      "Repeat on two sessions and look for any repeat behaviour — without assuming it will continue."
     ],
     example: {
-      title: "Hypothetical stock XYZ: role reversal",
+      title: "Hypothetical example: a support zone and role reversal",
       lines: [
-        "Hypothetical support zone: $44.80–$45.00, held three times yesterday.",
-        "This morning price closes decisively below it at $44.40 → support broken.",
-        "Later, price rallies back up to $44.90.",
-        "Sellers appear: a shooting star at $44.95 closes at $44.70.",
-        "Old support is now acting as resistance — role reversal (this time).",
-        "Hypothetical values; role reversal is a tendency, not a rule."
+        "Hypothetical ETF: previous day low ₹248.80; earlier swing low ₹248.70 → support zone ₹248.70-₹248.85.",
+        "10:20: price falls to ₹248.78 and turns up to ₹249.60 on rising volume — the zone held.",
+        "13:10: price falls again and closes a 15-minute candle at ₹248.30 — the zone broke.",
+        "14:05: price rises back to ₹248.75 and stalls — the old support acted as resistance.",
+        "None of these reactions was guaranteed; each was one possible outcome.",
+        "All prices are hypothetical."
       ]
     },
     mistakes: [
-      "Buying right into a well-defined resistance zone without accounting for likely selling there.",
-      "Deleting levels once they break, missing the role reversal that often follows.",
-      "Treating round numbers as guaranteed turning points rather than one input among several.",
-      "Ignoring the previous day's high and low, which many intraday traders watch closely.",
-      "Setting targets far beyond nearby resistance and then being frustrated when price stalls there."
+      "Drawing levels as exact lines and expecting price to turn to the paisa, which leads to stops placed too tight.",
+      "Marking so many levels that every price is 'near a level', which makes them meaningless.",
+      "Drawing levels after the move with hindsight, which inflates how reliable they seem.",
+      "Ignoring higher-timeframe levels and focusing only on 1-minute swings.",
+      "Assuming a level that held before must hold again, rather than treating it as a zone to watch."
     ],
     quiz: [
-      { q: "What is resistance?", a: "A price area where selling interest has repeatedly stopped advances." },
-      { q: "What is role reversal?", a: "When a broken support level later acts as resistance, or a broken resistance level later acts as support." },
-      { q: "Name two levels many day traders watch.", a: "The previous day's high and low (round numbers and the session open are also common)." }
+      { q: "What is support?", a: "A price zone where falling prices have tended to stop and turn up because buyers outweighed sellers." },
+      { q: "Name three common sources of intraday ETF levels.", a: "Any three of: previous day high/low/close, opening range high/low, prior swing highs/lows, VWAP, round numbers." },
+      { q: "What is role reversal?", a: "The tendency for broken support to act as resistance later, and broken resistance as support — a tendency, not a rule." }
     ]
   },
 
   17: {
     what: [
-      "A breakout happens when price moves decisively above a resistance zone. 'Decisively' is the key word: the strongest evidence is a candle that closes beyond the level on your primary timeframe, not just a wick that pokes through and falls back.",
-      "Quality breakouts often share three features. First, a momentum candle: a large body closing near its high, showing urgency. Second, rising volume: volume is the number of shares traded during the period; higher volume than recent candles suggests broad participation. Third, follow-through: the next candles continue in the breakout direction rather than stalling.",
-      "A wick through a level alone is not a breakout. It shows price visited above the level but could not stay there — closer to a rejection than a breakout.",
-      "Even quality breakouts fail sometimes. They are a probability setup: the features above improve the odds but do not guarantee the move. That is why a breakout plan always includes a point where the idea is wrong (for example, a close back inside the old range)."
+      "Market structure is the sequence of swing highs and swing lows on a chart. A swing high is a local peak: a candle whose high is higher than the highs of the candles on either side (often using two or three candles each side). A swing low is the mirror image. Connecting them shows the shape of the move.",
+      "Higher highs (HH) and higher lows (HL) describe an uptrend: each push goes further and each pullback stops higher. Lower highs (LH) and lower lows (LL) describe a downtrend. When swings overlap — highs and lows at similar prices without progress — the market is in a range or chop.",
+      "A structure break happens when the pattern changes: for example, in an uptrend price makes a lower low by falling below the last higher low. A break is a warning that the existing trend may be weakening, not proof that it has reversed. Often price shifts from trend to range before any reversal.",
+      "Structure depends on timeframe. A 15-minute uptrend can contain several 1-minute downtrends. Use your context timeframe (Day 9) to define the main structure and your primary timeframe for detail."
     ],
     why: [
-      "Breakouts are among the most common day-trading setups because they can start new moves. But they are also where many beginners get trapped by chasing every poke through a level. Learning to require a close, momentum, volume and follow-through filters out many weak breakouts."
+      "Structure is an objective way to answer 'what is the market doing?' without indicators. It defines trends for the trend and pullback strategies, ranges for the range strategy, and the breaks that matter for breakouts.",
+      "Labelling swings also slows you down and replaces gut feeling with a checklist, which is exactly what consistent simulated practice needs."
     ],
     how: [
-      "Mark a clear resistance zone in the Trading Practice Lab replay before the move happens.",
-      "When price reaches it, wait for the candle to close; note whether it closed beyond the zone or only wicked through.",
-      "Check the breakout candle's body-to-range ratio and compare its volume with the previous 10 candles.",
-      "Watch the next two or three candles and record whether there was follow-through.",
-      "Log each breakout in the Backtesting journal with a quality score (close, momentum, volume, follow-through) and the outcome.",
-      "In the Strategy Lab, write a draft breakout rule including the entry trigger and invalidation, and test it only in simulation."
+      "In Trading → Replay, open a 5-minute ETF session and pick a swing definition (for example two candles each side).",
+      "Step through and label each confirmed swing high and low as HH, HL, LH or LL.",
+      "Note the time of any structure break and what price did in the next hour.",
+      "Describe the structure in three parts: open, midday, close.",
+      "Repeat on a second session and compare with the 15-minute chart's structure.",
+      "Save your swing definition in the Playbook so you label the same way every time."
     ],
     example: {
-      title: "Hypothetical stock XYZ: grading a breakout",
+      title: "Hypothetical example: labelling structure",
       lines: [
-        "Hypothetical resistance zone: $36.80–$37.00 (three prior rejections).",
-        "Attempt 1: wick to $37.15, close $36.90 → no breakout (wick only).",
-        "Attempt 2: O $36.95 H $37.45 L $36.92 C $37.40 → closes above the zone, body ~85% of range.",
-        "Volume on attempt 2: about double the recent average → broad participation.",
-        "Next two candles close $37.55 and $37.70 → follow-through.",
-        "Invalidation in a simulated plan: a close back below $36.80.",
-        "All values hypothetical."
+        "Hypothetical ETF swing lows: ₹249.20 (09:40), ₹249.70 (10:50) → higher low.",
+        "Swing highs: ₹250.40 (10:15), ₹251.00 (11:30) → higher high. Structure: uptrend.",
+        "13:00: price falls to ₹249.50, below the ₹249.70 higher low → structure break.",
+        "13:00-15:00: highs and lows overlap between ₹249.50 and ₹250.60 → range, not a clear reversal.",
+        "A swing is only confirmed after the following candles form — labels come with a delay.",
+        "All prices are hypothetical."
       ]
     },
     mistakes: [
-      "Entering on a wick through resistance before the candle closes, then watching it close back below.",
-      "Chasing a breakout long after it happened, buying far above the level with poor risk-to-reward.",
-      "Ignoring volume, so low-participation breakouts are treated the same as strong ones.",
-      "Having no invalidation point, so a failed breakout becomes a large loss.",
-      "Trading breakouts into a nearby higher-timeframe resistance level that limits how far price can travel."
+      "Labelling swings with hindsight before they are confirmed, which makes structure look clearer than it was in real time.",
+      "Treating one structure break as a guaranteed reversal, when it often leads to a range instead.",
+      "Mixing timeframes so the 1-minute structure contradicts the 15-minute one without noticing.",
+      "Changing the swing definition from day to day, which makes your observations inconsistent.",
+      "Calling every small wiggle a swing, which turns structure into noise."
     ],
     quiz: [
-      { q: "What confirms a breakout better than a wick?", a: "A candle that closes decisively beyond the level." },
-      { q: "Name three features of a quality breakout.", a: "A momentum candle, rising volume and follow-through in the next candles." },
-      { q: "Do quality breakouts always work?", a: "No — they improve the odds, but some fail, which is why every breakout plan needs an invalidation point." }
+      { q: "What sequence defines an uptrend?", a: "Higher highs and higher lows." },
+      { q: "What is a structure break in an uptrend?", a: "Price falling below the most recent higher low, creating a lower low." },
+      { q: "Does a structure break mean the trend has reversed?", a: "No — it is a warning that the trend may be weakening; price often ranges before any reversal, and nothing is certain." }
     ]
   },
 
   18: {
     what: [
-      "A breakdown is the mirror image of a breakout: price closes decisively below a support zone. It suggests sellers have overwhelmed the buyers who were defending that area.",
-      "The same quality checks apply in reverse. Look for bearish momentum (a large red body closing near its low), higher volume than recent candles, and follow-through as the next candles continue lower. A single lower wick that dips below support and recovers is not a breakdown — it is closer to a rejection of lower prices.",
-      "Watch for an immediate reclaim. A reclaim is when price quickly moves back above the broken level and closes there. If that happens right after a breakdown, it is a warning that the breakdown may be failing and sellers could be trapped.",
-      "Breakdowns can be fast, because buyers who were relying on support may rush to exit at the same time. That speed can also mean more slippage. As always, the features improve odds; they do not guarantee continuation."
+      "Each session — or part of a session — can be roughly classified into one of three conditions. Trending: clear structure (HH/HL or LH/LL), price staying mostly on one side of VWAP, pullbacks that are shallow relative to the moves. Ranging: price moving between a fairly clear upper and lower zone, repeatedly testing both, with VWAP near the middle. Choppy: overlapping candles, frequent VWAP crosses, no clean swings and no reliable edges.",
+      "Conditions can change during the day. A trending morning often becomes a quiet midday range; a choppy open can turn into a trend after news. Classification is therefore something you repeat at fixed check-points, using the context timeframe for the overall picture.",
+      "Some simple, objective clues help: the number of VWAP crosses so far; whether recent swings make progress or overlap; the session's range so far compared with a typical range; and volume relative to normal. None of these is decisive alone, and a classification is always a probability-based judgement.",
+      "Each strategy in this course fits a condition: trend-following and pullbacks need trending conditions; range trading needs a range; breakouts need a clear level and a shift out of balance. Choppy conditions usually fit no strategy, and the right response is no trade."
     ],
     why: [
-      "Even if you mostly practise buy setups, breakdowns matter: a decisive close below support is often the clearest signal that a long idea is wrong and should be exited. For simulated short trades, breakdowns are the equivalent of breakouts. Either way, recognising quality versus failure protects you."
+      "Using the right tool in the wrong condition is one of the most common causes of losing simulated trades: trend entries in chop get stopped out repeatedly; range trades in a strong trend fight the move. Classifying first makes strategy selection deliberate.",
+      "It also makes 'no trade' a legitimate, planned outcome, which reduces overtrading."
     ],
     how: [
-      "Mark a clear support zone before the session in the Trading Practice Lab replay.",
-      "When price reaches it, wait for the close and note whether it closed below the zone or only wicked.",
-      "Check for bearish momentum (close near the low) and compare volume to the previous 10 candles.",
-      "Watch the next few candles for follow-through or a reclaim back above the zone.",
-      "Log each breakdown in the Backtesting journal with a quality score and outcome, including whether a reclaim happened.",
-      "Add to your Playbook: 'If I am long and price closes decisively below my support zone, the trade idea is invalid.'"
+      "In Trading → Replay, pick five different ETF sessions on your primary timeframe.",
+      "At 10:30, 12:30 and 14:30 in each, pause and classify: trending, ranging or choppy.",
+      "Write your reasons for each classification: VWAP crosses, swing structure, range size, volume.",
+      "Lock a Long / Short / No-Trade decision at each checkpoint consistent with your classification, and review the process score.",
+      "After finishing each session, compare your checkpoint calls with how the rest of the session unfolded — without rewriting them.",
+      "Record in the Playbook: 'Choppy = no trade.'"
     ],
     example: {
-      title: "Hypothetical stock XYZ: breakdown and reclaim watch",
+      title: "Hypothetical example: classifying at checkpoints",
       lines: [
-        "Hypothetical support zone: $27.00–$27.15.",
-        "Candle: O $27.10 H $27.12 L $26.60 C $26.65 → closes below zone, close near the low → bearish momentum.",
-        "Volume: roughly 1.8× the recent average.",
-        "Scenario A: next candles close $26.50 and $26.35 → follow-through, breakdown holding.",
-        "Scenario B: next candle closes $27.20, back above the zone → reclaim, breakdown failing.",
-        "A simulated short plan would treat Scenario B's reclaim as invalidation.",
-        "All values hypothetical."
+        "Hypothetical ETF session, 10:30: two higher highs, price above VWAP all morning, 0 VWAP crosses → trending.",
+        "12:30: price between ₹251.40 and ₹251.90 for 90 minutes, 4 VWAP crosses, falling volume → ranging.",
+        "14:30: overlapping candles, 7 VWAP crosses since noon, no clean swings → choppy.",
+        "Checkpoint decisions: 10:30 consider trend setups; 12:30 range rules only; 14:30 no trade.",
+        "Later checks may show a classification was wrong — that is normal, it is a probability call.",
+        "All details are hypothetical."
       ]
     },
     mistakes: [
-      "Treating a quick wick below support as a breakdown and selling before the candle closes.",
-      "Holding a long position after a decisive close below support because you hope it will come back.",
-      "Ignoring a fast reclaim, which often signals a failed breakdown and trapped sellers.",
-      "Selling into a breakdown that is already far below the level, leaving no sensible place for a stop.",
-      "Forgetting that slippage tends to be larger in fast breakdowns, so planned losses can be exceeded."
+      "Classifying only once at the open and ignoring that conditions change during the day.",
+      "Calling every move a trend because trends are exciting, which leads to entries in chop.",
+      "Refusing to classify anything as choppy, which removes the most useful no-trade signal.",
+      "Using a single clue (like one VWAP cross) instead of several, which makes classification unstable.",
+      "Revising checkpoint calls afterwards to look correct, which hides how hard real-time classification is."
     ],
     quiz: [
-      { q: "What is a breakdown?", a: "A decisive close below a support zone." },
-      { q: "What confirms a quality breakdown?", a: "Bearish momentum, higher volume and follow-through lower in the next candles." },
-      { q: "What is a reclaim and why does it matter?", a: "Price quickly closing back above the broken level; it warns that the breakdown may be failing." }
+      { q: "Name two signs of a choppy market.", a: "Any two of: overlapping candles, frequent VWAP crosses, no clean swings, no reliable range edges." },
+      { q: "Which strategies fit trending conditions?", a: "Trend-following and pullback strategies." },
+      { q: "What is the usual best response to choppy conditions?", a: "No trade." }
     ]
   },
 
   19: {
     what: [
-      "A retest happens when, after breaking a level, price comes back to test that level from the other side. After a breakout above resistance, price may pull back down to the old resistance zone; after a breakdown below support, price may rally back up to the old support zone.",
-      "This is role reversal in action. After a breakout, the old resistance should now act as support if the breakout is genuine. A successful retest is when price touches or approaches the level, it holds (candles close on the correct side), and price moves away again in the breakout direction.",
-      "Retests are a common, more patient entry location. Instead of chasing the breakout candle, a trader waits for price to return to the level, where the distance to a logical stop (just beyond the level) is smaller. The trade-off is that not every breakout retests — some simply run away and you miss them.",
-      "A failed retest is a warning sign. If price returns to the broken level and closes back through it (back inside the old range), the breakout is likely failing. Retests do not always happen and do not always hold; they are probabilities."
+      "Sector ETFs track one part of the market: BANKBEES follows the Nifty Bank index, ITBEES the Nifty IT index, PSUBNKBEES public-sector banks. Because they hold similar companies, they react strongly to sector news — interest-rate expectations for banks, global technology demand and currency moves for IT — and can move far more or less than the broad market on a given day.",
+      "Relative strength compares a sector ETF's percentage move with a benchmark, usually NIFTYBEES or the Nifty 50: relative strength = sector % change - benchmark % change. A positive figure means the sector is outperforming today; negative means underperforming. It says nothing about the future on its own.",
+      "Rotation describes money moving between sectors — some leading while others lag. Intraday, you can see it as one sector ETF rising while another falls on a flat market day. Banks have a large weight in the Nifty 50, so bank ETFs and the broad index often move together; IT can move against them when currency or global tech news dominates.",
+      "Sector ETFs are often less liquid than NIFTYBEES, so spreads, traded value and premium/discount (Day 5) must be checked before using any of them in simulation. A strong-looking sector chart is no use if the ETF cannot be traded at fair prices."
     ],
     why: [
-      "Waiting for a retest builds patience and often improves risk-to-reward, because entries happen closer to the level that defines when the idea is wrong. It also gives extra information: you get to see whether the market really accepts the new price area before committing."
+      "Relative strength adds context: a broad market rise led by one sector is different from a rise shared by all. It helps you choose which ETF to focus on in later strategies and helps explain why your chosen ETF behaved as it did.",
+      "It also warns you about concentration: holding a sector ETF is a bet on one industry, with larger moves and less diversification than an index ETF."
     ],
     how: [
-      "In the Trading Practice Lab replay, find a breakout you graded yesterday and mark the broken level as a zone.",
-      "Watch for price to return to that zone; note how many candles it took and how deep it went.",
-      "Look for evidence of a hold: rejection candles (long lower wicks) or strong bullish closes inside or just above the zone.",
-      "Record the outcome as successful retest, failed retest or no retest in the Backtesting journal.",
-      "In the Strategy Lab, draft a retest entry rule with a stop beyond the zone and compare its stop distance with entering on the breakout candle.",
-      "Add a Playbook note: 'Missing a breakout that does not retest is acceptable.'"
+      "In Trading → Markets, open NIFTYBEES, BANKBEES, ITBEES and PSUBNKBEES on the same day.",
+      "Record each ETF's percentage change from the previous close at 10:30, 12:30 and 15:00.",
+      "Calculate relative strength versus NIFTYBEES at each time and rank the sectors.",
+      "Run the ETF eligibility check in Trading → Practice on each sector ETF and note which pass.",
+      "Note any day where sectors moved in opposite directions and write a possible reason.",
+      "Record the strongest and weakest sector of the day in the Trading Journal."
     ],
     example: {
-      title: "Hypothetical stock XYZ: breakout and retest",
+      title: "Hypothetical example: ranking sectors by relative strength",
       lines: [
-        "Hypothetical resistance $37.00 broke with a close at $37.40; price ran to $37.90.",
-        "Breakout-candle entry at $37.40 with stop below $36.80 → risk $0.60 per share.",
-        "Price pulls back to $37.05, prints a hammer (low $36.95), closes $37.25 → level holding as support.",
-        "Retest entry at $37.25 with stop below $36.85 → risk $0.40 per share.",
-        "Same idea, smaller risk per share — but only because a retest happened this time.",
-        "Failed version: a close back below $36.80 would mark the retest as failed.",
-        "All values hypothetical."
+        "Hypothetical day at 12:30: broad index ETF +0.30%.",
+        "Hypothetical bank ETF +0.70% → relative strength +0.40%.",
+        "Hypothetical IT ETF -0.40% → relative strength -0.70%.",
+        "Hypothetical PSU bank ETF +1.20% → relative strength +0.90%, but its spread is 0.25% vs 0.02% for the bank ETF.",
+        "Ranking: PSU bank > bank > broad index > IT. Liquidity check favours the bank ETF for practice.",
+        "All figures are hypothetical."
       ]
     },
     mistakes: [
-      "Assuming every breakout will retest and refusing to accept missed trades.",
-      "Entering the moment price touches the level without waiting for evidence that it is holding.",
-      "Placing the stop exactly at the level, where normal noise during a retest can trigger it.",
-      "Ignoring a failed retest and holding on, even though a close back inside the range suggests the breakout is failing.",
-      "Confusing a deep pullback that slices far through the level with a valid retest."
+      "Treating today's strongest sector as certain to stay strong, when leadership can change within the session.",
+      "Comparing sector ETFs by rupee moves rather than percentages.",
+      "Ignoring liquidity and choosing a thin sector ETF just because its chart moved the most.",
+      "Forgetting that sector ETFs are concentrated, which understates how far they can move.",
+      "Reading relative strength from a single time point instead of watching how it develops."
     ],
     quiz: [
-      { q: "What is a retest?", a: "Price returning to a level it just broke, to test it from the other side." },
-      { q: "After a breakout, what should old resistance do on a successful retest?", a: "Act as support — price holds there and moves away in the breakout direction." },
-      { q: "Why are retest entries considered more patient?", a: "They wait for confirmation that the level holds and usually allow a closer stop, though some breakouts never retest." }
+      { q: "How is relative strength calculated here?", a: "Sector ETF % change minus benchmark (NIFTYBEES or Nifty 50) % change." },
+      { q: "What is sector rotation?", a: "Money moving between sectors, so some lead while others lag." },
+      { q: "Why check liquidity before practising on a sector ETF?", a: "Sector ETFs are often thinner, with wider spreads and premiums that make fair fills harder." }
     ]
   },
 
   20: {
     what: [
-      "A false breakout (sometimes called a failed breakout or fakeout) happens when price pushes through a level and then quickly reverses back inside the previous range. It looks like a breakout at first, then fails.",
-      "False breakouts trap traders. Those who bought the breakout are now holding losing positions; when price falls back inside, many of them exit at the same time, which can speed up the move in the opposite direction. The same happens in reverse with false breakdowns below support.",
-      "Early warning signs include a quick reclaim (price closes back inside the range within one or a few candles), long wicks beyond the level, weak volume on the breakout, and a lack of follow-through.",
-      "You cannot avoid all false breakouts — they are a normal part of markets, and even the best-looking breakout can fail. What protects you is recognising failure early and having a stop-loss in place, so a failed breakout is a small, planned loss rather than a large one."
+      "Gold ETFs such as GOLDBEES hold physical gold (or closely linked instruments) and aim to track the domestic price of gold. That price is driven mainly by the international gold price, quoted in US dollars, and the USD/INR exchange rate — a weaker rupee makes gold more expensive in rupees. Domestic factors such as import duties and local demand also play a part. Indian company earnings do not drive gold.",
+      "International gold trades almost around the clock. While the NSE is closed, gold keeps moving overseas, so gold ETFs often open with gaps that reflect those moves (Day 13). During NSE hours, gold ETFs may be quieter in the morning and more active when European and other markets are open, but this varies.",
+      "Gold often moves independently of the Nifty and sometimes in the opposite direction, for example on days of global risk aversion. This is a tendency, not a reliable inverse relationship — on some days both rise or both fall. Silver ETFs such as SILVERBEES follow similar drivers but are usually more volatile.",
+      "Costs differ too: gold ETFs carry no STT on intraday trades, while brokerage, exchange charges, SEBI fee, stamp duty and GST still apply (Day 6). Their iNAV is based on the gold price rather than a basket of shares, and spreads and premiums should be checked as with any ETF."
     ],
     why: [
-      "Every breakout trader will meet false breakouts, often frequently. The difference between a small and a large loss is preparation: a defined invalidation point and a stop. Understanding traps also helps you read when others are trapped, which some traders use as information in its own right."
+      "Applying equity-ETF thinking to gold leads to confusion: Indian market news may not matter, while an overnight dollar move does. Knowing what drives gold ETFs tells you which context to check and why their charts can look so different from NIFTYBEES.",
+      "It also shows that 'the market' is not one thing — a useful idea when you later compare strategies across different ETFs."
     ],
     how: [
-      "In the Trading Practice Lab replay, find three breakouts that failed and three that worked; compare their candles, volume and follow-through.",
-      "For each failure, note how many candles it took before price closed back inside the range.",
-      "Write a rule in your Playbook: 'A close back inside the range invalidates a breakout trade; the stop handles exits automatically.'",
-      "In every simulated breakout trade, enter the stop-loss at the same moment as the entry and log it in the Paper-trade/Simulation log.",
-      "In the Psychology journal, describe how it felt to be 'trapped' in a simulated false breakout and what you did.",
-      "Track in the Backtesting journal what percentage of your marked breakouts failed — the number is usually higher than beginners expect."
+      "In Trading → Markets, open GOLDBEES and NIFTYBEES side by side over several sessions.",
+      "Record each day's percentage change for both and mark days when they moved in opposite directions.",
+      "Note gold ETF gap sizes at the open over those sessions and compare them with NIFTYBEES gaps.",
+      "Write the gold cost stack (no STT) and recompute your Day 6 break-even move for a gold ETF.",
+      "Run the ETF eligibility check in Trading → Practice on GOLDBEES and SILVERBEES.",
+      "In the Trading Journal, list the drivers of gold ETFs and the days gold and Nifty diverged."
     ],
     example: {
-      title: "Hypothetical stock XYZ: a false breakout with a planned stop",
+      title: "Hypothetical example: why a gold ETF rose on a weak day",
       lines: [
-        "Hypothetical resistance $52.00; breakout candle closes at $52.30 on low volume.",
-        "Simulated entry $52.30, stop $51.85 (below the zone), 100 shares → planned risk about $45.",
-        "Next candle: wick to $52.40, closes $51.95 → back inside the range (quick reclaim).",
-        "Following candle drops to $51.60; stop triggers around $51.85 (could slip a little lower).",
-        "Result: about −$45 plus any slippage — a planned, small loss.",
-        "Without a stop, price at $51.20 would have meant −$110 and growing.",
-        "All values hypothetical."
+        "Hypothetical overnight: international gold +0.6% in US dollars; rupee weakens 0.2% versus the dollar.",
+        "Approximate effect on the rupee gold price: about +0.8%.",
+        "Hypothetical gold ETF opens 0.7% above its previous close — a gap driven by overseas moves.",
+        "Same hypothetical day: the broad index ETF falls 0.5% on weak global cues.",
+        "Gold and the index moved in opposite directions here; on other days they may move together.",
+        "All figures are hypothetical."
       ]
     },
     mistakes: [
-      "Trading breakouts without a stop-loss, so a false breakout turns into a large loss.",
-      "Moving the stop further away after the breakout fails, hoping price will recover.",
-      "Ignoring warning signs such as weak volume, long wicks and no follow-through.",
-      "Becoming afraid of all breakouts after a few failures instead of tracking the actual statistics.",
-      "Immediately flipping to the opposite direction on every failure without a plan, which leads to impulsive overtrading."
+      "Using Indian market news to explain gold ETF moves, when global gold prices and the rupee matter more.",
+      "Assuming gold always rises when the Nifty falls, which treats a loose tendency as a rule.",
+      "Forgetting that gold gaps overnight because international gold keeps trading.",
+      "Applying equity-ETF STT to gold ETF cost calculations, which overstates costs.",
+      "Ignoring spread and premium checks because gold feels 'safe', when ETF trading quality still varies."
     ],
     quiz: [
-      { q: "What is a false breakout?", a: "Price breaks through a level and then quickly reverses back inside the previous range." },
-      { q: "Name two early warning signs of a false breakout.", a: "A quick close back inside the range and weak volume or lack of follow-through (long wicks beyond the level are another)." },
-      { q: "What protects you from large losses on false breakouts?", a: "A predefined invalidation point and a stop-loss placed with the entry." }
+      { q: "What two factors mainly drive gold ETF prices in India?", a: "The international gold price in US dollars and the USD/INR exchange rate." },
+      { q: "Do gold ETFs pay STT on intraday trades?", a: "No, though brokerage, exchange charges, SEBI fee, stamp duty and GST still apply." },
+      { q: "Does gold always move opposite to the Nifty?", a: "No — it often moves independently and sometimes opposite, but this is a tendency, not a rule." }
     ]
   },
 
   21: {
     what: [
-      "Support (Day 15): an area where buying interest has repeatedly stopped declines. Draw zones, not lines; more and sharper reactions add significance, and recent levels matter most. Resistance (Day 16): an area where selling interest has repeatedly stopped advances. Role reversal means broken support often becomes resistance and vice versa; round numbers and the previous day's high and low are commonly watched levels.",
-      "Breakouts (Day 17): a decisive close above resistance. Quality comes from a momentum candle, rising volume and follow-through; a wick alone is not a breakout. Breakdowns (Day 18): a decisive close below support, confirmed by bearish momentum, volume and follow-through — and watch for an immediate reclaim, which suggests failure.",
-      "Retests (Day 19): after a break, price often returns to test the level from the other side. A successful retest — the level holds and price moves away — is a common, more patient entry location; a failed retest is a warning. False breakouts (Day 20): price breaks a level, then quickly returns inside, trapping breakout traders. Recognising failure early and always using a stop-loss is what protects you.",
-      "The common thread: levels are areas of probability where buyers and sellers have acted before. The candle skills from last week — closes, wicks, momentum and rejection — are how you read what happens at those levels. Today, consolidate: re-read your journal, find your weakest concept and rewrite it from memory."
+      "ETF vs index (Day 15): an index ETF follows its index with small tracking differences caused by costs, cash and trading; compare percentage moves, and expect brief intraday gaps from iNAV. Support and resistance (Day 16): zones where price has tended to stop or stall, from prior day levels, opening range, swings, VWAP and round numbers; broken levels may reverse roles.",
+      "Market structure (Day 17): swing highs and lows define trends (HH/HL or LH/LL) and ranges (overlapping swings); a structure break is a warning, not a verdict. Conditions (Day 18): classify each phase as trending, ranging or choppy at fixed checkpoints; each strategy fits certain conditions and choppy usually fits none.",
+      "Sector ETFs and rotation (Day 19): relative strength versus NIFTYBEES shows which sectors lead or lag today; sector ETFs are concentrated and often thinner. Gold ETFs (Day 20): driven by international gold and the rupee, gap overnight, carry no STT and often move independently of the Nifty.",
+      "Today you combine these into a pre-session context checklist — the routine you will run before every simulated session for the rest of the journey."
     ],
     why: [
-      "Support and resistance tie together everything learned so far: candles give the evidence, levels give the location, and stops give the protection. Many future setups are built on this foundation. Reviewing now, and checking your actual backtest records rather than impressions, helps you see what really happens at levels."
+      "Strategies in the coming phases only work in the right context. A trend setup in a choppy session, a breakout into a higher-timeframe level, or a thin sector ETF with a wide spread can all turn a reasonable idea into a poor trade. A context checklist catches these before you act and makes 'no trade' a planned decision."
     ],
     how: [
-      "Re-read your Trading Journal, Backtesting journal and Psychology journal entries for Days 15–20.",
-      "Without notes, explain from memory: support, resistance, role reversal, breakout, breakdown, retest and false breakout.",
-      "Check against the lessons and pick your weakest concept; rewrite it with a hypothetical example and save it to the Knowledge Vault.",
-      "Tally your Backtesting journal: how many breakouts worked, failed, or retested? Note the sample size before drawing any conclusion.",
-      "Do one full Trading Practice Lab replay session: mark levels before pressing play, then label each interaction as bounce, break, retest or false break.",
-      "Update your Playbook with level-drawing rules, breakout criteria and the invalidation rule.",
-      "Note in the Psychology journal how you handled simulated false breakouts this week."
+      "Recall each topic from Days 15-20 in two sentences without notes, then check against the lessons.",
+      "Draft a pre-session context checklist: ETF passes eligibility check; prior day levels marked; gap size noted; index and sector relative strength; gold and Nifty direction; condition at first checkpoint.",
+      "In Trading → Replay, run the full checklist on one session before stepping forward, then classify conditions at 10:30, 12:30 and 14:30.",
+      "Lock Long / Short / No-Trade decisions consistent with your checklist and review the process score.",
+      "Save the checklist in the Playbook as 'My pre-session context checklist'.",
+      "Identify your weakest concept from this phase and rewrite it with a hypothetical example.",
+      "In the Psychology journal, note one moment this week when you wanted to act without context."
     ],
     example: {
-      title: "Hypothetical self-review walkthrough",
+      title: "Hypothetical self-review walkthrough: a context check",
       lines: [
-        "Recall test: clear on support/resistance and breakouts; unsure when a retest becomes a failed retest.",
-        "Weakest concept = retests.",
-        "Rewrite: 'A retest holds if candles close on the new side of the level. A close back inside the old range = failed retest.'",
-        "Hypothetical example: breakout above $37.00; retest low $36.95 with close $37.25 → held; close $36.70 → failed.",
-        "Backtesting tally (hypothetical, 15 breakouts): 7 worked, 5 failed, 3 retested and then worked → sample too small to conclude.",
-        "Replay session: marked 4 levels; saw 2 bounces, 1 breakout with retest, 1 false breakdown.",
-        "Saved to Knowledge Vault; Playbook invalidation rule confirmed."
+        "Eligibility: hypothetical index ETF passes (spread 0.02%, adequate traded value).",
+        "Levels: prior day high ₹252.00, low ₹249.50, close ₹251.00 (hypothetical).",
+        "Gap: +0.3%; index and ETF agree within 0.02%. Banks leading (+0.4% relative), IT lagging.",
+        "10:30 check: HH/HL above VWAP → trending; 12:30: overlapping swings → ranging; 14:30: choppy → no trade.",
+        "Weakest concept: tracking error vs tracking difference — rewritten and saved.",
+        "All details are hypothetical; this is a reading exercise, not a trade recommendation."
       ]
     },
     mistakes: [
-      "Treating levels as exact lines or guaranteed turning points rather than zones of probability.",
-      "Judging breakouts by wicks or live candles instead of waiting for closes.",
-      "Concluding a setup 'works' or 'does not work' from a handful of backtests.",
-      "Redrawing levels after the fact to make past trades look better, which ruins honest review.",
-      "Reviewing without updating the Playbook, so lessons learned never change future behaviour."
+      "Skipping the context check when a chart 'looks obvious', which is when it is most needed.",
+      "Building a checklist so long it is never used; keep it to items you will actually check.",
+      "Treating context as prediction, when it only shifts the odds about which approach fits.",
+      "Reviewing only sessions that matched your expectations, which hides weaknesses in your reading.",
+      "Leaving the checklist out of the Playbook, so it is not applied consistently."
     ],
     quiz: [
-      { q: "What is role reversal?", a: "A broken support level acting as resistance later, or a broken resistance level acting as support." },
-      { q: "What is the difference between a breakout and a false breakout?", a: "A breakout closes decisively beyond the level with follow-through; a false breakout pushes through and then quickly returns inside the range." },
-      { q: "What is the non-negotiable protection against failed breakouts?", a: "A predefined invalidation point with a stop-loss placed at entry." }
+      { q: "Why compare NIFTYBEES and the Nifty 50 in percentages?", a: "The unit price is a fraction of the index level, so only percentage moves are comparable." },
+      { q: "What does relative strength tell you?", a: "Whether an ETF or sector is outperforming or underperforming a benchmark so far today — not what it will do next." },
+      { q: "What should happen when your checklist classifies the market as choppy?", a: "No trade — choppy conditions usually fit none of the course strategies." }
     ]
   }
 };

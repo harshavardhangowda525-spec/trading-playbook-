@@ -135,8 +135,11 @@ function utc(y: number, mo: number, d: number, h = 0, mi = 0, s = 0): number {
   return Math.floor(ms / 1000);
 }
 
-/** Returns UNIX seconds (UTC) or NaN. Times without a zone are UTC. */
-function parseTime(raw: string, order: DateOrder): number {
+/**
+ * Returns UNIX seconds (UTC) or NaN. Times without an explicit zone are read
+ * as local exchange time `naiveOffsetSec` ahead of UTC (0 = UTC; IST = 19800).
+ */
+function parseTime(raw: string, order: DateOrder, naiveOffsetSec = 0): number {
   const s = raw.trim().replace(/\s+(utc|gmt)$/i, '');
   if (!s) return NaN;
   // UNIX seconds / milliseconds (9+ digits; 8 digits is YYYYMMDD)
@@ -148,7 +151,8 @@ function parseTime(raw: string, order: DateOrder): number {
   if (m) {
     let t = utc(+m[1], +m[2], +m[3], +(m[4] ?? 0), +(m[5] ?? 0), +(m[6] ?? 0));
     const z = m[7];
-    if (z && z.toUpperCase() !== 'Z' && Number.isFinite(t)) {
+    if (!z) return t - naiveOffsetSec;
+    if (z.toUpperCase() !== 'Z' && Number.isFinite(t)) {
       const zm = /([+-])(\d{2}):?(\d{2})/.exec(z)!;
       const off = (+zm[2] * 60 + +zm[3]) * 60;
       t -= zm[1] === '+' ? off : -off;
@@ -166,14 +170,15 @@ function parseTime(raw: string, order: DateOrder): number {
     if (ap === 'pm' && h < 12) h += 12;
     if (ap === 'am' && h === 12) h = 0;
     const [mo, d] = order === 'dmy' ? [b, a] : [a, b];
-    return utc(y, mo, d, h, +(m[5] ?? 0), +(m[6] ?? 0));
+    return utc(y, mo, d, h, +(m[5] ?? 0), +(m[6] ?? 0)) - naiveOffsetSec;
   }
   m = COMPACT_RE.exec(s);
-  if (m) return utc(+m[1], +m[2], +m[3], +(m[4] ?? 0), +(m[5] ?? 0), +(m[6] ?? 0));
+  if (m) return utc(+m[1], +m[2], +m[3], +(m[4] ?? 0), +(m[5] ?? 0), +(m[6] ?? 0)) - naiveOffsetSec;
   // Last resort: other ISO-like strings the platform understands.
   if (/^\d{4}-\d{2}-\d{2}T/.test(s)) {
-    const ms = Date.parse(/[zZ]|[+-]\d{2}:?\d{2}$/.test(s) ? s : `${s}Z`);
-    return Number.isFinite(ms) ? Math.floor(ms / 1000) : NaN;
+    const zoned = /[zZ]|[+-]\d{2}:?\d{2}$/.test(s);
+    const ms = Date.parse(zoned ? s : `${s}Z`);
+    return Number.isFinite(ms) ? Math.floor(ms / 1000) - (zoned ? 0 : naiveOffsetSec) : NaN;
   }
   return NaN;
 }
@@ -247,7 +252,7 @@ export function countGaps(candles: Candle[], interval: Interval | null): number 
 
 const EMPTY_COLS = { time: '', open: '', high: '', low: '', close: '', volume: null };
 
-export function parseMarketCSV(text: string, fileName: string): ParseResult {
+export function parseMarketCSV(text: string, fileName: string, opts: { naiveOffsetSec?: number } = {}): ParseResult {
   void fileName; // kept for API symmetry / future format hints
   const base: ParseResult = {
     candles: [],
@@ -339,7 +344,7 @@ export function parseMarketCSV(text: string, fileName: string): ParseResult {
   const parsed: { line: number; k: Candle }[] = [];
   for (const { line, f } of data) {
     const rawT = timeOf(f);
-    const t = parseTime(rawT, order);
+    const t = parseTime(rawT, order, opts.naiveOffsetSec ?? 0);
     if (!Number.isFinite(t)) {
       reject(line, rawT ? `Unrecognised date/time "${rawT.slice(0, 40)}"` : 'Missing date/time');
       continue;

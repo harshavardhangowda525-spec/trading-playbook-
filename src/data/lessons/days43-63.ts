@@ -1,941 +1,950 @@
 import type { LessonContent } from './types';
 
-// Days 43-63: Strategy Development, Backtesting, Simulated Trading.
-// Educational content only — not financial advice. All practice is simulated.
+// Days 43-63: Strategy C (Pullback), Strategy D (Range-Bound), Backtesting Properly.
+// Educational and simulated only — not financial advice. ETF-only scope (NSE ETFs by default).
+// All numbers in examples are hypothetical and exist only to illustrate the arithmetic.
 
 export const CONTENT: Record<number, LessonContent> = {
   43: {
     what: [
-      "A trading strategy is a written set of rules that tells you what to look for, when to act, and when to stay out. Before any of those rules can be written, a strategy needs a focus: which market you will study, which part of the trading day you will study it in, and which chart timeframe you will make decisions on.",
-      "Your market is the single instrument or small group of similar instruments you study (for example, one large, liquid index fund or one futures contract). Your session is the window of the day you commit to, such as the first 90 minutes after the open. Your primary timeframe is the chart you base decisions on, such as the 5-minute or 15-minute chart; higher timeframes can give context, but one chart is in charge.",
-      "Giving the strategy a name sounds trivial, but it changes how you treat it. 'Opening Pullback v1' is a system with a version number that can be tested, measured and improved. 'Whatever looks good today' is a feeling, and feelings cannot be backtested.",
-      "This lesson is about narrowing, not about finding the 'best' market. Any choice you make now is a study choice for learning purposes inside the app's simulated environment."
+      "A pullback is a short, temporary move against an intraday trend that already exists. In an uptrend on an ETF such as NIFTYBEES, price rises, pauses or dips for a few candles, and then may continue higher. The pullback template is a set of rules that tries to join the existing trend during that dip, rather than buying after a long run when price is stretched far from any sensible stop.",
+      "The template starts with a trend filter, because without a trend there is nothing to pull back from. In this course an uptrend for pullback purposes means: the 20-period EMA on your primary timeframe (for example 5-minute) is rising, and price is trading above the session VWAP. Both conditions are observable — anyone looking at the chart would agree whether they are true.",
+      "A pullback is different from a reversal. A pullback dips toward a support zone while the trend structure (higher highs and higher lows, rising EMA, price mostly above VWAP) stays intact. A reversal breaks that structure: price closes below the prior higher low, below VWAP, and the EMA flattens or turns down. The rules you write over this week are designed to tell these apart as early as possible — imperfectly.",
+      "Everything in this phase is a template to test in Replay, Backtest and Paper with historical data and virtual money. It is not a pattern that works every time, and nothing here is a recommendation to trade any ETF with real money."
     ],
     why: [
-      "Every market and session behaves differently: volatility, typical range, spreads and the times of day when moves happen all change. If you switch markets and timeframes from day to day, your notes and statistics mix together and become meaningless. A narrow focus lets you collect comparable observations, which is the only way to learn whether a set of rules has any edge in historical data.",
-      "Focus also protects attention. A beginner watching ten charts misses the details on all of them; a beginner watching one chart starts to recognise how it normally behaves, which makes unusual behaviour easier to spot."
+      "Chasing a move that has already run tends to put your entry far from the nearest logical stop, which makes risk per unit large and reward small. Waiting for a pullback can shorten the distance to the stop, which improves the risk/reward of the plan — if the trend resumes. That 'if' is why the template must be tested.",
+      "ETFs like NIFTYBEES or BANKBEES often move in smaller percentage swings than the headlines suggest, and intraday costs eat into small moves. A clear, rule-based setup helps you take fewer, better-defined trades instead of many impulsive ones."
     ],
     how: [
-      "Open the Strategy Lab and create a new strategy draft.",
-      "Write the market you will study and one sentence on why (for example: liquid, plenty of historical data available in the Trading Practice Lab, moves during your available hours).",
-      "Write the session window you will study, with start and end times, and commit to ignoring charts outside it.",
-      "Pick one primary timeframe for decisions and, optionally, one higher timeframe for context only.",
-      "Name the strategy and give it a version number, e.g. 'Opening Pullback v1'. Every future rule change creates v2, v3 and so on.",
-      "Copy the name, market, session and timeframe into the top of your Playbook so every later lesson builds on the same foundation.",
-      "In the Trading Journal, write two sentences on what you expect this market to do in your chosen session — you will compare this with reality during backtesting."
+      "Open Trading → Learn and read the Pullback module introduction in the ETF Strategy Course.",
+      "Open Trading → Markets and load a 5-minute chart of a liquid ETF such as NIFTYBEES, with the 20-EMA and VWAP visible.",
+      "Find a session where the 20-EMA is rising and price stays above VWAP for at least an hour; mark it as 'trend present'.",
+      "Inside that trend, mark each dip of 2-6 candles that did not close below the previous higher low — these are candidate pullbacks.",
+      "Find one session with no clear trend (flat EMA, price crossing VWAP repeatedly) and note that the template says 'no pullback setup' there.",
+      "In Strategy Lab, create a draft called 'ETF Pullback v1' and write the trend filter in one sentence.",
+      "Add a Trading Journal note: 'Trend first. No trend = no pullback trade.'"
     ],
     example: {
-      title: "Hypothetical strategy header",
+      title: "Hypothetical trend + pullback on a 5-minute NIFTYBEES chart",
       lines: [
-        "Name: Opening Pullback v1 (hypothetical study strategy).",
-        "Market: one large, liquid index ETF (no specific ticker — study only).",
-        "Session: 09:45-11:15 local exchange time; no decisions outside this window.",
-        "Primary timeframe: 5-minute chart. Context timeframe: 60-minute chart.",
-        "Version log: v1 created Day 43 — no rules tested yet.",
-        "Note: this header describes what will be studied, not a recommendation to trade anything."
+        "All prices are hypothetical and chosen only to illustrate the idea.",
+        "09:45-10:30: price climbs from ₹261.20 to ₹262.60; 20-EMA rising; price above VWAP (₹261.70).",
+        "10:30-10:50: four candles drift down to ₹262.10 — near the 20-EMA (₹262.05). Higher low at ₹261.90 is not broken.",
+        "Template reading: trend present, pullback in progress, structure intact → 'watch for trigger' (no entry yet).",
+        "Counter-case: had price closed at ₹261.60, below VWAP and the prior higher low, the template would say 'pullback failed — no trade'.",
+        "This is a description of a chart, not a prediction or a recommendation."
       ]
     },
     mistakes: [
-      "Picking several markets at once, which splits your sample and makes the statistics impossible to interpret.",
-      "Switching primary timeframe mid-study because a different chart 'looked better' on one day, which is hindsight disguised as flexibility.",
-      "Choosing a session you cannot actually be present for, so your practice never matches your real schedule.",
-      "Skipping the name and version number, which makes it impossible to tell later which rules produced which results.",
-      "Treating the choice of market as a prediction of profit rather than a choice of what to study."
+      "Calling any red candle a pullback, even when there is no established trend.",
+      "Buying a dip in a market where the 20-EMA is flat or falling, which is catching a falling price rather than joining a trend.",
+      "Confusing a pullback with a reversal and ignoring the broken higher low.",
+      "Treating the template as a guaranteed pattern instead of a hypothesis to test.",
+      "Skipping the trend filter because the dip 'looks cheap'."
     ],
     quiz: [
-      { q: "What three things define a strategy's focus?", a: "One market, one session (time window) and one primary timeframe." },
-      { q: "Why give a strategy a name and version number?", a: "It turns a feeling into a testable system and lets you link results to a specific set of rules." },
-      { q: "What is the role of a higher timeframe if you use one?", a: "Context only — the primary timeframe is where decisions are made." }
+      { q: "What two conditions define an uptrend for the pullback template in this course?", a: "A rising 20-EMA on the primary timeframe and price trading above VWAP." },
+      { q: "How is a pullback different from a reversal?", a: "A pullback dips while trend structure stays intact; a reversal breaks it (close below the prior higher low and VWAP, EMA turning down)." },
+      { q: "What does the template say when there is no clear trend?", a: "No pullback setup — no trade." }
     ]
   },
 
   44: {
     what: [
-      "A setup is the specific market condition you wait for before even considering a trade. It describes the structure (what the trend or range looks like) and the location (where price is relative to important levels). Example: 'On the 15-minute chart, price is making higher highs and higher lows, and has pulled back to a prior resistance level that is now acting as support.'",
-      "A good setup definition is observable. That means anyone looking at the same chart, with your written rule in hand, would agree whether the setup is present or not. Words like 'strong', 'looks bullish' or 'feels like' are not observable. Words like 'two consecutive higher highs' or 'price within 0.2% of the level' are.",
-      "The setup is not the entry. It only tells you that conditions are right to start watching closely. The next lesson covers confirmation and the trigger that actually gets you in.",
-      "The rule 'no setup = no trade' is the backbone of discipline. If the condition you wrote down is not present, the correct action is to do nothing."
+      "Pullbacks in a trend often pause near areas that many participants watch. The template uses three: the 20-EMA (a moving average of recent price), VWAP (the session's volume-weighted average price), and a prior level (for example the high of an earlier consolidation that price broke above, which may now act as support).",
+      "These are zones, not exact prices. On NIFTYBEES a zone might be a few paise wide; on a more volatile sector ETF such as ITBEES it might be wider. A testable rule makes 'near' measurable, for example: 'the pullback candle's low is within 0.10% of the 20-EMA, VWAP or the marked level'.",
+      "Confluence means two or more zones sit close together — for example the 20-EMA and a prior breakout level both near ₹262.10. Confluence does not guarantee a bounce, but it gives you a more clearly defined area to watch, and a more obvious place for invalidation below it.",
+      "Each zone tends to behave a little differently. Shallow pullbacks in strong trends often only reach the 20-EMA. Deeper pullbacks may reach VWAP. A pullback that slices through all three zones is no longer a typical pullback, and the next lessons treat it as a warning sign."
     ],
     why: [
-      "Vague setups make honest testing impossible. If your definition can stretch to fit any chart, you will unconsciously include the charts that worked and exclude the ones that failed. A specific, observable definition is what lets a backtest measure the rules rather than your mood.",
-      "A clear setup also reduces decision fatigue. Instead of asking 'should I trade?' on every candle, you ask the narrower question 'is my setup present?', which is much easier to answer calmly."
+      "Without a defined zone, 'buy the dip' becomes 'buy whenever it feels low', which cannot be tested or reviewed. A written zone rule lets the Backtest tool and your own Replay notes apply the same definition every time.",
+      "Zones also anchor the stop. If the plan is 'price should hold the 20-EMA/VWAP area', then a clear close below that area is objective evidence the idea was wrong."
     ],
     how: [
-      "In your Strategy Lab draft, add a 'Setup' section under the strategy name.",
-      "Write the structure requirement in measurable terms (e.g. 'at least two higher highs and two higher lows on the primary timeframe').",
-      "Write the location requirement (e.g. 'pullback reaches a prior swing high that was broken earlier in the session, within a stated distance').",
-      "Add any context filter from the higher timeframe, written just as precisely.",
-      "Test the definition: open the Trading Practice Lab, replay three historical charts candle-by-candle and mark where you think the setup appears. Lock in 'No-Trade' whenever it does not appear.",
-      "Ask: would someone else, reading only my words, mark the same spots? Rewrite any phrase that relies on judgement.",
-      "Copy the final setup wording into your Playbook and save a screenshot of one clear example."
+      "In Trading → Learn, read the Pullback module section on pullback zones.",
+      "In Trading → Markets, open 5 recent 5-minute sessions of one liquid ETF with the 20-EMA and VWAP shown.",
+      "On each trend day, draw the most recent breakout level (prior swing high that price moved above).",
+      "For every pullback, tag which zone it reached first: 20-EMA, VWAP, prior level, or 'through all'.",
+      "Write a measurable 'near the zone' rule, such as 'low within 0.10% of the zone', and add it to ETF Pullback v1 in Strategy Lab.",
+      "Count how often each zone was reached and whether the trend later resumed; record the counts, not impressions.",
+      "Ask Trading → Ask AI to explain VWAP versus EMA in your own words, and check its answer against the course."
     ],
     example: {
-      title: "Turning a vague setup into a specific one (hypothetical)",
+      title: "Hypothetical zone tagging across five sessions",
       lines: [
-        "Vague: 'Price is trending up and pulls back to a good level.'",
-        "Specific: 'Primary (15-min) chart shows 2+ higher highs and higher lows since the open.'",
-        "Plus: 'Price pulls back to within 0.15% of a prior swing high that was broken earlier in the session.'",
-        "Plus: 'The 60-min chart is not making lower lows.'",
-        "Hypothetical replay check: 3 charts reviewed, setup present 4 times, absent on 1 entire chart → 'No-Trade' recorded there.",
-        "These numbers are for illustration only, not real market data."
+        "Hypothetical study counts for one ETF over 5 sessions — not real data.",
+        "Trend days found: 3. Pullbacks tagged: 9.",
+        "Reached 20-EMA only: 4 · reached VWAP: 3 · reached prior level with EMA confluence: 1 · went through all zones: 1.",
+        "'Near' rule used: candle low within 0.10% of the zone (on ₹262 that is about ₹0.26).",
+        "Note: 9 pullbacks is far too few to draw conclusions — this is practice in labelling, not evidence.",
+        "Next step: carry the same zone rule into Replay and Backtest without changing it."
       ]
     },
     mistakes: [
-      "Using subjective words like 'strong trend', which let you redefine the setup after you see the outcome.",
-      "Describing only structure and forgetting location, so the setup could appear anywhere on the chart.",
-      "Packing confirmation and entry into the setup definition, which blurs three separate decisions into one.",
-      "Writing a setup so loose that it appears on almost every chart, which usually means it captures nothing special.",
-      "Looking at the finished chart instead of replaying it candle-by-candle, which makes setups look clearer than they were in real time."
+      "Treating the EMA or VWAP as an exact line and calling a 1-paisa miss a failure (or a success).",
+      "Moving the zone after the fact to fit what price did.",
+      "Drawing so many levels that every price is 'near a level'.",
+      "Ignoring that zone width should suit the ETF's volatility and tick size.",
+      "Drawing conclusions from a handful of pullbacks."
     ],
     quiz: [
-      { q: "What two elements should every setup describe?", a: "Structure (trend or range shape) and location (where price is relative to key levels)." },
-      { q: "What is the test for whether a setup is specific enough?", a: "Two people reading the rule would independently agree it is present on the same chart." },
-      { q: "What should you do when the setup is not present?", a: "Nothing — no setup means no trade (record 'No-Trade' in practice)." }
+      { q: "Name the three pullback zones used in the template.", a: "The 20-EMA, VWAP, and a prior level such as an earlier breakout point." },
+      { q: "What is confluence?", a: "Two or more zones sitting close together, giving a clearer area to watch and to invalidate below." },
+      { q: "Why make 'near the zone' a measurable rule?", a: "So the same definition is applied every time and can be backtested and reviewed honestly." }
     ]
   },
 
   45: {
     what: [
-      "Once your setup is present, you still need evidence that the market is actually responding to it. That evidence is called confirmation. For a long pullback setup, confirmation might be a bullish rejection candle at the level: a candle with a long lower wick that closes in the upper part of its range.",
-      "The entry trigger is the exact, single event that gets you into the trade. It should be so specific that there is no debate: 'enter when price trades above the high of the confirmation candle' is a trigger; 'enter when it starts going up' is not.",
-      "Setup, confirmation and trigger are three separate checkpoints. Setup says 'conditions are right'. Confirmation says 'the market is reacting the way my idea expects'. Trigger says 'now'. If any one is missing, there is no entry.",
-      "Confirmation can fail. Sometimes the setup appears and no confirmation candle forms, or the trigger level is never reached. In that case the setup expires and you wait for the next one."
+      "Reaching a pullback zone is not an entry signal. The template waits for a trigger: a bullish candle at or near the zone that closes back up — for example a candle that closes above the prior candle's high, or closes in the upper part of its range after dipping into the zone. The exact trigger definition is yours to write, but it must be observable at the candle's close.",
+      "The entry is taken on the next bar, not inside the trigger candle. In Replay, Backtest and Paper this mirrors reality: you only know a candle closed bullish once it has closed, so the earliest realistic fill is at the next bar's open (plus slippage).",
+      "Invalidation is decided before entry. The template uses two rules: (1) a close below the pullback low means the dip was not a pullback after all — exit or do not enter; (2) if the 20-EMA turns down, the trend filter has failed — no new entries, and an open trade is managed toward exit. The initial stop goes just below the pullback low, with a small buffer for normal noise.",
+      "A target can be a fixed multiple of risk (for example 1.5R or 2R), the prior swing high, or a trailing stop — the important thing is to choose one approach and test it consistently."
     ],
     why: [
-      "Entering on the setup alone means acting before the market has shown anything. Entering on a vague feeling of confirmation means your entries will drift depending on mood. A precise confirmation and trigger make your entries repeatable, which is what lets backtesting and simulation measure the strategy rather than your guesswork.",
-      "A defined trigger also gives you a defined entry price, which you need to compute risk in R (the distance from entry to stop) in the next lesson."
+      "A trigger filters out pullbacks that keep falling. Without it you buy every dip into the zone, including the ones that turn into reversals.",
+      "Pre-defined invalidation turns a vague hope into a measurable risk. It also makes position sizing possible: risk per unit = entry − stop, and units = planned risk in ₹ ÷ risk per unit."
     ],
     how: [
-      "In the Strategy Lab, add a 'Confirmation' section and describe the candle or pattern you need, using measurable terms (e.g. 'lower wick at least 50% of the candle range, close in the top third').",
-      "Add an 'Entry trigger' section with one exact event (e.g. 'a trade 1 tick above the confirmation candle high').",
-      "Add an expiry rule: how long you will wait for the trigger before the setup is cancelled (e.g. '3 candles').",
-      "In the Trading Practice Lab, replay a historical chart. When your setup appears, pause and decide: is confirmation present? Lock your Long/Short/No-Trade decision before revealing the next candle.",
-      "Note every case where you hesitated about confirmation — these show where the wording is still ambiguous.",
-      "Rewrite unclear wording, then copy the final version into your Playbook."
+      "In Trading → Learn, read the Pullback module section on triggers and invalidation.",
+      "Write your trigger rule in Strategy Lab, e.g. 'bullish candle whose low touches the zone and which closes above the prior candle's high'.",
+      "Write the stop rule: 'initial stop = pullback low − buffer (e.g. ₹0.05 or 0.02%)' and the two invalidation rules.",
+      "Open Trading → Replay on a trend session; step candle by candle until price reaches a zone.",
+      "Lock Long only when a trigger candle has closed; otherwise lock No-Trade. Note entry as the next bar's open.",
+      "Calculate position size: planned risk in ₹ ÷ (entry − stop), rounded down to whole units.",
+      "Repeat until you have 3 valid triggers, and log each in the Trading Journal with a screenshot."
     ],
     example: {
-      title: "Setup → confirmation → trigger (hypothetical numbers)",
+      title: "Hypothetical trigger, entry, stop and size",
       lines: [
-        "Setup: uptrend on 5-min, pullback reaches prior resistance near a hypothetical level of 100.00.",
-        "Confirmation: candle range 99.80-100.30, low wick touches 99.80, closes at 100.22 (top third) → confirmed.",
-        "Trigger: enter if price trades above 100.31 (one tick above the candle high) within the next 3 candles.",
-        "Outcome A: next candle trades to 100.40 → simulated entry at 100.31.",
-        "Outcome B: price never exceeds 100.30 in 3 candles → setup expires, record 'No-Trade'.",
-        "All prices are hypothetical and chosen only to illustrate the sequence."
+        "Hypothetical NIFTYBEES 5-minute bars; numbers for illustration only.",
+        "Pullback low ₹262.02 near rising 20-EMA ₹262.05; price above VWAP ₹261.70.",
+        "Trigger candle closes ₹262.34, above prior candle high ₹262.20 → valid trigger at close.",
+        "Entry: next bar opens ₹262.36 + ₹0.01 slippage = ₹262.37. Stop: ₹262.02 − ₹0.05 buffer = ₹261.97.",
+        "Risk per unit = ₹0.40. Planned virtual risk ₹300 → 300 ÷ 0.40 = 750 units (≈ ₹1.97 lakh notional).",
+        "Target at 2R: ₹262.37 + ₹0.80 = ₹263.17 — before costs; costs still have to be subtracted.",
+        "Invalidation: a 5-minute close below ₹262.02 or the 20-EMA turning down → exit plan."
       ]
     },
     mistakes: [
-      "Treating the setup itself as confirmation, which means entering before the market has reacted.",
-      "Using a trigger with no precise price or event, so the entry changes with emotion.",
-      "Having no expiry rule, which leads to late entries long after the original idea has gone stale.",
-      "Lowering the confirmation standard after a few missed moves, which is fear of missing out rewriting the rules.",
-      "Stacking many indicators as 'confirmation' so that a valid entry almost never occurs."
+      "Entering inside the trigger candle before it has closed, which a backtest cannot reproduce honestly.",
+      "Placing the stop at a round number far from the pullback low, without a reason.",
+      "Moving the stop lower after entry to 'give it room'.",
+      "Forgetting that a large notional on a tight stop still has to pay costs on the full traded value.",
+      "Ignoring the EMA-turning-down rule because the trade is 'almost' back to breakeven."
     ],
     quiz: [
-      { q: "What is the difference between confirmation and a trigger?", a: "Confirmation is evidence the setup is working; the trigger is the exact event that puts you in." },
-      { q: "What happens if confirmation never appears?", a: "There is no entry; the setup expires and you wait for the next one." },
-      { q: "Why does an exact trigger matter for later lessons?", a: "It defines the entry price, which is needed to measure risk (R) and test the rules consistently." }
+      { q: "When is the earliest realistic entry after a trigger candle?", a: "At the next bar's open (plus slippage), once the trigger candle has closed." },
+      { q: "What are the two invalidation rules in the template?", a: "A close below the pullback low, or the 20-EMA turning down." },
+      { q: "How is position size calculated?", a: "Planned risk in ₹ ÷ (entry − stop), rounded down to whole units." }
     ]
   },
 
   46: {
     what: [
-      "The stop-loss rule says exactly where you exit if the trade idea is wrong. A well-placed stop sits at the point of invalidation: the price where your setup no longer makes sense. For a long pullback with a rejection candle, that is often just below the rejection wick.",
-      "The distance between your entry and your stop is called 1R (one unit of risk). Expressing results in R instead of money lets you compare trades of different sizes: a trade that gains twice the amount it risked is a +2R trade; a full stop-out is −1R.",
-      "The target rule says where you plan to take profit. Two common approaches are a structural target (the next resistance level for a long) or a fixed R multiple (for example, 2R). Many plans also include a minimum reward-to-risk rule, such as 'skip the trade if the nearest obstacle is less than 1.5R away'.",
-      "All of this is written before the trade, not decided during it."
+      "Many pullbacks do not resume the trend. Some become reversals, some turn into sideways chop, and some simply run out of time before the session ends. A failed pullback is not a mistake by itself — it is a normal outcome that the stop is designed to handle. What matters is recognising warning signs and keeping losses at the planned size.",
+      "Common warning signs: the pullback is deep (it goes through the 20-EMA, VWAP and the prior level all at once); the selling candles have noticeably higher volume than the rising candles before them; price closes below VWAP and stays there; the 20-EMA flattens or turns down; or the move happens late in the session, when there is little time left before square-off.",
+      "Market-wide context matters too. Sector ETFs such as BANKBEES or ITBEES can be pulled around by their underlying index, and broad-market news can override any intraday pattern. Around scheduled events (policy announcements, major data releases) the template is safer skipped.",
+      "The aim is not to predict which pullbacks will fail — that is not reliably possible — but to write skip conditions and exit rules that keep the failures small and comparable."
     ],
     why: [
-      "Decisions made with a position open are made under stress, and stress pushes beginners to widen stops and cut winners early. Fixed rules remove that in-the-moment choice. They also make backtesting possible: you cannot test a rule that only exists in your head.",
-      "Measuring in R makes your statistics honest. A strategy that wins often but loses 3R on each loser can look good on win rate alone and still lose overall."
+      "If you treat every failure as a surprise, you are tempted to hold, average down or move the stop. Expecting failures as part of the template makes it easier to accept a planned, small loss.",
+      "Skip conditions also reduce trade count in poor conditions, which reduces costs paid on low-quality setups."
     ],
     how: [
-      "In the Strategy Lab, write the stop rule using a chart reference (e.g. 'one tick below the low of the confirmation candle').",
-      "Add a maximum stop distance; if the invalidation point is too far, the trade is skipped.",
-      "Write your target rule: structural level, fixed R multiple, or both (e.g. 'the nearer of the next resistance or 2R').",
-      "Write a minimum R:R rule and test it on a few historical charts in the Trading Practice Lab.",
-      "Before each practice decision, write entry, stop and target in the replay notes, then lock your decision.",
-      "Record the outcome of each practice trade in R in the Trading Journal.",
-      "Copy the final stop and target rules into your Playbook."
+      "In Trading → Learn, read the Pullback module section on failure signs.",
+      "In Trading → Replay, find 2 sessions where a pullback started normally and then failed; step through them candle by candle.",
+      "For each, note the first candle where a warning sign appeared and whether the invalidation rule would have exited.",
+      "Write skip conditions in Strategy Lab, e.g. 'no entry if the pullback closes below VWAP' and 'no new entries after 14:45 IST'.",
+      "Open Mistake Lab and add 'holding a failed pullback' and 'averaging down' as mistakes to watch for.",
+      "In the Psychology journal, write how you felt watching a planned stop get hit in Replay."
     ],
     example: {
-      title: "Computing R and checking the minimum R:R (hypothetical)",
+      title: "Hypothetical failed pullback on BANKBEES",
       lines: [
-        "Hypothetical entry 50.40, stop 50.10 → risk per share 0.30 = 1R.",
-        "Next resistance at 50.90 → reward 0.50 → 0.50 / 0.30 = 1.67R.",
-        "Rule: minimum 1.5R → trade qualifies. Target = the nearer of resistance (1.67R) or 2R → 50.90.",
-        "If price hits 50.90: result +1.67R. If price hits 50.10: result −1R.",
-        "If resistance had been at 50.70 (1.0R), the rule says skip the trade.",
-        "Numbers are illustrative only and not real market prices."
+        "Hypothetical 5-minute bars; prices for illustration only.",
+        "Morning trend: 20-EMA rising, price above VWAP ₹519.80.",
+        "11:20: pullback begins; three red candles on volume about 2× the prior rising candles.",
+        "11:35: close at ₹519.55 — below VWAP and below the prior higher low ₹519.70 → template says 'pullback failed, no entry'.",
+        "If a trade had been open from an earlier trigger, the stop below the pullback low would have closed it at a planned loss of about 1R.",
+        "Lesson: the template did its job by limiting the damage, not by being right."
       ]
     },
     mistakes: [
-      "Placing the stop at a round money amount instead of the invalidation point, so it gets hit by normal noise or sits far too wide.",
-      "Moving the stop further away once the trade is open, which turns a −1R loss into a much larger one.",
-      "Measuring results in money instead of R, which hides whether losses are larger than wins.",
-      "Setting targets beyond obvious obstacles, so price repeatedly stalls before reaching them.",
-      "Leaving the rules unwritten and 'deciding when I see it'."
+      "Averaging down into a failing pullback.",
+      "Removing or widening the stop after the warning signs appear.",
+      "Entering late-day pullbacks with no time for the move to develop before square-off.",
+      "Treating one failed pullback as proof the template is useless — single outcomes prove nothing.",
+      "Ignoring broad-market or event risk that affects the whole ETF."
     ],
     quiz: [
-      { q: "What is 1R?", a: "The distance (risk) between your entry price and your stop-loss price." },
-      { q: "Where should a stop be placed in principle?", a: "At the invalidation point — where the setup idea is proven wrong." },
-      { q: "Hypothetical: risk 0.40, reward 0.60. What is the R:R?", a: "0.60 / 0.40 = 1.5R." }
+      { q: "Name three warning signs of a failing pullback.", a: "Any three of: very deep pullback through all zones, heavy selling volume, close below VWAP, 20-EMA flattening or turning down, late-session timing." },
+      { q: "Is a stopped-out pullback trade a mistake?", a: "Not by itself — a planned, rule-based loss is a normal outcome. Breaking the rules is the mistake." },
+      { q: "Why add a time-of-day skip rule?", a: "Late in the session there is little time for the move to work before end-of-day square-off." }
     ]
   },
 
   47: {
     what: [
-      "Exit rules cover every way a trade can end other than the original stop or target. They answer questions like: What if the trade goes nowhere for an hour? What if it moves halfway to target and stalls? What if the setup is clearly broken before the stop is hit?",
-      "Time exits close a trade after a set number of candles or at a fixed clock time (for example, at the end of your session) if neither stop nor target has been reached. Trailing stops move the stop in the direction of the trade according to a rule, such as 'below each new higher low'. Partial profits mean closing part of a position at one level and leaving the rest for a further target.",
-      "Early invalidation exits close the trade when the reason for it disappears before the stop is hit — for example, a long trade where price closes back below the support level that defined the setup.",
-      "The key idea: every exit is decided before entry, and each one is written as a rule, not a feeling."
+      "Replay shows a historical session one candle at a time. You do not see the future, so each decision is made with the same information you would have had then. At each step you can lock Long, Short or No-Trade, and the tool gives a process score based on whether the decision matched your written rules — not on whether it made money.",
+      "Today you bring the whole pullback checklist into Replay: trend filter (rising 20-EMA, price above VWAP), pullback to a zone, trigger candle closing back up, entry at the next bar, stop below the pullback low, invalidation rules and skip conditions. The template in this course is long-only; any short-side version would need its own rules and its own testing.",
+      "No-Trade is an important decision. On many sessions the correct answer, according to your rules, is to do nothing. A good process score often includes many No-Trade decisions.",
+      "Process score and P&L measure different things. A rule-following trade can lose and a rule-breaking trade can win; over many decisions, consistent process is what makes results interpretable."
     ],
     why: [
-      "Without exit rules, open trades become a stream of emotional decisions: grabbing a small profit out of fear, or holding a dead trade out of hope. Pre-written exits keep management consistent, and consistency is what makes simulated results comparable to backtested ones.",
-      "Exit choices also change your statistics. Partial profits raise win rate but lower average win; trailing stops do the opposite. You need to know which rules you are using to understand your numbers."
+      "Reading about a template is not the same as applying it under uncertainty. Replay exposes the hesitation, early entries and second-guessing that never show up when you look at a finished chart.",
+      "Logging each decision creates a record you can compare with the backtest next lesson, which checks whether you apply the rules the same way the computer does."
     ],
     how: [
-      "In the Strategy Lab, add an 'Exits' section with four headings: time exit, trailing rule, partial rule, early invalidation.",
-      "Write a time exit (e.g. 'close if neither stop nor target is hit within 12 candles, and always by session end').",
-      "Decide whether you use a trailing stop; if yes, define exactly when it starts and how it moves.",
-      "Decide whether you take partials; if yes, define the level and size (e.g. 'half at 1R, stop to entry').",
-      "Write one early invalidation rule tied to your setup (e.g. 'a candle closes back below the support level').",
-      "Replay two historical charts in the Trading Practice Lab, apply the exits candle-by-candle, and note any situation the rules did not cover.",
-      "Update the rules for the gaps you found and copy them into your Playbook — this is v1 of your exits; later changes become v2."
+      "Open your ETF Pullback v1 checklist from Strategy Lab and keep it visible.",
+      "In Trading → Replay, choose a liquid ETF, a 5-minute timeframe and a session you have not looked at before.",
+      "Step candle by candle. At each decision point, lock Long or No-Trade before revealing the next bar.",
+      "For every Long, record entry (next open), stop, target and the rule that justified it.",
+      "Complete 3 sessions and note the process score for each.",
+      "In the Trading Journal, list any rule you broke or hesitated on, and add repeat errors to Mistake Lab."
     ],
     example: {
-      title: "Same hypothetical trade, three exit rules",
+      title: "Hypothetical Replay log — three sessions",
       lines: [
-        "Hypothetical long: entry 20.00, stop 19.80 (1R = 0.20), target 20.40 (2R).",
-        "Price rises to 20.25, stalls, then drifts back and hits 19.80.",
-        "Rule set A (stop/target only): −1R.",
-        "Rule set B (half off at 1R = 20.20, stop to entry): +0.5R on half, 0R on the rest → +0.5R total.",
-        "Rule set C (time exit after 12 candles, price at 20.05 then): +0.25R.",
-        "Lesson: the exit rule changes the result, so pick one in advance and test that exact rule."
+        "Hypothetical results for illustration only.",
+        "Session A (trend day): 1 Long on 20-EMA pullback, stopped out −1R. Rules followed → process score high.",
+        "Session B (choppy day): 0 trades, 6 No-Trade locks (EMA flat). Process score high.",
+        "Session C (trend day): 1 Long entered before trigger candle closed → rule break; trade won +1.2R. Process score low.",
+        "Takeaway: the winning trade in C was the worst decision of the three.",
+        "Action: add 'wait for candle close' to Mistake Lab."
       ]
     },
     mistakes: [
-      "Deciding how to exit only after the trade is open, which invites fear and hope to take over.",
-      "Moving the stop to break-even too early by habit, so normal pullbacks knock you out of valid trades.",
-      "Using partials and trailing stops without recording them, so backtest and simulation stats cannot be compared.",
-      "Ignoring early invalidation and waiting for the full stop even when the setup is clearly broken.",
-      "Having no session-end rule, so practice trades are held into periods your strategy was never designed for."
+      "Peeking ahead or replaying a session you remember, which removes the uncertainty.",
+      "Judging the day by P&L instead of process score.",
+      "Avoiding No-Trade because it feels like 'not practising'.",
+      "Changing the checklist mid-session after a loss.",
+      "Not recording the rule behind each decision."
     ],
     quiz: [
-      { q: "Name the four exit types covered in this lesson.", a: "Time exits, trailing stops, partial profits and early invalidation exits." },
-      { q: "When should exit rules be decided?", a: "Before entry, as written rules." },
-      { q: "How do partial profits typically affect statistics?", a: "They tend to raise win rate while lowering the average winning R." }
+      { q: "What does the Replay process score measure?", a: "Whether each decision followed your written rules, not whether it made money." },
+      { q: "Can a winning trade be a bad decision?", a: "Yes — if it broke the rules, it is a bad process even with a good outcome." },
+      { q: "Why is No-Trade a valid decision?", a: "When the conditions in your rules are not met, doing nothing is the rule-following choice." }
     ]
   },
 
   48: {
     what: [
-      "No-trade conditions are rules that tell you when to stay out, even if a setup appears. They are just as much a part of your strategy as entry rules.",
-      "Common categories: scheduled news and low-liquidity times (major economic releases, the first minutes after the open, holiday sessions), choppy conditions (price overlapping in a tight range with no clear structure), limits already hit (you have reached your maximum daily loss or maximum number of trades), and personal state (tired, ill, angry, distracted, or trying to 'win back' a loss).",
-      "Choppy conditions can be defined objectively, for example: 'the last 10 candles overlap and the range is less than X% of the session average range'. Personal-state rules can be a short checklist answered honestly before the session.",
-      "'No-Trade' is a valid decision. In the Trading Practice Lab it is one of the three locked choices for exactly this reason."
+      "The Backtest tool applies your written rules to historical ETF data automatically. You pick an ETF, a date range, a timeframe (1m, 5m or 15m) and the strategy settings; it then simulates every signal using next-bar fills and the Indian cost model, and produces a report.",
+      "To backtest the pullback template, each rule must be mechanical: trend filter (20-EMA rising, close above VWAP), zone (low within X% of 20-EMA or VWAP), trigger (bullish close above prior high), entry (next bar open), stop (below pullback low), target (e.g. 2R) and exits (invalidation, end-of-day square-off). Anything that relies on 'feel' cannot be tested.",
+      "Split the data by date: an earlier training period where you study results and may adjust rules, and a later out-of-sample period you run once, unchanged. Phase 9 covers this in detail; for now, set it up and do not tune on the out-of-sample section.",
+      "Results describe how one set of rules would have behaved on past data under the tool's assumptions. They do not predict future results, and a small number of trades says very little."
     ],
     why: [
-      "Many losses for beginners come not from a bad strategy but from trading it in conditions it was never designed for. Excluding those conditions removes a large source of random results and emotional mistakes.",
-      "Written no-trade rules also protect you from yourself. After a loss or a long boring wait, the urge to 'do something' is strong; a rule that was written when you were calm is much harder to argue with."
+      "Replay gives you a feel for a few sessions; a backtest checks the same rules across many sessions consistently. It is the first place where costs, trade frequency and drawdown become visible together.",
+      "Fixing the rules before running the test protects you from adjusting them to fit what you see — the beginning of overfitting."
     ],
     how: [
-      "In the Strategy Lab, add a 'No-Trade Conditions' section.",
-      "List time-based exclusions: scheduled high-impact news windows, the first minutes of the session, and any holiday or half-day sessions.",
-      "Define choppy conditions in measurable terms you can see on your primary chart.",
-      "Write your limits: maximum daily loss in R and maximum number of trades per session; after either is hit, the session ends.",
-      "Write a three-question readiness check (sleep, mood, distractions) to answer before every practice session.",
-      "In the Trading Practice Lab, replay a choppy historical chart and practise locking 'No-Trade' each time the setup appears inside the chop.",
-      "Copy the conditions into your Playbook and add a 'No-Trade log' column to your Trading Journal."
+      "Write the full rule list for ETF Pullback v1 in Strategy Lab and save it as fixed for this test.",
+      "Open Trading → Backtest and choose one liquid ETF, e.g. NIFTYBEES, on the 5-minute timeframe.",
+      "Pick a date range with enough sessions to produce at least ~30 trades; set the training/out-of-sample split by date.",
+      "Confirm the cost model settings (brokerage, STT, exchange, SEBI, stamp duty, GST, slippage) are switched on.",
+      "Run the training period first; record trade count, win rate, net P&L, profit factor, max drawdown and expectancy.",
+      "Run the out-of-sample period once with no rule changes and record the same metrics.",
+      "In the Trading Journal, note any differences between backtest trades and your Replay decisions."
     ],
     example: {
-      title: "A hypothetical pre-session no-trade check",
+      title: "Hypothetical pullback backtest summary",
       lines: [
-        "Scheduled high-impact release in 20 minutes → no new entries until 15 minutes after it.",
-        "Last 10 candles on 5-min chart overlap, range 40% of the session average → 'choppy' rule active.",
-        "Daily limits: −2R max loss, 3 trades max. Current: −1R, 1 trade → still allowed.",
-        "Readiness: slept 5 hours, feeling irritable → readiness check fails.",
-        "Decision: no session today; log reasons in the Trading Journal.",
-        "Scenario is hypothetical and for practice only."
+        "Hypothetical numbers for illustration only — not real results.",
+        "ETF: NIFTYBEES · 5m · training: 6 months · out-of-sample: next 3 months.",
+        "Training: 46 trades · win rate 43% · gross P&L ₹4,100 · costs ₹3,200 · net P&L ₹900 · profit factor 1.09.",
+        "Out-of-sample: 21 trades · win rate 38% · net P&L −₹650.",
+        "Reading: costs absorbed most of the gross edge; out-of-sample has fewer than 30 trades, so it is inconclusive.",
+        "Next step: record, do not tune to make the numbers look better."
       ]
     },
     mistakes: [
-      "Treating no-trade rules as optional suggestions that can be skipped when a setup 'looks too good'.",
-      "Defining 'choppy' by feel, which lets you decide after the fact whether the rule applied.",
-      "Continuing after hitting the daily loss limit to win it back, which tends to compound losses.",
-      "Ignoring personal state, as if fatigue or anger did not affect decisions.",
-      "Not recording no-trade decisions, so you never see how much discipline actually saved you."
+      "Changing rules after looking at results, then re-running until the numbers look good.",
+      "Reporting gross P&L and ignoring costs.",
+      "Testing a date range so short that only a handful of trades occur.",
+      "Testing on a thinly traded ETF where the fills in the report are unrealistic.",
+      "Reading a positive backtest as a forecast or a reason to trade real money."
     ],
     quiz: [
-      { q: "Name four categories of no-trade conditions.", a: "News/low-liquidity times, choppy conditions, after hitting limits, and when not mentally ready." },
-      { q: "What should happen after the maximum daily loss is reached?", a: "The session ends — no further trades that day." },
-      { q: "Is 'No-Trade' a valid decision in practice?", a: "Yes — it is a rule-based decision and should be recorded like any other." }
+      { q: "Why must rules be fixed before running the backtest?", a: "So you do not adjust them to fit the data you are looking at, which leads to overfitting." },
+      { q: "What is the out-of-sample period for?", a: "A later date range run once, unchanged, to see how the rules behaved on data not used to build them." },
+      { q: "What does a backtest result tell you about the future?", a: "Nothing guaranteed — it only describes past behaviour under the tool's assumptions." }
     ]
   },
 
   49: {
     what: [
-      "This week you built a strategy from scratch. Day 43 gave it a focus: one market, one session, one primary timeframe and a name with a version number. Day 44 defined the setup — the specific, observable structure and location you wait for.",
-      "Day 45 separated confirmation (evidence the setup is working) from the entry trigger (the exact event that gets you in). Day 46 set the stop at the invalidation point, defined 1R, and added target and minimum R:R rules. Day 47 added exit rules beyond stop and target: time exits, trailing stops, partials and early invalidation. Day 48 added no-trade conditions.",
-      "Put together, these form a complete, testable strategy document. A review day is where you check that the pieces fit together and that you can explain each one without looking at your notes."
+      "This week built the pullback template step by step. Day 43 set the trend filter: rising 20-EMA and price above VWAP. Day 44 defined the pullback zones: 20-EMA, VWAP and prior levels, treated as measurable zones. Day 45 added the bullish trigger candle, next-bar entry, stop below the pullback low and two invalidation rules (close below the pullback low, EMA turning down).",
+      "Day 46 covered failure: deep pullbacks, heavy selling volume, VWAP loss, a turning EMA and late-session timing as warning signs, and skip conditions to avoid them. Day 47 applied the checklist in Replay with locked decisions and process scores. Day 48 ran the rules in Backtest with costs and a train/out-of-sample split.",
+      "Together these form ETF Pullback v1: a complete, testable template. It is not a proven edge. Whatever your backtest showed, the sample is likely small and the results describe only the past.",
+      "Review day is for consolidating and clarifying — not for adding new indicators or rewriting the strategy based on a few trades."
     ],
     why: [
-      "Next week you will backtest this strategy. Any ambiguity left in the rules now will show up as inconsistent decisions in the backtest, which makes the results unreliable. Fixing wording today is far cheaper than discovering after 50 samples that you applied a rule two different ways.",
-      "Rewriting ideas from memory is also how learning sticks. If you cannot explain a rule in your own words, you will not apply it consistently under pressure."
+      "Writing a clean summary now makes the next phases easier: range trading will be compared to this template, and Phase 9 will test it more rigorously.",
+      "Clarifying ambiguous rules is more valuable than adding new ones. Every vague word is a place where your Replay and Backtest decisions can drift apart."
     ],
     how: [
-      "Re-read this week's Trading Journal entries and your Strategy Lab draft from top to bottom.",
-      "Without looking, write the full strategy from memory on a blank page: name, focus, setup, confirmation, trigger, stop, target, exits, no-trade conditions.",
-      "Compare with the draft. Any rule you forgot or wrote differently is your weakest concept — re-read that lesson.",
-      "Run a 'second-person test': read only the written rules and replay one historical chart in the Trading Practice Lab, applying them literally. Note every moment you had to interpret.",
-      "Tighten the wording for each interpretation point and save as v1 final in the Strategy Lab and Playbook.",
-      "Save the two or three most useful insights from the week to the Knowledge Vault."
+      "Reread the key points for days 43-48 and answer this week's quiz questions without notes.",
+      "In Strategy Lab, check that every rule of ETF Pullback v1 is observable at a candle close.",
+      "Compare your Replay log (Day 47) with the backtest trade list (Day 48) and note any rule you applied differently.",
+      "Write a one-paragraph summary in the Playbook: trend filter, zones, trigger, stop, target, invalidation, skip rules.",
+      "List at most one rule to clarify for a future v2 — record it, but do not test it yet.",
+      "Log this week's most common mistake in Mistake Lab."
     ],
     example: {
-      title: "Hypothetical self-review walkthrough",
+      title: "Hypothetical Playbook summary — ETF Pullback v1",
       lines: [
-        "Wrote the strategy from memory: forgot the trigger expiry rule and the time exit.",
-        "Weakest concept: exits (Day 47) → re-read and summarised in 3 sentences.",
-        "Second-person replay test on one historical chart: 2 interpretation points found.",
-        "Point 1: 'near the level' → rewritten as 'within 0.15% of the level'.",
-        "Point 2: 'choppy' undefined → rewritten as 'last 10 candles overlap'.",
-        "Saved 'Opening Pullback v1 final' to the Playbook; 2 insights added to the Knowledge Vault."
+        "Template only; numbers are hypothetical settings to be tested, not recommendations.",
+        "Trend: 5m 20-EMA rising and close above VWAP.",
+        "Zone: pullback low within 0.10% of 20-EMA, VWAP or prior breakout level.",
+        "Trigger: bullish candle closing above prior candle high; enter next bar open.",
+        "Stop: pullback low − small buffer. Target: 2R. Square-off at end of day.",
+        "Invalidate: close below pullback low or 20-EMA turning down. Skip: after 14:45 IST, around scheduled news.",
+        "Evidence so far: Replay 3 sessions, one backtest with < 30 out-of-sample trades — inconclusive."
       ]
     },
     mistakes: [
-      "Skimming notes instead of recalling them, which feels productive but builds little understanding.",
-      "Starting to backtest with rules that still contain vague words, which makes the results unreliable.",
-      "Adding lots of new rules on review day, creating a complicated strategy before any evidence exists.",
-      "Skipping the no-trade section because it feels less important than entries.",
-      "Treating a tidy strategy document as proof that it works — only testing can show that, and even then not guarantee future results."
+      "Rewriting the template after a single bad Replay session.",
+      "Adding extra indicators to 'fix' losses without testing.",
+      "Calling the strategy 'proven' after one backtest.",
+      "Leaving rules vague because they feel obvious.",
+      "Skipping the comparison between Replay decisions and backtest trades."
     ],
     quiz: [
-      { q: "List the main sections of a complete strategy document.", a: "Name and focus, setup, confirmation, entry trigger, stop, target/min R:R, exit rules, no-trade conditions." },
-      { q: "Why fix vague wording before backtesting?", a: "Ambiguous rules get applied inconsistently, which makes backtest results unreliable." },
-      { q: "What is the 'second-person test'?", a: "Applying only the written rules literally to a chart to find places where interpretation is needed." }
+      { q: "List the pullback template steps in order.", a: "Trend filter, pullback to a zone, bullish trigger close, next-bar entry with stop below the pullback low, target/exit, invalidation rules." },
+      { q: "Why compare Replay decisions with backtest trades?", a: "To find rules you apply differently from the mechanical version, which means a rule is unclear." },
+      { q: "How many rule changes should go into v2 at once?", a: "One at a time, so you can tell what caused any difference." }
     ]
   },
 
   50: {
     what: [
-      "Backtesting means going through historical charts and applying your written rules to find every instance of your setup, then recording what would have happened under those rules. It is a way to gather evidence about how a set of rules behaved in the past.",
-      "Manual backtesting is done bar by bar: you hide the future, reveal one candle at a time, and decide as if it were happening live. The app's Trading Practice Lab is built for this — historical replay, candle-by-candle, with locked Long/Short/No-Trade decisions so you cannot change your mind after seeing the next candle.",
-      "Two rules make or break a backtest. First, record every valid setup, including every loser; skipping losses produces a fantasy. Second, follow the rules exactly as written; if you improvise, you are testing your improvisation, not the strategy.",
-      "Even an honest backtest has limits. Historical results do not guarantee future results, and replay cannot fully reproduce slippage, fills, or the emotions of real-time decisions."
+      "A range is a period when price moves sideways between a support area below and a resistance area above, turning back from each more than once. Many ETF sessions — especially quiet days on NIFTYBEES or GOLDBEES — spend hours inside a range.",
+      "The template requires objective evidence before calling something a range: at least two touches of support and at least two touches of resistance on the primary timeframe, a flat 20-EMA (no clear slope), and price crossing back and forth over VWAP. A 'touch' means the candle's low (or high) comes within a defined distance of the boundary and price then turns away.",
+      "Boundaries are zones, not exact lines. A range might be 'support ₹518.20-518.35, resistance ₹520.25-520.40'. Measure the width both in rupees and as a percentage of price; that width decides whether a range is even worth considering after costs.",
+      "A range is a description of the recent past. It can end at any moment with a breakout. The range template is a rule set to test, not an assumption that the boundaries will hold."
     ],
     why: [
-      "Without a backtest, you have no idea whether your rules have any edge at all — you only have a story. A backtest gives you a baseline: how often the setup appears, a rough win rate, an average R, and how bad losing streaks can be.",
-      "That baseline is what you later compare your simulated trading against. If simulation results are far worse than the backtest, the gap tells you where your execution or psychology is breaking down."
+      "Trend and pullback rules perform poorly in sideways markets, and range rules perform poorly in trends. Identifying the market type first decides which template, if any, applies.",
+      "Many intraday ranges on large index ETFs are narrow. Measuring width early prevents you from studying ranges that could never cover round-trip costs."
     ],
     how: [
-      "Choose a historical date range in the Trading Practice Lab before you start, and commit to testing every session in it — no skipping days.",
-      "Open your strategy v1 rules from the Strategy Lab beside the chart.",
-      "Reveal candles one at a time. Only decide when your setup and confirmation are present; otherwise lock 'No-Trade'.",
-      "For each trade, write entry, stop and target before revealing the next candle, then lock the decision.",
-      "Step forward until the trade exits under your rules, and record the result in R.",
-      "Log every trade in the Backtesting journal, including date, setup quality, result and a screenshot.",
-      "Never edit rules during the test; write improvement ideas in a separate 'later' list."
+      "In Trading → Learn, read the Range module introduction in the ETF Strategy Course.",
+      "In Trading → Markets, open a 5-minute chart of a liquid ETF with the 20-EMA and VWAP visible.",
+      "Find a session where the 20-EMA is flat; mark the highest and lowest turning points that were touched at least twice.",
+      "Draw the support and resistance zones and record the touch times.",
+      "Measure width: resistance − support in ₹, and divide by price for %.",
+      "Compare the width with the round-trip cost estimate from Day 6 (or the Backtest cost settings) and note the ratio in the Trading Journal.",
+      "Repeat for 3 ranges on at least two different ETFs."
     ],
     example: {
-      title: "First hour of a hypothetical backtest",
+      title: "Hypothetical BANKBEES range identification",
       lines: [
-        "Date range chosen in advance: 20 historical sessions in the replay library.",
-        "Session 1: setup appears twice. First: no confirmation → 'No-Trade' logged. Second: confirmed → simulated long.",
-        "Hypothetical entry 30.20, stop 30.05 (1R = 0.15), target 30.50 (2R).",
-        "Revealed candle-by-candle: stop hit after 4 candles → −1R, logged with screenshot.",
-        "Temptation: 'that one shouldn't count, the candle was a bit small' → logged anyway, idea noted for later.",
-        "All figures hypothetical; backtest results never guarantee future performance."
+        "Hypothetical 5-minute bars; numbers for illustration only.",
+        "Support touches: 10:20 low ₹518.25, 11:35 low ₹518.30. Resistance touches: 10:50 high ₹520.35, 12:10 high ₹520.30.",
+        "20-EMA flat around ₹519.30; price crossed VWAP 5 times since 10:00.",
+        "Width: ₹520.35 − ₹518.25 = ₹2.10 → about 0.40% of price.",
+        "Template reading: valid range (2+ touches each side, flat EMA). Next lesson decides whether and where to act.",
+        "If width had been ₹0.40 (about 0.08%), the template would flag it as too narrow versus costs."
       ]
     },
     mistakes: [
-      "Hindsight bias: looking at the right side of the chart before deciding, which makes setups look cleaner than they were.",
-      "Cherry-picking dates or charts that 'look interesting', which skews the sample toward obvious moves.",
-      "Skipping losers because they were 'not really' the setup, which inflates results.",
-      "Changing rules mid-test, which means no single set of rules has actually been tested.",
-      "Ignoring realistic costs and slippage, which makes small-R strategies look better than they would be."
+      "Calling a range after one touch on each side.",
+      "Drawing boundaries at exact prices and treating a small overshoot as a breakout.",
+      "Ignoring a sloping EMA — a gently trending channel is not a flat range.",
+      "Forgetting to measure width relative to costs.",
+      "Assuming the range will keep holding because it held before."
     ],
     quiz: [
-      { q: "What are the two most important rules for honest backtesting?", a: "Record every valid setup including losers, and follow the written rules exactly." },
-      { q: "Why replay candle-by-candle instead of viewing the whole chart?", a: "To avoid hindsight bias — you decide with only the information available at that moment." },
-      { q: "Does a good backtest guarantee future results?", a: "No. It is evidence about past data only and cannot predict the future." }
+      { q: "What evidence does the template require to call a range?", a: "At least two touches of support and of resistance, a flat 20-EMA, and price crossing VWAP repeatedly." },
+      { q: "Why measure range width as a percentage?", a: "To compare it with round-trip costs and see whether the range could even cover them." },
+      { q: "Are range boundaries exact prices?", a: "No — they are zones with some tolerance." }
     ]
   },
 
   51: {
     what: [
-      "Backtest Session 1 is about building the recording habit. The goal is not to find out whether the strategy 'works' — ten trades cannot tell you that. The goal is to log your first ten or so samples with complete, consistent detail.",
-      "Each Backtesting journal entry should contain: date and time, direction, entry, stop, target, result in R, setup quality (for example A/B/C against your written definition), a screenshot of the chart at entry and at exit, and any mistake you made applying the rules.",
-      "Setup quality is a grade of how cleanly the chart matched your written setup, not a guess about the outcome. Grade it before you reveal the result.",
-      "Mistakes here mean rule-application errors: you entered without confirmation, misplaced the stop, forgot the time exit. These are logged honestly, because they reveal ambiguity in the rules and gaps in your attention."
+      "The range template only considers trades near the edges: buying near support, or selling near resistance. The middle of a range offers roughly equal distance to both boundaries, so the reward available is small relative to the risk — the template ignores it.",
+      "Being near an edge is not enough. The template requires a rejection: a candle that pushes into the boundary zone and then closes back inside the range, away from the edge — for example a long lower wick at support with a close in the upper half of the candle. Entry is at the next bar's open, just as in the pullback template.",
+      "Selling near resistance means either exiting an existing long or, in simulation, opening a short. Intraday short selling of ETFs has its own rules, margins and risks in real markets; in this course the short side is studied only as a simulated exercise in Replay and Backtest, and you may choose to keep your template long-only.",
+      "A rejection is evidence that the edge is holding for now, not a promise. Edges break, and the next lessons cover when to stand aside and where to place stops."
     ],
     why: [
-      "Every later statistic depends on clean records. If the first sessions are sloppy — missing stops, results in money instead of R, no screenshots — the data cannot be trusted or reviewed later. Habits formed in session 1 tend to last for the whole test.",
-      "Screenshots matter more than they seem: in Session 4 and 5 you will compare setups and review mistakes, which is impossible from numbers alone."
+      "Edge entries with a rejection create a natural stop location (just beyond the boundary) and a natural target (the midpoint or opposite edge). That structure is what makes the setup testable.",
+      "Waiting for rejection filters out many touches that break straight through the boundary, at the cost of a slightly worse entry price."
     ],
     how: [
-      "Start where your pre-chosen date range begins in the Trading Practice Lab; do not skip ahead to 'interesting' days.",
-      "Before revealing each confirmation candle, grade the setup quality A/B/C and write it down.",
-      "When the trigger fires, record entry, stop and target, then lock your decision.",
-      "Step forward to the exit and record the result in R; take a screenshot at entry and at exit.",
-      "Log every rule-application mistake in the 'mistakes' field, even small ones.",
-      "Stop after roughly 10 logged trades (or the end of your session time) and check that every entry has all fields filled.",
-      "Write one line in the Trading Journal about how the recording process felt and what slowed you down."
+      "In Trading → Learn, read the Range module section on edge entries.",
+      "Write the rejection rule in Strategy Lab, e.g. 'candle low inside the support zone and close in the upper half of the candle, above the zone'.",
+      "Define 'near the edge': within the outer 25% of the range width.",
+      "In Trading → Replay, open a session where you can confirm a range; step candle by candle.",
+      "Lock Long only after a rejection candle closes at support; lock No-Trade in the middle of the range.",
+      "If you practise the short side, label it clearly as simulated and log it separately.",
+      "Record 3 edge rejections, including any that failed, in the Trading Journal."
     ],
     example: {
-      title: "A complete hypothetical journal entry",
+      title: "Hypothetical support rejection on BANKBEES",
       lines: [
-        "Sample #4 · historical session 3 · Long.",
-        "Setup grade: B (pullback reached the level but structure had only one clear higher low).",
-        "Hypothetical entry 45.10 · stop 44.92 (1R = 0.18) · target 45.46 (2R).",
-        "Result: time exit after 12 candles at 45.19 → +0.5R.",
-        "Mistake logged: placed stop under the wrong candle at first, corrected before locking.",
-        "Screenshots: entry and exit attached. Prices are hypothetical, not real data."
+        "Hypothetical numbers continuing from Day 50; for illustration only.",
+        "Range: support ₹518.25, resistance ₹520.35, width ₹2.10. Outer 25% near support = ₹518.25-518.78.",
+        "13:05 candle: low ₹518.28, close ₹518.72 (upper half of candle, back above zone) → rejection.",
+        "Entry: next bar open ₹518.74 + ₹0.02 slippage = ₹518.76.",
+        "Middle of range (₹519.30) at 12:40: template says No-Trade.",
+        "Outcome is not shown here on purpose — the decision is judged by the rules, not the result."
       ]
     },
     mistakes: [
-      "Recording results in money instead of R, which makes trades of different sizes impossible to compare.",
-      "Grading setup quality after seeing the result, which turns the grade into hindsight.",
-      "Leaving fields blank to 'fill in later', which usually means never.",
-      "Skipping screenshots, which makes later reviews of setups and mistakes impossible.",
-      "Drawing conclusions about the strategy from ten trades — the sample is far too small."
+      "Buying in the middle of the range because price 'is going up'.",
+      "Entering on the touch instead of waiting for the rejection candle to close.",
+      "Treating every touch as a rejection even when the candle closes at its low.",
+      "Practising shorts without understanding they are a simulated exercise with extra real-world risks.",
+      "Forgetting that a rejection can still fail."
     ],
     quiz: [
-      { q: "What is the main goal of Backtest Session 1?", a: "Building a complete, consistent recording habit for the first ~10 samples." },
-      { q: "When should setup quality be graded?", a: "Before the result is revealed, based only on how well the chart matched the written setup." },
-      { q: "Name four fields every backtest entry should include.", a: "Any four of: date/time, direction, entry, stop, target, result in R, setup grade, screenshots, mistakes." }
+      { q: "Why does the template ignore the middle of the range?", a: "The distance to both boundaries is similar, so available reward is small relative to risk." },
+      { q: "What is a rejection candle at support?", a: "A candle that pushes into the support zone and closes back inside the range, away from the edge (e.g. long lower wick, close in the upper half)." },
+      { q: "When is the entry after a rejection?", a: "At the next bar's open, plus slippage." }
     ]
   },
 
   52: {
     what: [
-      "Session 2 is about sample size and market conditions. Small samples lie: with 10 trades, a few lucky or unlucky results can swing your win rate by 20 percentage points or more. Around 30 trades starts to show a rough picture; 100 or more is better.",
-      "To make the sample representative, it needs to include different market conditions — trending days, range days, high-volatility and quiet sessions. A strategy tested only on strong trend days will look much better than it really is.",
-      "This session adds a 'conditions' tag to each trade (e.g. trend day, range day, high or low volatility, news day) and keeps tracking R:R for each trade. The rules themselves stay exactly the same as in Session 1.",
-      "Keeping rules unchanged is essential. If you adjust the stop rule after trade 15, trades 1-14 and 15-30 are testing two different strategies, and neither sample is large enough to mean anything."
+      "Range rules assume price will keep turning at the boundaries. Several conditions make that assumption especially weak, and the template lists them as no-trade filters. The first is a strong trend: a sloping 20-EMA, price staying on one side of VWAP, and a series of higher highs or lower lows. Buying 'support' in a downtrend means fighting the trend.",
+      "The second is timing. The first 15-30 minutes after the 09:15 IST open are often volatile as overnight news is absorbed, and ranges identified then are unreliable. Around scheduled news — policy announcements, major data releases, index events — boundaries can break abruptly. Late in the session there may not be enough time before square-off.",
+      "The third is cost. If the range is narrow, the distance from edge entry to target may be close to the round-trip cost of brokerage, taxes, spread and slippage. A rule such as 'range width must be at least 4× the estimated round-trip cost in %' makes this testable.",
+      "The fourth is liquidity. Thinly traded ETFs can have wide spreads and jumpy prints that create fake 'touches'. Check volume, traded value and the bid-ask spread before treating any range as real."
     ],
     why: [
-      "Most false confidence in trading comes from small, one-sided samples. A run of five winners in a strong trend can convince a beginner they have found something, when the same rules may struggle in other conditions.",
-      "Tagging conditions now gives you the data for Session 4, where you compare which conditions favour or hurt the strategy."
+      "Many losses in range trading come not from bad entries but from trading ranges that should have been skipped. Filters reduce the number of low-quality trades and the costs paid on them.",
+      "Written filters also give you a reason to say No-Trade calmly instead of forcing a setup on a quiet day."
     ],
     how: [
-      "Before starting, write in the Backtesting journal: 'Rules: v1, unchanged'.",
-      "Continue from where Session 1 ended in your date range — no skipping to different periods.",
-      "Before each session's replay, tag the day's condition using a simple rule (e.g. 'trend day' if the first hour moves more than X in one direction).",
-      "Log each trade with all Session 1 fields plus the condition tag and the planned R:R at entry.",
-      "If the range so far is all one condition type, extend the pre-chosen date range to include different conditions, and note why.",
-      "Aim to bring your running total toward 30 samples.",
-      "Write any rule-change ideas in the 'later' list, not in the rules."
+      "In Trading → Learn, read the Range module section on when not to range-trade.",
+      "Write four filters in Strategy Lab: trend filter, time filter (e.g. no entries before 09:45 IST or after 14:45 IST), news filter, cost filter.",
+      "Use Trading → Practice and its ETF eligibility check to confirm the ETF has adequate volume and a tight spread.",
+      "Calculate the cost filter: estimated round-trip cost % × 4 = minimum range width %.",
+      "In Trading → Replay, find 3 sessions where at least one filter says skip, and lock No-Trade with the reason.",
+      "Add the filters to the Risk & No-Trade section of your Playbook."
     ],
     example: {
-      title: "How small samples mislead (hypothetical)",
+      title: "Hypothetical cost filter check",
       lines: [
-        "After 10 hypothetical trades: 7 wins, 3 losses → 70% win rate. All 10 on trend days.",
-        "After 30 hypothetical trades (now including 12 range days): 14 wins, 16 losses → 47% win rate.",
-        "Range-day trades alone: 3 wins, 9 losses.",
-        "Same rules, very different picture — the first 10 were not representative.",
-        "Even 30 trades is still a small sample; conclusions remain tentative.",
-        "Numbers are invented to illustrate the point, not real results."
+        "Hypothetical figures for illustration; actual rates change and are configurable in the app.",
+        "Estimated round trip (brokerage, STT, exchange, SEBI, stamp, GST, spread, slippage) on ~₹1 lakh: about 0.10%.",
+        "Filter: minimum range width = 4 × 0.10% = 0.40%.",
+        "Range A on NIFTYBEES: width 0.12% → skip (too narrow versus costs).",
+        "Range B on BANKBEES: width 0.42% → passes cost filter; still check trend, time and news filters.",
+        "Range C: width 0.50% but formed 09:15-09:35 → skip (opening period)."
       ]
     },
     mistakes: [
-      "Stopping the test after a good early streak, which locks in a misleadingly positive result.",
-      "Only testing periods with strong trends, which overstates how often the setup works.",
-      "Tweaking a rule mid-sample, which splits the data into two small, meaningless tests.",
-      "Not tagging conditions, which makes it impossible to see where the strategy struggles.",
-      "Assuming 30 trades is 'proof' rather than a first rough picture."
+      "Range-trading against a strong, sloping trend.",
+      "Taking edge trades during the opening minutes or right before scheduled news.",
+      "Ignoring that a narrow range cannot cover costs.",
+      "Trading a range on a thinly traded ETF with a wide spread.",
+      "Treating the filters as optional on days you feel confident."
     ],
     quiz: [
-      { q: "Roughly how many trades start to give a picture, and what is better?", a: "Around 30 starts to give a rough picture; 100 or more is better." },
-      { q: "Why tag market conditions on each trade?", a: "To make sure the sample is representative and to compare performance across conditions later." },
-      { q: "What happens to your data if you change a rule mid-test?", a: "It splits into two smaller tests of different strategies, and neither is reliable." }
+      { q: "Name four situations where the template says do not range-trade.", a: "Strong trend, the opening period, around scheduled news, and when range width is too small versus costs (also illiquid ETFs)." },
+      { q: "How can the cost filter be made testable?", a: "Set a minimum range width as a multiple of estimated round-trip cost %, e.g. 4×." },
+      { q: "Why check spread and volume first?", a: "Thin ETFs can have wide spreads and fake touches, making ranges unreliable and fills costly." }
     ]
   },
 
   53: {
     what: [
-      "Session 3 adds a checkpoint: looking at your running statistics. The three basics are win rate (wins / total trades), average R per trade, and net R (the sum of all results in R).",
-      "Looking at stats mid-test is useful only if you stay objective. It tells you whether your recording is consistent and gives an early, rough picture. It is not a signal to change anything.",
-      "This session also practises A+ discipline inside the backtest: when a setup is only partly present — a C-grade — your rules decide whether it counts. If the rules say it qualifies, it is recorded; if not, it is a 'No-Trade'. You do not get to decide based on how the chart looks afterwards.",
-      "Improvement ideas are written in a separate list with the trade number that inspired them. They will be tested later as a new version, not slipped into this one."
+      "In a range trade, the boundary you entered from is the reason for the trade, so the stop goes just beyond it. For a long from support, the stop sits below the support zone (or below the rejection candle's low, whichever is lower) plus a small buffer. If price closes outside the range, the range idea has failed.",
+      "The target sits before the opposite boundary or at the range midpoint. Placing the target slightly inside resistance (rather than exactly at it) accounts for the fact that other participants also watch that level. A midpoint target gives a higher hit rate but a smaller reward; a near-opposite-edge target gives the reverse. Pick one and test it.",
+      "Reward ÷ risk must be checked after costs. Gross R:R might look like 1.8, but if costs equal 20% of the reward, the net figure is lower. A rule such as 'skip unless net reward ÷ risk ≥ 1.5' prevents trades where costs eat the edge.",
+      "A time stop can also apply: if price has not moved toward the target after a set number of bars, or square-off time is near, exit. Ranges that stall often break."
     ],
     why: [
-      "The moment people see a weak running stat, they want to fix it. Changing rules mid-test is one of the most common ways backtests become worthless. Writing ideas down satisfies the urge without corrupting the data.",
-      "Objectivity also guards against the opposite error: seeing a good number and deciding to stop testing early."
+      "Clear stops and targets turn a range idea into a defined trade with known risk, which is required for sizing and backtesting.",
+      "Because ranges are often narrow, small differences in stop and target placement change the result a lot. Writing them down prevents decisions in the moment."
     ],
     how: [
-      "Before replaying, export or total your Backtesting journal so far and calculate win rate, average R and net R.",
-      "Write these numbers in the Trading Journal with the sample size beside them (e.g. '47% over 30 trades').",
-      "Continue the backtest from where you left off in the Trading Practice Lab.",
-      "For every borderline setup, re-read the written rule and apply it literally; if it is not met, lock 'No-Trade' and log it as a skipped setup.",
-      "Every time you think 'this rule should be different', add it to the 'v2 ideas' list with the sample number.",
-      "At the end, recompute the running stats and note whether they changed much — large swings show the sample is still small."
+      "In Trading → Learn, read the Range module section on stops and targets.",
+      "Write the stop rule in Strategy Lab: 'below support zone or rejection low, minus buffer'.",
+      "Choose one target rule: midpoint, or a set distance before resistance, and write it down.",
+      "Add an invalidation rule: 'a 5-minute close outside the range ends the setup'.",
+      "Plan 3 hypothetical range trades from your Day 50-51 charts: entry, stop, target, units.",
+      "For each, calculate gross R:R, estimated costs in ₹, and net reward ÷ risk; record them in the Trading Journal.",
+      "Set the matching stop-loss and take-profit fields when you later practise in Trading → Paper."
     ],
     example: {
-      title: "Hypothetical running stats check",
+      title: "Hypothetical range trade plan on BANKBEES",
       lines: [
-        "Hypothetical sample: 32 trades, 15 wins, 17 losses → win rate 15 / 32 ~ 47%.",
-        "Net result: +9.4R → average R per trade = 9.4 / 32 ~ +0.29R.",
-        "Borderline setups this session: 4 → rules applied literally, 3 logged as 'No-Trade'.",
-        "v2 ideas list: '#27 — maybe require the higher-timeframe trend filter', '#31 — time exit might be too short'.",
-        "Rules unchanged: still v1.",
-        "All numbers hypothetical; past test results do not guarantee future results."
+        "Hypothetical numbers continuing from Day 51; for illustration only.",
+        "Entry ₹518.76. Stop: below support zone ₹518.25 − ₹0.10 buffer = ₹518.15. Risk ₹0.61 per unit.",
+        "Target: ₹0.20 before resistance ₹520.35 = ₹520.15. Reward ₹1.39 per unit → gross R:R about 2.3.",
+        "Size: planned virtual risk ₹300 ÷ 0.61 = 491 units (≈ ₹2.55 lakh notional).",
+        "Estimated costs at about 0.10% of ₹2.55 lakh ≈ ₹255 → net reward ≈ 491 × 1.39 − 255 ≈ ₹428; net loss if stopped ≈ ₹300 + ₹255 = ₹555.",
+        "Net reward ÷ net risk ≈ 0.77 — below a 1.5 rule, so the template says skip or reduce size and re-check.",
+        "Lesson: on narrow ranges, costs scale with notional, not with risk."
       ]
     },
     mistakes: [
-      "Changing a rule because of a few recent losses, which invalidates the sample.",
-      "Reading too much into running stats from a small sample.",
-      "Counting C-grade setups when they win and excluding them when they lose.",
-      "Calculating stats in money rather than R, which distorts the picture when trade sizes differ.",
-      "Losing improvement ideas because they were not written down with the sample that triggered them."
+      "Setting the target exactly at resistance and watching price turn just short of it.",
+      "Using a stop inside the range where normal noise will hit it.",
+      "Calculating R:R before costs only.",
+      "Holding after a close outside the range because 'it will come back'.",
+      "Ignoring that a tight stop forces a large position, which raises costs."
     ],
     quiz: [
-      { q: "How do you calculate win rate and average R?", a: "Win rate = wins / total trades; average R = net R / total trades." },
-      { q: "What should you do with a rule-change idea during a test?", a: "Write it on a separate 'later' / v2 list; do not apply it to the current test." },
-      { q: "How should borderline setups be handled?", a: "Apply the written rules literally; if not met, record a 'No-Trade' regardless of what happened next." }
+      { q: "Where does the stop go on a long from range support?", a: "Just below the support zone or rejection low, whichever is lower, plus a small buffer." },
+      { q: "What are the two common range target choices?", a: "The range midpoint, or a point slightly before the opposite boundary." },
+      { q: "Why can a tight range stop make costs worse?", a: "A tight stop allows a larger position for the same risk, and costs are charged on the full traded value." }
     ]
   },
 
   54: {
     what: [
-      "Session 4 turns from collecting to comparing. Using the setup grades and condition tags you have been recording, you split the sample into groups: A vs B vs C setups, trend days vs range days, morning vs late-session trades, different locations (e.g. pullback to a prior high vs pullback to a moving average).",
-      "Session 4 also includes a focused review of losing trades. For each loser, you ask: was this a valid trade that simply lost (a normal part of any strategy), or did a rule-application error or an unhelpful condition contribute?",
-      "The principle is evidence over opinion. You may 'feel' that afternoon trades are worse, but the journal either supports that or it does not.",
-      "Be careful with small groups. If one group has only five trades, its stats are almost noise. Comparisons are a source of hypotheses to test next, not final answers."
+      "Today you apply the full range checklist in Trading → Replay. The order matters: first decide whether a range exists (2+ touches each side, flat 20-EMA), then check the no-trade filters (trend, time, news, cost, liquidity), then wait for an edge rejection, then plan stop and target with net R:R.",
+      "Most candles will be No-Trade. That is expected: ranges take time to form, filters remove many of them, and the template only acts at the edges after a rejection.",
+      "Lock decisions before revealing the next candle. The process score reflects whether the decision matched your written rules. If your template is long-only, locking Short is a rule break; if you also study the simulated short side, follow its own written rules.",
+      "Watch for the moment a range ends. A strong close outside the boundary means the range template no longer applies — and may be where the breakout template from Phase 6 becomes relevant instead."
     ],
     why: [
-      "Strategies rarely work equally well everywhere. Finding where your rules perform best and worst can show which no-trade conditions to add later — but only if the evidence is solid.",
-      "Reviewing losers separately is important because losses are where you learn the most about rule ambiguity and conditions, and they are the trades people most want to forget."
+      "Range trading feels easy on a finished chart because the boundaries are obvious in hindsight. Replay removes hindsight and shows how often a 'range' was unclear at the time.",
+      "Comparing your Replay decisions with the backtest you run next lesson shows whether your rules are mechanical enough."
     ],
     how: [
-      "Continue the backtest for this session's planned samples, still on v1 rules.",
-      "Then sort the Backtesting journal by setup grade and compute win rate and average R for each grade.",
-      "Do the same for each condition tag and each time-of-day window.",
-      "Filter to losing trades only and review each screenshot: label it 'valid loss', 'rule error', or 'bad condition'.",
-      "Write the sample size beside every group statistic; mark any group with fewer than ~15 trades as 'not enough data'.",
-      "Add the strongest findings to the v2 ideas list as hypotheses (e.g. 'Hypothesis: skip range days').",
-      "Note in your Playbook that these are findings from historical data only."
+      "Open your range checklist from Strategy Lab next to Trading → Replay.",
+      "Choose a liquid ETF, 5-minute timeframe, and an unfamiliar session.",
+      "Step candle by candle; write down the moment you first consider the range confirmed.",
+      "Run through the filters each time price approaches an edge; lock No-Trade if any filter fails.",
+      "When a rejection closes at an edge, lock the decision and record entry, stop, target and net R:R.",
+      "Complete 3 sessions and record each process score.",
+      "Add any repeated rule break to Mistake Lab and note feelings in the Psychology journal."
     ],
     example: {
-      title: "Hypothetical comparison by condition and grade",
+      title: "Hypothetical range Replay log",
       lines: [
-        "Hypothetical sample: 48 trades total.",
-        "Trend days: 28 trades, avg +0.55R. Range days: 20 trades, avg −0.20R.",
-        "A-grade: 18 trades, avg +0.70R. B-grade: 22 trades, avg +0.10R. C-grade: 8 trades → too few to judge.",
-        "Loser review (24 losses): 17 valid losses, 4 rule errors, 3 bad conditions.",
-        "Hypothesis for v2: add a range-day no-trade filter — to be tested separately, not assumed.",
-        "Invented numbers for illustration; not a forecast."
+        "Hypothetical results for illustration only.",
+        "Session 1 (GOLDBEES): range confirmed at 11:40; one support rejection → Long; target hit. Rules followed.",
+        "Session 2 (NIFTYBEES): range width 0.15% → cost filter fails → No-Trade all day. Rules followed.",
+        "Session 3 (BANKBEES): range broke down at 13:20; I bought 'support' after the break → rule break, −1R.",
+        "Process scores: high, high, low.",
+        "Action: add 'close outside range = no range trades' to the top of the checklist."
       ]
     },
     mistakes: [
-      "Drawing firm conclusions from tiny subgroups, which is noise mistaken for signal.",
-      "Slicing the data in dozens of ways until something looks good, which finds patterns that are pure chance.",
-      "Treating every loser as a mistake, when valid losses are a normal part of any rule set.",
-      "Applying findings straight to the current test instead of saving them for a new version.",
-      "Trusting your memory of 'which trades worked' over what the journal actually shows."
+      "Confirming a range too early, after only one touch per side.",
+      "Skipping the filter check when price reaches an edge quickly.",
+      "Continuing to trade the 'range' after a clear close outside it.",
+      "Judging the session by P&L instead of process score.",
+      "Replaying sessions you already know."
     ],
     quiz: [
-      { q: "What is the purpose of comparing setup variations?", a: "To find, with evidence, which conditions or locations the rules perform best and worst in." },
-      { q: "What three labels can you give a losing trade in review?", a: "Valid loss, rule-application error, or bad condition." },
-      { q: "Why be cautious with a group of only five trades?", a: "The sample is too small; its statistics are mostly noise." }
+      { q: "What is the correct order of the range checklist?", a: "Confirm the range, check no-trade filters, wait for an edge rejection, then plan stop, target and net R:R." },
+      { q: "What should happen when price closes clearly outside the range?", a: "The range template no longer applies — no more range trades on that range." },
+      { q: "Why expect many No-Trade decisions?", a: "Ranges take time to confirm, filters remove many, and entries only happen at edges after rejection." }
     ]
   },
 
   55: {
     what: [
-      "Session 5 completes the sample and computes the full statistics. The core measures are win rate, average winning R, average losing R, net R, maximum drawdown in R (the largest peak-to-trough fall in cumulative R) and the longest losing streak.",
-      "The headline number is expectancy: the average result per trade you would expect if future trades looked like the sample. Expectancy = (win% × average win R) − (loss% × average loss R). A positive expectancy means the rules made money on average in this historical sample, before costs; a negative one means they did not.",
-      "This session also reviews your most common rule-application mistakes and any rule ambiguity — places where the written rule could be read two ways. These become the basis for refinements in a future version.",
-      "Remember what the numbers are: a description of how the rules performed on a particular set of historical data. They are not a prediction or a guarantee, and live or simulated results usually come in lower."
+      "Backtesting the range template uses the same Trading → Backtest tool as the pullback template, but the rules must capture range-specific ideas mechanically: range detection (for example, highest high and lowest low over the last N bars with at least two touches within a tolerance, and a 20-EMA slope below a threshold), the edge zone, the rejection candle, the filters and the stop/target rules.",
+      "Translating visual ideas into code often reveals ambiguity. 'Two touches' needs a tolerance; 'flat EMA' needs a slope limit; 'narrow range' needs a minimum width. Write each one down before running anything.",
+      "Range strategies often show a reasonable win rate before costs and a much weaker result after costs, because targets are small. Always compare gross and net P&L side by side.",
+      "Use the same date split approach as before: training period for study, out-of-sample period run once unchanged. Fewer than ~30 trades in either period means the result is mostly noise."
     ],
     why: [
-      "Win rate alone is misleading. A 40% win rate can have positive expectancy if winners are much larger than losers; a 70% win rate can have negative expectancy if losers are large. Expectancy combines both.",
-      "Drawdown and losing streaks prepare you psychologically. If the backtest shows a six-loss streak, experiencing four in a row in simulation is within expectations, not a reason to abandon the plan."
+      "A backtest shows whether the range template's small, frequent targets survive the Indian cost model over many sessions — something Replay cannot show.",
+      "Comparing the range and pullback backtests on the same ETF and dates shows how different templates behave in different conditions."
     ],
     how: [
-      "Finish the remaining samples in your pre-chosen date range, still on v1 rules.",
-      "In the Backtesting journal, compute: total trades, win rate, average win R, average loss R, net R.",
-      "Compute expectancy = (win% × avg win R) − (loss% × avg loss R).",
-      "Plot or list cumulative R trade by trade and find the maximum drawdown and longest losing streak.",
-      "Count mistakes by type (e.g. late entry, wrong stop placement, ignored time exit) and list the top three.",
-      "List every rule where you hesitated or interpreted — these are ambiguity points.",
-      "Write a one-paragraph summary in the Trading Journal and save the stats to the strategy page in the Strategy Lab, noting 'historical only'."
+      "In Strategy Lab, convert each range rule into a measurable setting: lookback N, touch tolerance, EMA slope limit, minimum width, edge zone, rejection rule.",
+      "Open Trading → Backtest and choose the same ETF, timeframe and dates you used for the pullback test (Day 48).",
+      "Confirm all cost settings are on, including a realistic slippage assumption.",
+      "Run the training period; record trade count, win rate, gross P&L, total costs, net P&L, profit factor, max drawdown and expectancy.",
+      "Run the out-of-sample period once without changes and record the same metrics.",
+      "Write the gross-to-net difference as a % of gross profit in the Trading Journal.",
+      "Note in Analytics or your journal how the range results compare with the pullback results."
     ],
     example: {
-      title: "Computing expectancy (hypothetical sample)",
+      title: "Hypothetical range backtest summary",
       lines: [
-        "Hypothetical sample: 60 trades, 27 wins (45%), 33 losses (55%).",
-        "Average win: +1.8R. Average loss: −1.0R.",
-        "Expectancy = (0.45 × 1.8) − (0.55 × 1.0) = 0.81 − 0.55 = +0.26R per trade.",
-        "Max drawdown: −6.0R. Longest losing streak: 6 trades.",
-        "Top mistakes: late entry (5), ignored time exit (3). Ambiguity: 'near the level'.",
-        "Hypothetical figures only; a historical result like this does not guarantee anything about the future."
+        "Hypothetical numbers for illustration only — not real results.",
+        "ETF: NIFTYBEES · 5m · same dates as pullback test.",
+        "Training: 58 trades · win rate 55% · gross P&L ₹3,600 · costs ₹4,100 · net P&L −₹500 · profit factor 0.95.",
+        "Out-of-sample: 24 trades · net P&L −₹380.",
+        "Reading: a positive gross result turned negative after costs; ranges were mostly too narrow.",
+        "Possible next test (one change only): raise the minimum width filter, then re-test on new out-of-sample dates."
       ]
     },
     mistakes: [
-      "Judging the strategy on win rate alone, ignoring the size of wins and losses.",
-      "Forgetting costs and slippage, which can erase a small positive expectancy.",
-      "Ignoring drawdown, then panicking at a normal losing streak later.",
-      "Treating a positive backtest as proof the strategy will work in the future.",
-      "Fixing ambiguity by quietly re-grading old trades instead of documenting it for a new version."
+      "Looking only at win rate, which is often high for range strategies.",
+      "Ignoring costs, which hit small-target strategies hardest.",
+      "Leaving range detection vague so the backtest does something different from your Replay rules.",
+      "Tweaking the minimum width on the out-of-sample data until it turns positive.",
+      "Treating a negative backtest as a failure of learning — it is useful information."
     ],
     quiz: [
-      { q: "What is the expectancy formula?", a: "Expectancy = (win% × average win R) − (loss% × average loss R)." },
-      { q: "Hypothetical: 50% win rate, avg win 1.5R, avg loss 1R. Expectancy?", a: "(0.5 × 1.5) − (0.5 × 1) = +0.25R per trade." },
-      { q: "Why record maximum drawdown and losing streaks?", a: "They show how bad normal bad runs were, so you can recognise them later instead of abandoning the plan." }
+      { q: "Why do range strategies often look worse after costs?", a: "Their targets are small, so fixed and percentage costs take a large share of each win." },
+      { q: "Name two range rules that need a numeric setting to backtest.", a: "Any two of: lookback length, touch tolerance, EMA slope limit, minimum width, edge zone size." },
+      { q: "Why use the same dates as the pullback test?", a: "So the two templates are compared under the same market conditions." }
     ]
   },
 
   56: {
     what: [
-      "This week you tested your strategy on historical data. Day 50 covered how to backtest honestly: bar-by-bar replay, every valid setup recorded, no skipped losers, rules followed exactly.",
-      "Session 1 built the recording habit with complete entries. Session 2 grew the sample and tagged market conditions. Session 3 checked running stats while keeping rules frozen. Session 4 compared setup grades and conditions and reviewed losers. Session 5 completed the sample and computed expectancy, drawdown and losing streaks, and listed mistakes and ambiguities.",
-      "You now have a baseline description of how strategy v1 behaved on one set of historical data, along with a list of ideas for v2. Today is about understanding that baseline and its limits."
+      "This week built the range template. Day 50 defined a range objectively: at least two touches of support and of resistance, a flat 20-EMA and price crossing VWAP, with width measured in ₹ and %. Day 51 limited entries to the edges, only after a rejection candle, with next-bar entries.",
+      "Day 52 added the no-trade filters: strong trend, the opening period, scheduled news, ranges too narrow versus costs, and illiquid ETFs. Day 53 placed stops beyond the traded boundary, targets at the midpoint or before the far edge, and checked net reward ÷ risk after costs.",
+      "Day 54 practised the full checklist in Replay, and Day 55 backtested it with costs and a train/out-of-sample split. A common finding is that range templates look acceptable before costs and weaker after them — your own results may differ, and any sample is limited.",
+      "The pullback and range templates are opposites: one needs a trend, the other needs its absence. Knowing which conditions apply, and when neither does, is as important as either set of rules."
     ],
     why: [
-      "Next week you move to simulated trading, and the backtest becomes the yardstick. If you do not understand what your backtest numbers mean — and what they cannot tell you — you will either over-trust them or ignore them.",
-      "Review is also where you decide, calmly, whether any refinements are worth making before simulation, and how to do so without throwing away the evidence you collected."
+      "Consolidating the range template now gives you two complete, comparable templates to examine properly in the backtesting phase.",
+      "Seeing how costs affect a small-target strategy is one of the most practical lessons for intraday ETF study."
     ],
     how: [
-      "Re-read this week's Backtesting journal and Trading Journal entries.",
-      "From memory, write the expectancy formula and explain each part in your own words; check against Day 55.",
-      "Rewrite your backtest summary in five lines: sample size, win rate, average win/loss R, expectancy, max drawdown.",
-      "Write three limits of your backtest (e.g. sample size, period covered, no real slippage or emotions).",
-      "Decide whether to keep v1 for simulation or create v2; if you make changes, record them as a new version and note that v2 is untested.",
-      "Identify your weakest concept from the week and re-read that lesson.",
-      "Save the key insights to the Knowledge Vault."
+      "Reread key points for days 50-55 and answer the quiz questions without notes.",
+      "In Strategy Lab, check every range rule is observable at a candle close and has a number where needed.",
+      "Compare Replay decisions (Day 54) with backtest trades (Day 55) and note any mismatch.",
+      "Write ETF Range v1 in the Playbook: identification, filters, entry, stop, target, invalidation.",
+      "Write two sentences comparing it with ETF Pullback v1: which market conditions each needs.",
+      "Log the week's most common mistake in Mistake Lab."
     ],
     example: {
-      title: "Hypothetical weekly self-review",
+      title: "Hypothetical Playbook summary — ETF Range v1",
       lines: [
-        "Sample: 60 hypothetical trades, v1 rules unchanged throughout.",
-        "Win rate 45%, avg win +1.8R, avg loss −1.0R → expectancy +0.26R (historical, before costs).",
-        "Max drawdown −6R; longest losing streak 6.",
-        "Limits: one market, one historical period, replay only — no real fills or emotions.",
-        "Decision: keep v1 for simulation; v2 idea (range-day filter) parked for a later test.",
-        "Weakest concept: drawdown → re-read Day 55 and rewrote the definition."
+        "Template only; numbers are hypothetical settings to be tested, not recommendations.",
+        "Range: 2+ touches each side within 0.05%, 20-EMA slope near zero, price crossing VWAP.",
+        "Filters: no entries before 09:45 or after 14:45 IST, no scheduled news, width ≥ 4× round-trip cost %, liquid ETF only.",
+        "Entry: rejection candle in the outer 25% of range; enter next bar open.",
+        "Stop: beyond the boundary plus buffer. Target: slightly before the far edge. Net R:R ≥ 1.5.",
+        "Invalidate: a close outside the range.",
+        "Evidence so far: Replay 3 sessions, one backtest negative after costs — inconclusive and not a basis for real trading."
       ]
     },
     mistakes: [
-      "Treating the backtest result as a promise of future performance.",
-      "Making several rule changes at once before simulation, so you cannot tell which change mattered.",
-      "Calling a modified strategy 'tested' when only the old version was tested.",
-      "Skipping the limits list, which leads to overconfidence.",
-      "Forgetting the losing-streak number, which you will need for perspective during simulation."
+      "Mixing pullback and range rules on the same chart without deciding the market type first.",
+      "Dropping the cost filter because it removes most trades.",
+      "Concluding the range template 'works' or 'doesn't work' from one small backtest.",
+      "Adding new rules on review day instead of clarifying existing ones.",
+      "Not writing the summary in the Playbook."
     ],
     quiz: [
-      { q: "What were the distinct focuses of Backtest Sessions 1-5?", a: "1 recording discipline, 2 sample size and conditions, 3 running stats with rules frozen, 4 comparing variations and losers, 5 full stats and mistakes." },
-      { q: "If you change rules after the backtest, what is the status of the new version?", a: "Untested — it needs its own test before being compared with v1." },
-      { q: "Name two limits of a manual backtest.", a: "Any two of: limited sample, one historical period, no real slippage or fills, no real-time emotions, possible hindsight bias." }
+      { q: "What market condition does each template need?", a: "Pullback needs an established trend; range needs a sideways market with a flat EMA and repeated boundary touches." },
+      { q: "What are the range no-trade filters?", a: "Strong trend, opening period, scheduled news, range too narrow versus costs, and illiquid ETFs." },
+      { q: "Where are range stops and targets placed?", a: "Stop just beyond the boundary traded from; target at the midpoint or slightly before the opposite boundary." }
     ]
   },
 
   57: {
     what: [
-      "Simulated trading, often called paper trading, means applying your strategy in market conditions without real money. In this app, simulation happens through historical replay in the Trading Practice Lab and is recorded in the Paper-trade/Simulation log.",
-      "The difference from backtesting is the mindset. In backtesting you are collecting data about the rules. In simulation you are practising execution: following the plan in sequence, under time pressure, as if each decision counted.",
-      "Paper trading only teaches anything if you treat it seriously. That means the same written rules, the same risk limits (risk per trade in R, maximum daily loss, maximum trades), and the same journaling as a full trading plan would require.",
-      "Good simulation results are a sign you are applying your process consistently. They are not a signal or a recommendation to trade real money, and they do not show how you would behave with real money at risk."
+      "A backtest is only as honest as its assumptions. The most important is no look-ahead: a decision can only use information that existed at the time. In Trading → Backtest, indicators and signals are computed on a bar's close. The earliest possible fill is the next bar's open, and the simulator adds slippage to that price.",
+      "Stops and targets are checked against each later bar's high and low. If both the stop and the target fall inside the same bar, the simulator cannot know which was hit first from OHLC data alone, so it assumes the stop was hit first. This is deliberately conservative: it may understate results, but it avoids flattering them.",
+      "If a bar opens beyond your stop — a gap through the stop, for example after a sudden move between bars — the fill happens at that bar's open, not at your stop price. The loss can be larger than planned, which is what happens in real markets too.",
+      "Because this is an intraday course, all open positions are squared off at the end of the session at the square-off time set in the app. No positions are carried overnight, so overnight gaps cannot rescue or ruin a trade."
     ],
     why: [
-      "Many people discover that following rules is much harder than writing them. Simulation exposes the gap between plan and behaviour — hesitation, impulsive entries, moved stops — in a setting where mistakes cost nothing.",
-      "The habits you build here (pre-session planning, logging every trade, stopping at limits) are the process. Treating simulation casually builds casual habits."
+      "Look-ahead bias is the most common reason backtests look far better than reality: using a bar's close to enter at that same close, or using a day's high to decide something during that day. Knowing the fill rules lets you trust (and question) the report.",
+      "Understanding the conservative assumptions also explains why Replay or Paper results may differ from the backtest."
     ],
     how: [
-      "Write a 'Simulation Rules' page in your Playbook: strategy version, risk per trade (1R), max daily loss (e.g. −2R), max trades per session (e.g. 3).",
-      "Set up the Paper-trade/Simulation log with the same fields as your Backtesting journal, plus 'followed plan? yes/no' and 'emotion' fields.",
-      "Write a pre-session checklist: readiness check, no-trade conditions, today's limits.",
-      "Practise one short replay session in the Trading Practice Lab, locking Long/Short/No-Trade decisions in real time.",
-      "After the session, check your process score and compare it with your own plan-adherence rating.",
-      "Write one line in the Trading Journal stating: 'This is practice. Results here are not a reason to trade real money.'"
+      "In Trading → Learn, review how signals, fills and exits are simulated (or read the notes inside Trading → Backtest).",
+      "Run a short backtest of ETF Pullback v1 on one week of NIFTYBEES 5-minute data.",
+      "Open the trade list and pick 3 trades; for each, find the signal bar, the next bar's open and the recorded fill.",
+      "Check that fill = next bar open + slippage, and that stops were checked from the bar after entry.",
+      "Look for any trade where stop and target were both inside one bar and confirm it was recorded as a stop.",
+      "Find the last trade of a session and confirm it was squared off at the square-off time.",
+      "In the Trading Journal, explain look-ahead bias in two sentences in your own words."
     ],
     example: {
-      title: "Hypothetical simulation rules card",
+      title: "Hypothetical bar-by-bar trace",
       lines: [
-        "Strategy: Opening Pullback v1 (hypothetical).",
-        "Risk per trade: 1R (simulated account only). Max daily loss: −2R. Max trades: 3.",
-        "Session ends at whichever comes first: −2R, 3 trades, or end of time window.",
-        "Every simulated trade logged with entry, stop, target, result in R, followed-plan Y/N, emotion.",
-        "Readiness check before every session; failed check = no session.",
-        "Reminder: simulated results are practice only, not evidence of future profits."
+        "Hypothetical 5-minute bars; numbers for illustration only.",
+        "10:15 bar closes ₹250.38 and the trigger condition is true → signal on close.",
+        "10:20 bar opens ₹250.40 → fill ₹250.40 + ₹0.02 slippage = ₹250.42. Stop ₹250.00, target ₹251.20.",
+        "10:35 bar: high ₹251.30, low ₹249.95 — both target and stop inside one bar → recorded as stop (conservative).",
+        "Alternative: if the 10:35 bar had opened at ₹249.90 (below the stop), the exit would be ₹249.90, not ₹250.00.",
+        "Any trade still open at the square-off time is closed then; nothing is held overnight."
       ]
     },
     mistakes: [
-      "Taking bigger simulated risks 'because it isn't real', which trains the wrong habits.",
-      "Skipping journal entries for simulated trades, which wastes the main benefit of practising.",
-      "Ignoring daily limits in simulation, so the limit is never practised.",
-      "Treating a good simulation week as a reason to start trading real money.",
-      "Restarting a replay after a bad decision, which hides exactly the behaviour you need to see."
+      "Assuming a signal on a bar's close can be filled at that same close.",
+      "Expecting stops always to fill at the exact stop price.",
+      "Thinking 'stop first' on ambiguous bars is a bug rather than a conservative choice.",
+      "Using indicators that repaint or rely on future bars.",
+      "Comparing backtest results with Paper results without accounting for fill differences."
     ],
     quiz: [
-      { q: "What is the main purpose of simulated trading?", a: "Practising execution of the plan — rules, limits and journaling — without real money." },
-      { q: "Should simulation rules differ from your written plan?", a: "No — same rules, same risk limits, same journal." },
-      { q: "Do good simulation results mean you should trade real money?", a: "No. They reflect practice consistency only and are not a signal to trade real money." }
+      { q: "When is a backtest signal computed and when is it filled?", a: "Computed on the bar's close; filled at the next bar's open plus slippage." },
+      { q: "If stop and target are both hit in the same bar, what does the backtester assume?", a: "That the stop was hit first — a conservative assumption." },
+      { q: "What happens if a bar opens beyond the stop?", a: "The exit fills at that bar's open, which can be worse than the stop price." }
     ]
   },
 
   58: {
     what: [
-      "Simulation Session 1 focuses on the pre-session plan and simply following it. Before any replay starts, you write a short plan: which strategy version, today's limits, the levels or conditions you are watching, and what you will do if no setup appears.",
-      "During the session you execute in the Trading Practice Lab and record each simulated trade in the Paper-trade/Simulation log. You respect your maximum number of trades — when you reach it, the session is over, even if another setup appears.",
-      "A new field matters here: emotion. Before and after each trade, note in one or two words how you feel (calm, anxious, impatient, excited). Over time these notes reveal patterns that numbers alone do not."
+      "Every simulated intraday ETF trade carries several costs. Brokerage is typically the lower of ₹20 or 0.03% per executed order on discount brokers. STT on intraday equity ETF trades is about 0.025% on the sell side (gold and liquid ETFs typically have none). The NSE transaction charge is about 0.00297% of turnover, the SEBI fee is ₹10 per crore, stamp duty is about 0.003% on the buy side, and GST at 18% applies to brokerage plus exchange and SEBI charges.",
+      "There are also costs that never appear on a contract note: the bid-ask spread (buying near the ask and selling near the bid) and slippage (getting a slightly worse price than expected, especially in fast moves or thin ETFs). In a backtest these must be assumed; the app lets you set a slippage value per trade.",
+      "These rates change over time and differ between brokers. The figures here are illustrative; the cost model in Trading → Backtest and Trading → Paper is configurable, and you should keep it in line with current published rates.",
+      "Costs matter more for intraday ETF trading than many beginners expect, because typical intraday moves on index ETFs are small percentages. A strategy that captures 0.15% per trade on average may keep only a fraction of that after costs."
     ],
     why: [
-      "A plan written before the session is made with a clear head. Decisions made mid-session, after a few candles of excitement or boredom, are much less reliable. Starting the simulation phase with a planning habit sets the tone for everything after.",
-      "Recording emotions from the very first session gives you a baseline to compare against later, when you start to notice which feelings come before your worst decisions."
+      "A strategy that looks positive before costs and negative after them has no edge in practice. Modelling costs honestly is the difference between a useful backtest and a misleading one.",
+      "Testing with pessimistic slippage shows how fragile results are: if a small increase in slippage turns the result negative, the template has very little margin for error."
     ],
     how: [
-      "Write a pre-session plan in the Trading Journal: strategy version, max trades, max daily loss, conditions to avoid, and the context from the higher timeframe.",
-      "Do the readiness check; if it fails, record that and stop.",
-      "Start a historical replay in the Trading Practice Lab and advance candle-by-candle.",
-      "When your setup appears, check confirmation and trigger against the written rules, then lock your decision.",
-      "Log each simulated trade in the Simulation log with all fields, including emotion before and after.",
-      "Stop at your max trades or max daily loss, whichever comes first.",
-      "After the session, write 'plan vs actual' in three lines: what you planned, what you did, any differences."
+      "Open the cost settings in Trading → Backtest and read each line item and its current value.",
+      "Calculate one round trip by hand (buy then sell) using the example below as a template.",
+      "Express total cost as a % of the buy value, then compare it with the average move your strategy targets.",
+      "Use Trading → Practice's ETF eligibility check to review spread and traded value for your chosen ETF.",
+      "Re-run your Day 48 or Day 55 backtest with slippage doubled and record the change in net P&L.",
+      "Record the cost % and the slippage sensitivity in the Trading Journal."
     ],
     example: {
-      title: "Hypothetical Simulation Session 1",
+      title: "Hypothetical round-trip cost on NIFTYBEES",
       lines: [
-        "Plan: v1 rules, max 3 trades, max −2R; watching a prior swing level around a hypothetical 75.00.",
-        "Trade 1: setup + confirmation → simulated long, result +2R. Emotion: calm → excited.",
-        "Trade 2: entered before trigger fired (impulsive) → −1R. Emotion: excited → frustrated.",
-        "Trade 3: valid setup, followed plan → −1R. Emotion: anxious → calm.",
-        "Max trades reached → session ended. Net 0R. Plan followed on 2 of 3 trades.",
-        "Hypothetical session; outcomes are illustrative, not real market data."
+        "Hypothetical: buy 400 units at ₹250.00 (₹1,00,000), sell at ₹251.00 (₹1,00,400). Rates illustrative and configurable.",
+        "Brokerage: lower of ₹20 or 0.03% per order → ₹20 + ₹20 = ₹40.00.",
+        "STT 0.025% on sell ₹1,00,400 = ₹25.10 · NSE charge 0.00297% on ₹2,00,400 = ₹5.95 · SEBI ₹0.20.",
+        "Stamp duty 0.003% on buy ₹1,00,000 = ₹3.00 · GST 18% × (₹40 + ₹5.95 + ₹0.20) = ₹8.31.",
+        "Explicit costs ≈ ₹82.56. Spread/slippage assumed ₹0.01 per unit each side = ₹8.00. Total ≈ ₹90.56.",
+        "Gross profit ₹400 → net ≈ ₹309. Costs took about 23% of the gross gain on a 0.40% move.",
+        "On a 0.10% move (gross ₹100), the same costs would leave about ₹9 — almost nothing."
       ]
     },
     mistakes: [
-      "Starting the replay without a written plan, so every decision becomes improvised.",
-      "Taking a fourth trade 'because it looked perfect', which breaks the max-trades rule you are practising.",
-      "Judging the session by net R instead of by plan adherence.",
-      "Leaving the emotion field empty because it feels unimportant.",
-      "Not noting impulsive entries as mistakes when they happen to win."
+      "Backtesting with costs switched off or with zero slippage.",
+      "Forgetting that brokerage applies on both the buy and the sell order.",
+      "Assuming every ETF has the same spread as NIFTYBEES.",
+      "Using outdated rates without checking the app's current cost settings.",
+      "Ignoring that STT does not apply the same way to gold or liquid ETFs."
     ],
     quiz: [
-      { q: "What should a pre-session plan contain?", a: "Strategy version, max trades, max daily loss, conditions to avoid and current context." },
-      { q: "What happens when you hit your max trades?", a: "The session ends, even if another setup appears." },
-      { q: "Why record emotions before and after each trade?", a: "To reveal patterns linking feelings to decisions that numbers alone would miss." }
+      { q: "List the explicit cost items in an Indian intraday ETF trade.", a: "Brokerage, STT, exchange transaction charge, SEBI fee, stamp duty and GST." },
+      { q: "Which two costs are not on the contract note but still matter?", a: "The bid-ask spread and slippage." },
+      { q: "Why test with higher slippage?", a: "To see how fragile the result is; if a small increase turns it negative, the template has little margin." }
     ]
   },
 
   59: {
     what: [
-      "Session 2 focuses on patience: taking only A-quality setups. An A-setup is one where every element of the written setup, confirmation and trigger is clearly present — no 'almost', no 'close enough'.",
-      "Skipping a mediocre setup is a win for discipline, even if that setup would have worked. Over a sample, your backtest grades from Week 2 likely showed that A-setups and lower grades behaved differently; this session practises acting on that evidence.",
-      "You also record skipped setups. Each time you see a B or C setup and choose not to trade it, log it as 'skipped', with its grade and the reason. This proves to yourself that you saw it and made a choice rather than missing it.",
-      "Locking 'No-Trade' in the Trading Practice Lab counts as a decision and contributes to your process score."
+      "A backtest report is a set of numbers that only make sense together. Win rate is the % of trades that made money after costs. On its own it says little: a 70% win rate with small wins and large losses can lose money, and a 35% win rate with large wins can be positive.",
+      "Gross P&L is the result before costs; net P&L is after all costs. Profit factor = gross wins ÷ gross losses, where gross wins is the sum of all winning trades and gross losses is the sum of all losing trades (as a positive number), usually measured on net trade results. Above 1.0 means winners outweighed losers; close to 1.0 means a thin margin.",
+      "Max drawdown is the largest fall in the equity curve from a peak to a later low. It shows the worst run of losses you would have had to sit through. Average win and average loss show the typical size of each; average R:R (reward-to-risk) is average win ÷ average loss, or the average realised R multiple.",
+      "Expectancy is the average net result per trade: (win rate × average win) − (loss rate × average loss), or simply net P&L ÷ number of trades. It combines how often and how much. A positive expectancy in a backtest describes the past sample only."
     ],
     why: [
-      "Overtrading is one of the most common beginner problems: taking marginal setups out of boredom or fear of missing out. Practising patience in simulation is how you build the habit before it matters.",
-      "Logging skipped setups also guards against regret-driven decisions. When a skipped B-setup runs, the log reminds you that over many samples, skipping lower-grade setups was part of the plan."
+      "Focusing on one number — usually win rate or total P&L — leads to wrong conclusions. Reading the metrics together shows whether results came from many small wins, a few large ones, or a lucky streak.",
+      "Drawdown in particular tells you about the emotional and risk-limit side: could you have followed the rules through that losing run in Paper trading?"
     ],
     how: [
-      "In your pre-session plan, write the A-setup checklist: every element that must be present.",
-      "Add a rule: 'If any element is uncertain, it is not an A — lock No-Trade.'",
-      "Replay a historical session candle-by-candle in the Trading Practice Lab.",
-      "For every setup you see, grade it A/B/C before the next candle; trade only As.",
-      "Log every skipped setup in the Simulation log with grade, reason and emotion.",
-      "After the session, reveal what skipped setups did — and note your emotion about it, without changing the plan.",
-      "Count: A-setups taken, setups skipped, impulsive entries (target: zero)."
+      "Open the report from your Day 48 backtest in Trading → Backtest.",
+      "Write down: trades, win rate, gross P&L, net P&L, profit factor, max drawdown, average win, average loss, expectancy.",
+      "Recalculate expectancy by hand from win rate, average win and average loss; check it matches net P&L ÷ trades.",
+      "Recalculate profit factor from gross wins and gross losses.",
+      "Look at the equity curve in the report or in Analytics: is the result spread across the period or from one or two trades?",
+      "Write one sentence per metric in the Trading Journal on what it says about this template."
     ],
     example: {
-      title: "Hypothetical patience session",
+      title: "Hypothetical metrics worked by hand",
       lines: [
-        "Setups seen: 6. Graded: 1 A, 3 B, 2 C.",
-        "Taken: the A-setup → simulated result +1.4R (exited at session-end time rule).",
-        "Skipped: 5 setups logged with reasons, e.g. 'B — no higher-timeframe alignment'.",
-        "Afterwards: 2 of the skipped B-setups would have reached target. Emotion noted: 'frustrated'.",
-        "Process view: 0 impulsive entries, 6 of 6 decisions followed the plan.",
-        "Hypothetical session; a skipped winner does not mean the rule was wrong."
+        "Hypothetical report, net of costs; for illustration only.",
+        "40 trades: 18 wins, 22 losses → win rate 45%.",
+        "Gross wins ₹9,000 · gross losses ₹7,200 → profit factor = 9,000 ÷ 7,200 = 1.25. Net P&L ₹1,800.",
+        "Average win = 9,000 ÷ 18 = ₹500 · average loss = 7,200 ÷ 22 ≈ ₹327 → average R:R ≈ 1.53.",
+        "Expectancy = 0.45 × 500 − 0.55 × 327 ≈ ₹45 per trade (= 1,800 ÷ 40).",
+        "Max drawdown ₹2,100 — larger than the entire net result.",
+        "Reading: a thin, positive past result with a deep drawdown; 40 trades is still a small sample."
       ]
     },
     mistakes: [
-      "Upgrading a B-setup to an A because you have been waiting a long time.",
-      "Not logging skipped setups, so you cannot tell missed setups from deliberate skips.",
-      "Changing the A-only rule after one skipped setup works out, based on a single example.",
-      "Treating a session with no trades as a failure, when patience was the goal.",
-      "Grading setups after seeing the outcome, which turns grades into hindsight."
+      "Judging a strategy by win rate alone.",
+      "Quoting gross P&L as if it were net.",
+      "Ignoring max drawdown because the final number is positive.",
+      "Not checking whether one or two outlier trades produced most of the profit.",
+      "Treating a positive expectancy as a promise of future profit."
     ],
     quiz: [
-      { q: "What makes a setup A-quality?", a: "Every element of the written setup, confirmation and trigger is clearly present." },
-      { q: "Why log skipped setups?", a: "To show you made a deliberate choice and to judge the skip rule over many samples instead of by regret." },
-      { q: "A skipped B-setup hit its target. What should you do?", a: "Note it and your emotion, but don't change the rule based on one example." }
+      { q: "How is profit factor calculated?", a: "Gross wins ÷ gross losses." },
+      { q: "What is expectancy?", a: "The average net result per trade: (win rate × average win) − (loss rate × average loss), equal to net P&L ÷ trades." },
+      { q: "What does max drawdown measure?", a: "The largest peak-to-low fall in the equity curve during the test." }
     ]
   },
 
   60: {
     what: [
-      "Session 3 focuses on managing open trades: honouring stops and targets exactly as written. Once a simulated trade is open, the only actions allowed are the ones your exit rules describe — stop, target, time exit, partials, trailing, early invalidation.",
-      "'No moving stops' means you never move the stop further away from entry. A stop can only move in the direction your written trailing or break-even rule allows, at the point the rule says.",
-      "Honouring targets matters just as much. Closing early because a winner 'feels like it might reverse', or holding past target 'to see if it goes further', both replace your rules with emotion.",
-      "Management is where the most emotion appears, so this session pays close attention to what you feel while a trade is open."
+      "If you build and adjust a strategy on the same data you then use to judge it, the result is biased: the rules have been shaped to fit that data. The fix is to split history by date. The earlier part is the training period — you study it, adjust rules and choose settings there. The later part is the out-of-sample period — you run the finished rules on it once, without changes.",
+      "Splitting by date (not randomly) matters because markets change over time. Out-of-sample data that comes after the training period is the closest a backtest can get to 'the future' while still using history.",
+      "Once you have looked at out-of-sample results, that data is no longer truly out-of-sample. If you change rules because of it and re-run, you are training on it. A new, later period would be needed for a fresh check.",
+      "Expect out-of-sample results to be somewhat worse than training results. A modest drop is normal; a large drop, or a flip from positive to negative, usually means the rules were fitted to noise in the training data."
     ],
     why: [
-      "Moving a stop to avoid a loss turns a planned −1R into a potentially much larger loss; doing it even occasionally can wipe out a positive expectancy. Cutting winners early lowers average win R, which also erodes expectancy.",
-      "Your backtest statistics assumed perfect management. Every deviation in simulation makes your real behaviour diverge from those numbers."
+      "Out-of-sample testing is the simplest guard against fooling yourself. It does not prove a strategy works, but it can reveal one that only worked on the data it was built on.",
+      "It also builds a habit you will need in Paper trading: rules are fixed before you see the results."
     ],
     how: [
-      "In your pre-session plan, copy your exit rules word for word.",
-      "Run a replay in the Trading Practice Lab, taking only setups that meet your rules.",
-      "When a trade is open, before each new candle, write which exit rule (if any) applies.",
-      "Act only on rule-defined exits. If you feel an urge to intervene, write the urge and the emotion in the notes instead.",
-      "Log each trade with a 'management followed plan? Y/N' field and the type of any deviation.",
-      "After the session, compute what each trade would have returned with perfect rule management, and compare."
+      "In Trading → Backtest, choose an ETF and a long date range (for example 9 months of 5-minute data).",
+      "Set the split by date, e.g. first 6 months training, last 3 months out-of-sample.",
+      "Run and study the training period; make at most one documented rule change and re-run training.",
+      "Freeze the rules in Strategy Lab with a version number.",
+      "Run the out-of-sample period once and record the same metrics side by side.",
+      "In the Trading Journal, note the drop (or rise) in net expectancy and profit factor, and the trade count in each period."
     ],
     example: {
-      title: "Hypothetical management log",
+      title: "Hypothetical training vs out-of-sample table",
       lines: [
-        "Trade 1: hypothetical long, entry 12.50, stop 12.38, target 12.74 (2R).",
-        "Price drops to 12.41 → urge to move stop lower noted ('fear') → stop left in place.",
-        "Price reverses and hits 12.74 → +2R, managed exactly as planned.",
-        "Trade 2: at +1.5R, urge to close early ('greed/fear of giving back') → held per rule → time exit at +1.2R.",
-        "Deviations: 0. Urges recorded: 2. Emotion pattern: fear peaks near the stop.",
-        "Hypothetical prices only; illustrative of process, not real market data."
+        "Hypothetical results for illustration only.",
+        "Training (Jan-Jun): 64 trades · win rate 47% · profit factor 1.30 · expectancy ₹38 · max DD ₹2,400.",
+        "Out-of-sample (Jul-Sep): 31 trades · win rate 42% · profit factor 1.05 · expectancy ₹6 · max DD ₹1,900.",
+        "Reading: performance dropped sharply; the out-of-sample edge is close to zero after costs.",
+        "Interpretation: possibly fitted to the training period, or market conditions changed — inconclusive either way.",
+        "Not allowed: tweaking rules now and re-running Jul-Sep to 'fix' the result."
       ]
     },
     mistakes: [
-      "Widening the stop when price approaches it, which turns small planned losses into large ones.",
-      "Taking profits early out of fear, which lowers average win R and damages expectancy.",
-      "Moving the stop to break-even without a written rule, then getting stopped out of valid trades.",
-      "Not recording urges you resisted, which hides the emotional pattern you need to see.",
-      "Excusing a deviation because the trade ended well."
+      "Splitting randomly instead of by date.",
+      "Re-running the out-of-sample period after changing rules and calling it out-of-sample.",
+      "Making many rule changes in training and keeping the best version.",
+      "Using an out-of-sample period with only a handful of trades.",
+      "Reading similar train and out-of-sample results as proof of a future edge."
     ],
     quiz: [
-      { q: "What does 'no moving stops' mean?", a: "Never move the stop further from entry; only move it as a written rule allows." },
-      { q: "How do early exits from winners affect expectancy?", a: "They lower average win R, which reduces expectancy." },
-      { q: "What should you do with an urge to intervene in an open trade?", a: "Write down the urge and the emotion, and act only on rule-defined exits." }
+      { q: "Why split history by date rather than randomly?", a: "Later data is the closest a backtest gets to the future, and markets change over time." },
+      { q: "What should you never do with out-of-sample data?", a: "Adjust rules based on it and re-run — that turns it into training data." },
+      { q: "What does a large drop from training to out-of-sample suggest?", a: "The rules were probably fitted to noise in the training data (or conditions changed)." }
     ]
   },
 
   61: {
     what: [
-      "Session 4 compares your simulation results to your backtest. Both used the same rules, so differences usually come from execution (late entries, missed triggers, management deviations) and psychology (fear, impatience, frustration after losses).",
-      "Compare like with like: win rate, average win R, average loss R, expectancy and the percentage of trades where the plan was followed. With few simulated trades, differences in win rate may be just noise, but process gaps — e.g. an average loss of −1.3R when the plan says −1.0R — are a clear signal.",
-      "This session also introduces a post-loss routine: a short, fixed sequence you follow after every losing trade, such as pausing for a set number of candles, re-reading the plan, and writing one line on whether the loss was a valid loss or a mistake.",
-      "Many execution gaps appear right after losses, which is why the routine and the comparison belong together."
+      "Overfitting means adjusting a strategy until it matches the past so closely that it is describing random noise rather than a repeatable behaviour. Signs include many parameters, oddly specific settings (an EMA of 17 with a 0.13% zone and no trades on Tuesdays), large gains from small setting changes, and a big drop in out-of-sample results.",
+      "Every time you test a variation and keep the best one, you increase the chance that the winner looks good by luck. Testing 20 variations of a template and choosing the top one almost guarantees an impressive-looking backtest, even if none has any edge.",
+      "Sample size is the other half of the problem. A handful of trades can produce almost any result by chance. As a rough working rule in this course, treat any result with fewer than about 30 trades as unreliable, and remember that even a few hundred trades only describe the period tested.",
+      "Past results do not predict future results. More trades, fewer parameters and out-of-sample checks reduce the risk of fooling yourself, but nothing removes it."
     ],
     why: [
-      "The gap between backtest and simulation tells you what to work on. If your simulated losses average larger than −1R, you are not honouring stops. If wins are smaller than in the backtest, you are cutting them early. These are fixable behaviours, not strategy flaws.",
-      "A post-loss routine interrupts the most dangerous emotional sequence in trading: loss → frustration → impulsive revenge trade."
+      "Overfitted backtests are the most convincing way to believe a strategy works when it does not. Recognising the signs protects you from treating noise as skill.",
+      "Keeping a log of every variation you tested makes the risk visible: if you tried 15 versions, the best one deserves extra suspicion."
     ],
     how: [
-      "Total your Simulation log so far: trades, win rate, avg win R, avg loss R, expectancy, % plan followed.",
-      "Put these beside your backtest numbers from Day 55 in the Trading Journal.",
-      "For each difference, label the likely cause: execution, psychology, or sample size.",
-      "Write your post-loss routine (e.g. pause 3 candles, re-read setup rules, label the loss, emotion check).",
-      "Run a new replay session in the Trading Practice Lab and apply the routine after every loss.",
-      "Log which trades came immediately after a loss and whether they followed the plan.",
-      "Pick the single biggest execution gap as next session's focus."
+      "List every parameter in ETF Pullback v1 and ETF Range v1 in Strategy Lab; count them.",
+      "Check the trade count in every backtest you have run; mark any with fewer than ~30 trades as 'insufficient sample'.",
+      "In Trading → Backtest, change one parameter slightly (e.g. EMA 20 → 22) and re-run training; note how much results change.",
+      "If a small change swings results a lot, write 'fragile' next to that parameter.",
+      "Create a variation log in the Trading Journal: date, version, change, trade count, net expectancy.",
+      "Ask Trading → Ask AI to explain overfitting in a simple example, and compare with this lesson."
     ],
     example: {
-      title: "Hypothetical backtest vs simulation comparison",
+      title: "Hypothetical overfitting warning",
       lines: [
-        "Backtest (60 trades): win 45%, avg win +1.8R, avg loss −1.0R, expectancy +0.26R.",
-        "Simulation (15 trades): win 47%, avg win +1.2R, avg loss −1.3R.",
-        "Sim expectancy = (0.47 × 1.2) − (0.53 × 1.3) = 0.564 − 0.689 ~ −0.13R.",
-        "Gap 1: smaller wins → early exits (psychology: fear of giving back).",
-        "Gap 2: losses beyond −1R → stop moved twice; both trades came right after a loss.",
-        "Hypothetical numbers; 15 trades is a small sample, so focus on process gaps, not the win rate."
+        "Hypothetical results for illustration only.",
+        "Variation log: 14 versions of the range template tested on the same training data.",
+        "Best version: 22 trades · profit factor 2.10 · settings: lookback 37 bars, tolerance 0.07%, no entries 12:00-12:30.",
+        "Neighbouring settings (lookback 35 or 40): profit factor 0.90 and 0.85.",
+        "Out-of-sample for best version: 11 trades · profit factor 0.70.",
+        "Reading: tiny sample, fragile settings, many attempts → strong signs of overfitting. Do not trust it."
       ]
     },
     mistakes: [
-      "Blaming the strategy when the numbers show execution gaps.",
-      "Comparing only win rate and ignoring average win and loss size.",
-      "Over-reading differences from a small simulation sample.",
-      "Skipping the post-loss routine 'just this once' after a frustrating loss.",
-      "Trying to fix every gap at once instead of picking the biggest one."
+      "Testing many variations and reporting only the best one.",
+      "Trusting results from fewer than about 30 trades.",
+      "Adding filters to remove specific past losing trades.",
+      "Choosing oddly precise settings because they scored highest.",
+      "Believing a large sample proves future performance."
     ],
     quiz: [
-      { q: "Where do most differences between backtest and simulation come from?", a: "Execution and psychology, since the rules are the same." },
-      { q: "Simulated average loss is −1.3R while the plan is −1R. What does that suggest?", a: "Stops are not being honoured — losses are exceeding the planned risk." },
-      { q: "What is the purpose of a post-loss routine?", a: "To interrupt the frustration → impulsive trade cycle and return to the plan after a loss." }
+      { q: "What is overfitting?", a: "Tuning rules until they match random noise in past data rather than a repeatable behaviour." },
+      { q: "Below roughly how many trades should results be treated as unreliable in this course?", a: "About 30 trades." },
+      { q: "Name two signs of overfitting.", a: "Any two of: many parameters, oddly specific settings, big swings from small setting changes, large drop out-of-sample, many variations tested." }
     ]
   },
 
   62: {
     what: [
-      "Session 5 is the final simulation session of the phase. The focus is a complete cycle: plan, execute only the plan, respect limits, and finish with a full statistical and behavioural review.",
-      "The full review covers both numbers and behaviour. Numbers: trades, win rate, average win and loss R, expectancy, net R, maximum drawdown across all simulation sessions. Behaviour: plan adherence percentage, number of impulsive entries, management deviations, skipped setups, and the emotions that came before mistakes.",
-      "This session applies everything from the week: pre-session plan (Session 1), A-setups only (Session 2), honouring stops and targets (Session 3), and the post-loss routine (Session 4)."
+      "A template that tested reasonably on NIFTYBEES might behave very differently on BANKBEES, ITBEES, JUNIORBEES or GOLDBEES. ETFs differ in volatility, typical intraday range, liquidity, spread and what drives them. Gold ETFs follow gold prices and currency moves rather than the equity market, and their tax and cost treatment differs (for example STT).",
+      "A fair comparison keeps everything else equal: same date range, same timeframe, same rules, same cost and slippage settings, same train/out-of-sample split. Change only the ETF — or, when comparing strategies, only the strategy.",
+      "Compare net metrics: net expectancy per trade, profit factor, max drawdown and trade count. Total P&L alone is misleading, because a strategy with more trades or a higher-priced ETF can show a larger number without being better.",
+      "Thinly traded ETFs can show results that would never be achievable, because the backtest's slippage assumption may be far too optimistic for their real spreads. Check liquidity before including an ETF in a comparison."
     ],
     why: [
-      "A complete review turns a week of sessions into conclusions you can act on: what your process does well, where it breaks, and what to practise next. Without it, the sessions are just isolated experiences.",
-      "Ending the phase with a clean, plan-only session also gives you a reference point — a session you can look back on as an example of the process working as intended, regardless of the R result."
+      "Comparing across ETFs shows whether a template's result depends on one instrument's history. A result that appears on only one ETF and one period deserves less confidence.",
+      "It also helps you choose which ETF and template to practise in Paper trading — as a learning choice, not a profit decision."
     ],
     how: [
-      "Write the full pre-session plan, including limits and the post-loss routine.",
-      "Run a replay session in the Trading Practice Lab: A-setups only, rule-based management, stop at limits.",
-      "Log every trade and every skipped setup in the Simulation log with emotions.",
-      "Combine all five simulation sessions and compute the full statistics, including expectancy.",
-      "Compute behaviour statistics: % plan followed, impulsive entries, management deviations, trades after losses.",
-      "Compare with your backtest and with Session 4's gaps — did the biggest gap shrink?",
-      "Write a one-page phase summary in the Trading Journal and update your Playbook with the lessons learned."
+      "Choose 3 liquid ETFs, e.g. NIFTYBEES, BANKBEES and GOLDBEES; check each with Trading → Practice's ETF eligibility check.",
+      "In Trading → Backtest, run ETF Pullback v1 on each with identical dates, timeframe, costs and split.",
+      "Repeat with ETF Range v1 on the same three.",
+      "Build a table in the Trading Journal: ETF × strategy, with trades, net expectancy, profit factor and max drawdown (out-of-sample).",
+      "Mark any cell with fewer than ~30 trades as 'insufficient'.",
+      "Use Evaluation or Analytics to review the comparison, and write two sentences on what it does and does not show."
     ],
     example: {
-      title: "Hypothetical full simulation review",
+      title: "Hypothetical out-of-sample comparison table",
       lines: [
-        "All sessions: 20 hypothetical simulated trades, 9 wins (45%), 11 losses (55%).",
-        "Avg win +1.6R, avg loss −1.05R → expectancy = (0.45 × 1.6) − (0.55 × 1.05) = 0.72 − 0.58 ~ +0.14R.",
-        "Plan followed: 17 of 20 trades (85%). Impulsive entries: 2 (both in Session 1). Stop moves: 2 (Sessions 1-3), 0 since.",
-        "Session 5: 2 trades, both by plan; 3 setups skipped. Net −0.3R — still a good process session.",
-        "Main finding: early exits are the remaining gap; next practice focus is holding to target.",
-        "Hypothetical and small-sample; not evidence of real-money performance."
+        "Hypothetical results for illustration only; same dates, 5m, same costs.",
+        "Pullback · NIFTYBEES: 34 trades · expectancy ₹12 · PF 1.08 · max DD ₹1,600.",
+        "Pullback · BANKBEES: 39 trades · expectancy ₹21 · PF 1.14 · max DD ₹2,300.",
+        "Pullback · GOLDBEES: 18 trades · insufficient sample.",
+        "Range · NIFTYBEES: 41 trades · expectancy −₹9 · PF 0.94 · max DD ₹1,800.",
+        "Range · GOLDBEES: 33 trades · expectancy ₹4 · PF 1.03 · max DD ₹1,200.",
+        "Reading: all results are thin and close to breakeven; none is evidence of a reliable edge."
       ]
     },
     mistakes: [
-      "Judging the phase only by net R, ignoring the improvement in process.",
-      "Breaking limits on the last session because 'it's the final one'.",
-      "Skipping the behavioural statistics, which are the most useful part of simulation.",
-      "Concluding from 20 simulated trades that the strategy is proven.",
-      "Treating the end of simulation as a signal to trade real money."
+      "Comparing tests that used different dates, timeframes or cost settings.",
+      "Ranking strategies by total P&L instead of net expectancy and drawdown.",
+      "Including illiquid ETFs whose backtest fills are unrealistic.",
+      "Picking the best cell in the table and ignoring the rest.",
+      "Assuming gold ETFs behave like equity index ETFs."
     ],
     quiz: [
-      { q: "What two kinds of statistics belong in the full review?", a: "Performance stats (win rate, avg R, expectancy, drawdown) and behaviour stats (plan adherence, impulsive entries, deviations)." },
-      { q: "Can a losing session be a good session?", a: "Yes — if every decision followed the plan, the process was good regardless of the result." },
-      { q: "Hypothetical: 40% wins, avg win 2R, avg loss 1R. Expectancy?", a: "(0.4 × 2) − (0.6 × 1) = +0.2R per trade." }
+      { q: "What must be kept the same for a fair comparison?", a: "Dates, timeframe, rules, cost and slippage settings, and the train/out-of-sample split — change only one thing." },
+      { q: "Why is total P&L a poor comparison metric?", a: "It depends on trade count and price level; net expectancy, profit factor and drawdown are more comparable." },
+      { q: "Why might a thinly traded ETF's backtest be misleading?", a: "Its real spread and slippage may be much larger than the backtest assumes." }
     ]
   },
 
   63: {
     what: [
-      "This week moved from testing rules to practising execution in simulation. Day 57 set the paper-trading rules: no real money, same plan, same limits, same journal. Session 1 built the pre-session plan and logged emotions. Session 2 practised patience with A-setups only and logged skipped setups.",
-      "Session 3 focused on managing open trades: honouring stops and targets, never moving stops away. Session 4 compared simulation with the backtest to find execution and psychology gaps and introduced a post-loss routine. Session 5 ran a complete plan-only session and a full review of performance and behaviour.",
-      "The big idea of the week: differences between a strategy on paper and a strategy in practice usually come from the person executing it. Simulation is where you find and work on those differences without real money at stake."
+      "This week explained how to backtest properly. Day 57 covered the simulator: signals on bar close, fills at the next bar's open plus slippage, stops checked first when stop and target share a bar, gaps through stops filling at the open, and end-of-day square-off. Day 58 covered the Indian cost model: brokerage, STT, exchange charges, SEBI fee, stamp duty, GST, plus spread and slippage.",
+      "Day 59 explained the metrics: win rate, gross versus net P&L, profit factor (gross wins ÷ gross losses), max drawdown, average win and loss, average R:R and expectancy. Day 60 split history by date into training and out-of-sample periods. Day 61 covered overfitting and sample size, with fewer than about 30 trades treated as unreliable. Day 62 compared strategies across ETFs fairly.",
+      "The central idea: a backtest is a careful description of how fixed rules would have behaved on past data under stated assumptions. It is a tool for rejecting weak ideas and understanding risk, not for predicting profit. Past results do not predict future results.",
+      "Next phase moves to Paper trading with virtual money on replayed sessions, where you will compare live-style decisions with what the backtest expected."
     ],
     why: [
-      "Knowing your rules is not the same as following them. This review turns a week of simulated experience into a short list of personal habits to keep and to fix.",
-      "It also resets expectations. A handful of simulated sessions is a small sample, and neither good nor bad results here say much about the future. What they do show clearly is your process."
+      "A written backtest checklist makes every future test comparable and honest, and helps you notice when a result is too good to be true.",
+      "Understanding the gap between backtest assumptions and real execution prepares you to interpret Paper results calmly."
     ],
     how: [
-      "Re-read this week's Simulation log entries and Trading Journal notes.",
-      "From memory, write the five simulation session focuses and one thing you learned from each.",
-      "Write your plan adherence percentage, your most common deviation, and the emotion that most often preceded it.",
-      "Rewrite your post-loss routine and simulation rules card from memory; compare with the originals.",
-      "Identify your weakest concept from the week and re-read that lesson.",
-      "Update the Playbook with one habit to keep and one habit to fix.",
-      "Save the best insights to the Knowledge Vault."
+      "Reread key points for days 57-62 and answer the quiz questions without notes.",
+      "Write a backtest checklist in the Playbook: fixed rules, no look-ahead, costs on, realistic slippage, date split, ≥ ~30 trades, net metrics, variation log.",
+      "Review your variation log and count how many versions you tested.",
+      "Re-read your cross-ETF table and choose one template and one ETF to practise in Paper next phase — as a learning choice.",
+      "Write down the backtest metrics you expect to compare against in Paper trading.",
+      "Log the week's most important lesson in the Trading Journal."
     ],
     example: {
-      title: "Hypothetical weekly self-review",
+      title: "Hypothetical backtest checklist",
       lines: [
-        "Sessions 1-5 recalled: plan, patience, management, comparison, full review.",
-        "Plan adherence: 85% across 20 hypothetical simulated trades.",
-        "Most common deviation: early exit from winners; emotion before it: 'fear of giving back'.",
-        "Post-loss routine rewritten from memory — forgot the 'label the loss' step → re-added.",
-        "Keep: pre-session plan. Fix: hold to target unless a written exit rule applies.",
-        "Reminder: simulated practice only — not a signal to trade real money."
+        "A template checklist; settings are hypothetical.",
+        "1. Rules written and versioned before running (e.g. Pullback v1.1).",
+        "2. Signal on close, fill next open + slippage; stop-first on ambiguous bars; square-off at end of day.",
+        "3. Cost model on and current; slippage also tested at 2×.",
+        "4. Training vs out-of-sample split by date; out-of-sample run once.",
+        "5. Trade count ≥ ~30 in each period, else 'inconclusive'.",
+        "6. Read net expectancy, profit factor, max drawdown, average win/loss together.",
+        "7. Reminder: past results do not predict future results."
       ]
     },
     mistakes: [
-      "Focusing only on simulated profit and loss rather than on process and behaviour.",
-      "Assuming good simulation results mean real-money trading would go the same way.",
-      "Listing many things to fix instead of choosing the single most important one.",
-      "Skipping the emotion review because it feels less concrete than numbers.",
-      "Not updating the Playbook, so the week's lessons are not carried forward."
+      "Skipping the checklist when a result looks exciting.",
+      "Treating a backtest as proof that a strategy will work.",
+      "Forgetting to compare Paper results against the backtest's assumptions next phase.",
+      "Hiding the number of variations tested.",
+      "Choosing the Paper strategy purely by the highest backtest P&L."
     ],
     quiz: [
-      { q: "What were the focuses of Simulation Sessions 1-5?", a: "1 pre-session plan, 2 A-setups only/patience, 3 honouring stops and targets, 4 comparing with backtest and post-loss routine, 5 full plan-only session and review." },
-      { q: "Where do differences between backtest and simulation usually come from?", a: "Execution and psychology." },
-      { q: "What does simulation success tell you about real-money trading?", a: "Nothing definitive — it shows process consistency in practice, not future results, and is not a signal to trade real money." }
+      { q: "Summarise the backtester's fill rules.", a: "Signal on bar close; fill at next bar open plus slippage; stop assumed first if stop and target share a bar; gaps fill at the open; square-off at end of day." },
+      { q: "Which metrics should be read together?", a: "Win rate, net P&L, profit factor, max drawdown, average win and loss, average R:R and expectancy — with trade count." },
+      { q: "What can a good backtest tell you about the future?", a: "Nothing guaranteed — past results do not predict future results." }
     ]
   }
 };

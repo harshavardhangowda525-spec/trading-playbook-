@@ -6,6 +6,8 @@ import { TOTAL_DAYS } from '../../data/curriculum';
 
 export const PAGES: Record<string, { to: string; label: string }> = {
   replay: { to: '/trading/replay', label: 'Start a Replay' },
+  backtest: { to: '/trading/backtest', label: 'Open Backtest' },
+  paper: { to: '/trading/paper', label: 'Open Paper Trading' },
   practice: { to: '/trading', label: 'Open Practice Lab' },
   markets: { to: '/trading/markets', label: 'Open Markets' },
   library: { to: '/trading/history', label: 'Open practice library' },

@@ -53,6 +53,13 @@ export interface Dataset {
   rows: number; // rows in the file
   rejected: number; // invalid rows skipped
   gaps: number; // missing bars detected (never filled)
+  /** ETF datasets: the listed exchange the data belongs to (absent on older imports). */
+  exchange?: 'NSE' | 'US';
+  /** How zone-less timestamps in the file were read. */
+  tz?: 'IST' | 'UTC';
+  /** Where the candles came from. */
+  source?: 'csv' | 'upstox';
+  fetchedAt?: number;
 }
 
 /** Aggregate candles into a higher timeframe. Buckets are aligned to UTC. */
