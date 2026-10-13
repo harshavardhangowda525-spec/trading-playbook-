@@ -3,6 +3,7 @@
 // never enter the chart's data. Drawings live in an SVG overlay anchored to
 // candle time + price so they stay attached while panning / zooming.
 
+import { localTime, hhmm } from '../../lib/etf/calendar';
 import {
   forwardRef,
   useCallback,
@@ -31,6 +32,7 @@ import {
   createChart,
   createSeriesMarkers,
   CrosshairMode,
+  TickMarkType,
   HistogramSeries,
   LineStyle,
   type IChartApi,
@@ -84,6 +86,8 @@ export interface PracticeChartProps {
   markers?: { t: number; kind: 'decision' | 'fill' | 'exit'; text: string; position?: 'above' | 'below' }[];
   readOnly?: boolean;
   height?: number | string;
+  /** Show times in this IANA zone (e.g. Asia/Kolkata for NSE ETFs); UTC when omitted. */
+  timeZone?: string;
 }
 
 // ─── Palette ───────────────────────────────────────────────────────────────
@@ -213,6 +217,7 @@ export const PracticeChart = forwardRef<PracticeChartHandle, PracticeChartProps>
     onLevelPick,
     levels,
     markers,
+    timeZone,
     readOnly = false,
     height,
   } = props;
@@ -259,7 +264,10 @@ export const PracticeChart = forwardRef<PracticeChartHandle, PracticeChartProps>
     if (!active || !hostRef.current) return;
     const host = hostRef.current;
     const chart = createChart(host, {
-      localization: { locale: safeLocale() },
+      localization: {
+        locale: safeLocale(),
+        ...(timeZone ? { timeFormatter: (t: Time) => { const lt = localTime(Number(t), timeZone); return `${lt.day} ${hhmm(lt.min)}`; } } : {}),
+      },
       width: host.clientWidth,
       height: host.clientHeight,
       layout: {
@@ -284,6 +292,14 @@ export const PracticeChart = forwardRef<PracticeChartHandle, PracticeChartProps>
         shiftVisibleRangeOnNewBar: true,
         timeVisible: interval !== '1d',
         secondsVisible: false,
+        ...(timeZone
+          ? {
+              tickMarkFormatter: (t: Time, type: TickMarkType) => {
+                const lt = localTime(Number(t), timeZone);
+                return type <= TickMarkType.DayOfMonth ? lt.day.slice(5) : hhmm(lt.min);
+              },
+            }
+          : {}),
       },
       handleScroll: { mouseWheel: true, pressedMouseMove: true, horzTouchDrag: true, vertTouchDrag: false },
       handleScale: { mouseWheel: true, pinch: true, axisPressedMouseMove: true, axisDoubleClickReset: true },
@@ -842,7 +858,7 @@ export const PracticeChart = forwardRef<PracticeChartHandle, PracticeChartProps>
 
       {rc && (
         <div className="pc-readout" aria-live="off">
-          <span className="pc-ro-time">{fmtTime(rc.t, interval)}</span>
+          <span className="pc-ro-time">{timeZone ? (() => { const lt = localTime(rc.t, timeZone); return `${lt.day} ${hhmm(lt.min)} ${timeZone === 'Asia/Kolkata' ? 'IST' : 'local'}`; })() : fmtTime(rc.t, interval)}</span>
           <span>
             <i>O</i>
             {fmtPrice(rc.o)}

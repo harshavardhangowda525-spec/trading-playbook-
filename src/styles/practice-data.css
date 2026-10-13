@@ -438,3 +438,21 @@
     font-size: 22px;
   }
 }
+
+/* Upstox connector */
+.pd-upstox {
+  display: grid;
+  gap: 10px;
+  margin-top: 18px;
+}
+.pd-upstox-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.pd-upstox-row .select,
+.pd-upstox-row .input {
+  width: auto;
+  flex: 1 1 130px;
+  min-width: 0;
+}

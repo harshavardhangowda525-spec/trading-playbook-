@@ -11,6 +11,8 @@ import { todayKey } from '../../lib/dates';
 import { pulseCore } from '../../lib/events';
 import { C, type Strategy } from '../../lib/domain';
 import { MISTAKES, type MistakeKey } from '../../lib/journal';
+import { etfBySymbol } from '../../lib/etf/universe';
+import { SESSIONS } from '../../lib/etf/calendar';
 import { DATASETS, SOURCE_LABEL, fmtPrice, fmtTime, loadRef, type Candle, type DataRef, type Dataset } from '../../lib/market';
 import {
   NO_TRADE_REASONS,
@@ -326,6 +328,7 @@ function Workspace({ session: s, candles, review }: { session: PracticeSession; 
         <div className="glass pl-chart-wrap">
           <PracticeChart
             ref={chart}
+            timeZone={etfBySymbol(s.market) ? SESSIONS[etfBySymbol(s.market)!.exchange].timeZone : undefined}
             candles={candles}
             visible={visible}
             interval={s.interval}

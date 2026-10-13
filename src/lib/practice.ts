@@ -511,18 +511,18 @@ export interface ChallengeDoc {
 }
 
 const PHASE_CHALLENGES: Record<number, (topic: string) => string> = {
-  1: (t) => `Replay one day of BTC/USDT and note how "${t}" shows up on the chart.`,
-  2: (t) => `Replay 20 candles and label each one — focus on "${t}".`,
-  3: (t) => `Find 3 historical examples of ${t.toLowerCase()} reactions.`,
-  4: (t) => `Replay a trend and mark every swing — focus on "${t}".`,
-  5: (t) => `Replay 3 setups and note what ${t.toLowerCase()} suggested before each move.`,
-  6: (t) => `Make 3 replay decisions with a written stop and target — focus on "${t}".`,
-  7: () => `Replay 3 setups using your own strategy and tick every rule honestly.`,
-  8: () => `Run 5 replay decisions with one strategy and record each in the journal.`,
-  9: () => `Run a full simulation session and let every trade reach its stop or target.`,
-  10: (t) => `Make 3 replay decisions and rate your mindset — watch for "${t}".`,
-  11: () => `Replay your best setup twice and copy the lesson into your playbook.`,
-  12: () => `Run 3 replay decisions and compare your process scores with week 1.`,
+  1: (t) => `Replay one NIFTYBEES session and note how "${t}" shows up on the chart.`,
+  2: (t) => `Replay 20 ETF candles and label each one — focus on "${t}".`,
+  3: (t) => `Classify 3 ETF sessions as trending, ranging or choppy — focus on "${t}".`,
+  4: (t) => `Make 3 replay decisions with a stop sized to 0.5% risk — focus on "${t}".`,
+  5: () => `Run the Trend-Following backtest on one ETF and compare training vs out-of-sample.`,
+  6: () => `Run the Breakout backtest and count how many breakouts failed.`,
+  7: () => `Run the Pullback backtest and review three losing trades on the chart.`,
+  8: () => `Run the Range-Bound backtest and note which sessions it skipped.`,
+  9: () => `Re-run one backtest with higher slippage and see whether the result survives.`,
+  10: () => `Complete one paper-trading session with a written reason for every order.`,
+  11: () => `Replay your best ETF setup twice and copy the lesson into your playbook.`,
+  12: () => `Compare this week’s paper sessions with your first backtest results.`,
 };
 
 export function challengeFor(day: number): string {

@@ -1,932 +1,949 @@
 import type { LessonContent } from './types';
 
-// Days 22–42: Market Structure, Indicators, Risk Management.
-// Educational and simulation content only — not financial advice. All prices are hypothetical.
+// Days 22-42: Phase 4 Risk Management, Phase 5 Trend-Following, Phase 6 Breakout.
+// ETF-only, educational and simulation content — not financial advice. All prices, volumes and results are hypothetical.
+// Cost figures use typical published rates at the time of writing; rates change and are configurable in the app.
 
 export const CONTENT: Record<number, LessonContent> = {
   22: {
     what: [
-      "Market structure is the pattern that price swings make over time. A swing high is a peak where price turned down, with lower highs on both sides of it. A swing low is a trough where price turned up, with higher lows on both sides. Instead of looking at every single candle, structure reading looks only at these turning points.",
-      "A higher high (HH) is a swing high that is above the previous swing high. A higher low (HL) is a swing low (the bottom of a pullback) that holds above the previous swing low. A pullback is simply a temporary move against the main direction before price continues.",
-      "When price keeps printing HH followed by HL, it means buyers are willing to pay more on each push and step in earlier on each dip. That sequence — HH, HL, HH, HL — is called bullish structure, and it is the basic definition of an uptrend.",
-      "You label swings, not every candle. A single green candle that closes slightly higher is not a higher high. A swing needs a visible turn: price pushes up, then pulls back enough that you can see a peak. The cleaner the swings, the clearer the structure."
+      "Risk per trade is the number of rupees you accept losing on one simulated trade if your stop-loss is hit. It is usually set as a small percentage of the account. With a hypothetical ₹1,00,000 virtual account and a 0.5% rule, the risk budget is ₹500 per trade. This number is decided before you look for a trade, not after.",
+      "Position sizing is the step that converts that rupee risk into a number of ETF units. The formula is: units = risk budget ÷ (entry - stop). The gap between entry and stop is the risk per unit. A tight stop allows more units; a wide stop allows fewer units — but the rupee loss at the stop stays the same.",
+      "There is a second limit: capital. In the simulator you cannot buy more ETF units than your virtual capital allows (the app does not assume leverage). If the formula says 400 units but 400 units cost more than the account, you cap the size at what the capital can pay for, and your actual rupee risk becomes smaller than the budget.",
+      "R is shorthand for the rupee risk of one trade. A loss at the stop is -1R; a win of twice the risk is +2R. Thinking in R lets you compare trades on NIFTYBEES at around ₹270 with trades on GOLDBEES or JUNIORBEES at very different prices."
     ],
     why: [
-      "Structure is the foundation that every later topic in this journey builds on. Trends, ranges, reversals, stop placement and target selection all depend on knowing where the last important highs and lows are. If you cannot label HH and HL, indicators will not save you, because you will not know what they are confirming.",
-      "Structure is also an honest description of what has happened, not a prediction. A series of HH and HL tells you buyers have been in control so far. It does not guarantee the next swing will be higher — it just tells you which side currently has the evidence."
+      "Most beginner accounts are damaged not by one bad idea but by inconsistent size: a few oversized losses wipe out many small wins. Fixed-percentage risk keeps every loss roughly the same size, so a losing streak is survivable and your results reflect your rules rather than random sizing.",
+      "Sizing from the stop also forces you to define the stop first. If you cannot say where the idea is wrong, you cannot calculate a size — which is a useful signal that there is no trade yet."
     ],
     how: [
-      "Open a chart in Chart Practice or the Trading Practice Lab replay and zoom out until you can see 50–100 candles.",
-      "Find the obvious peaks and troughs first. Mark only turns that stand out — ignore tiny wiggles of one or two candles.",
-      "Starting from the left, label each swing high as HH or LH (compared to the prior high) and each swing low as HL or LL (compared to the prior low).",
-      "Ask: is the most recent sequence HH + HL? If yes, note 'bullish structure' and write down the price of the last HL — that is the level that keeps the structure intact.",
-      "Step the replay forward candle by candle and update your labels as new swings form, without peeking ahead.",
-      "Log three labelled screenshots or descriptions in your Trading Journal with a one-line note on how clear (or messy) the swings were."
+      "Decide your risk % for all simulated trades this phase (0.25% to 1% is common in education; 0.5% is used in these examples) and write it in your Playbook.",
+      "Open Trading → Replay on a NIFTYBEES 5m session and pick a hypothetical entry price and a logical stop price.",
+      "Calculate risk per unit = entry - stop, then units = risk budget ÷ risk per unit, rounding down to a whole unit.",
+      "Calculate position value = units × entry. If it is more than your virtual capital, cap units at capital ÷ entry, rounded down.",
+      "Recalculate the actual rupee risk = final units × risk per unit, and note it in R terms.",
+      "In Trading → Paper, check the risk limit settings so the per-trade risk matches the number you wrote down.",
+      "Repeat for five different setups and log each calculation in the Trading Journal."
     ],
     example: {
-      title: "Hypothetical stock XYZ, 5-minute chart (practice replay)",
+      title: "Hypothetical NIFTYBEES 5m trade — position sizing (illustrative numbers only)",
       lines: [
-        "Swing low at $20.00, then price rallies to a swing high at $21.00.",
-        "Pullback bottoms at $20.40 — above $20.00, so that is a higher low (HL).",
-        "Price rallies to $21.30 — above $21.00, so that is a higher high (HH).",
-        "Next pullback holds at $20.80 — another HL above $20.40.",
-        "Sequence so far: HH + HL + HH + HL → bullish structure.",
-        "The key level to watch is the last HL at $20.80; while it holds, the structure stays bullish (not a guarantee of anything)."
+        "Virtual account ₹1,00,000 × 0.5% risk = ₹500 risk budget.",
+        "Hypothetical entry ₹270.00, stop ₹268.75 → risk per unit = ₹1.25.",
+        "Units = ₹500 ÷ ₹1.25 = 400 units.",
+        "Position value = 400 × ₹270.00 = ₹1,08,000 — more than the ₹1,00,000 capital.",
+        "Capital cap: ₹1,00,000 ÷ ₹270.00 = 370.37 → 370 units (₹99,900).",
+        "Actual risk = 370 × ₹1.25 = ₹462.50, about 0.93R of the ₹500 budget.",
+        "Same idea with a stop at ₹268.50 (₹1.50 per unit): ₹500 ÷ ₹1.50 = 333 units, value ₹89,910 — within capital."
       ]
     },
     mistakes: [
-      "Labelling every candle as a high or low, which turns the chart into noise and hides the real swings.",
-      "Calling a new high 'bullish structure' before a higher low has formed, because one HH alone does not complete the sequence.",
-      "Mixing timeframes while labelling, so a 1-minute swing gets compared to a 1-hour swing and the labels contradict each other.",
-      "Treating bullish structure as a guarantee, when it only describes what buyers have done so far.",
-      "Redrawing swings after the fact to fit the answer you wanted, which defeats the purpose of practice."
+      "Choosing the number of units first and the stop afterwards, which makes the rupee risk random.",
+      "Forgetting the capital cap and assuming you can always buy the full formula size.",
+      "Rounding units up instead of down, which quietly pushes risk above the budget.",
+      "Raising the risk % after a loss to 'win it back faster'.",
+      "Comparing ETFs by rupee profit instead of by R, which hides that one trade risked far more than another."
     ],
     quiz: [
-      { q: "What is a higher low (HL)?", a: "A pullback swing low that holds above the previous swing low." },
-      { q: "What two-part sequence defines bullish structure?", a: "Higher highs followed by higher lows, repeating — HH + HL." },
-      { q: "Why should you label swings rather than individual candles?", a: "Single candles are noise; only clear turning points show who is in control." }
+      { q: "What is the position sizing formula?", a: "Units = risk budget ÷ (entry - stop), rounded down." },
+      { q: "With ₹500 risk and a ₹2.00 stop distance, how many units?", a: "₹500 ÷ ₹2.00 = 250 units (then check the capital cap)." },
+      { q: "What happens to your rupee risk when the capital cap reduces the size?", a: "It becomes smaller than the risk budget: final units × risk per unit." }
     ]
   },
 
   23: {
     what: [
-      "Bearish structure is the mirror image of yesterday's lesson. A lower high (LH) is a rally that fails and turns down below the previous swing high. A lower low (LL) is a new swing low that breaks below the previous swing low.",
-      "When price keeps producing LH followed by LL, sellers are in control: each bounce runs out of buyers sooner, and each decline pushes further than the last. That LH + LL sequence is the basic definition of a downtrend.",
-      "The first lower high inside an uptrend is an early warning. It means buyers could not push past the last peak. It is not yet a downtrend — the higher low below it is still intact — but it tells you momentum has weakened and you should pay closer attention.",
-      "As with highs and lows in an uptrend, you label swings, not candles. A single red candle is not a lower low; a lower low is a clear trough below the previous one."
+      "A stop-loss is a pre-decided price at which a simulated position is closed because the trade idea has been proven wrong. It is not a guess about how much pain you can bear; it is the price at which the reason for the trade no longer holds.",
+      "For a long trade in an intraday uptrend, the idea is usually 'buyers are defending higher lows'. So the logical stop sits just below the last swing low — if price trades there, the higher-low structure has broken. For a breakout, the idea is 'price has left the range', so the stop sits back inside the range.",
+      "A buffer is a small extra distance beyond the level, so the stop is not triggered by the spread or a single wick. On a liquid ETF like NIFTYBEES a few paise to ₹0.10 may be enough; thinly traded ETFs with wide spreads need more room — or should be skipped.",
+      "A stop-loss order in Trading → Paper is triggered when price reaches the stop price. In fast moves the fill can be worse than the stop price; this difference is called slippage, and it is why the backtester also models costs and spread."
     ],
     why: [
-      "Recognising bearish structure keeps you from buying into something that keeps making lower prices just because it 'looks cheap'. Price that keeps making LL is telling you that, so far, sellers have been stronger.",
-      "Spotting the first LH early helps with risk: it is a reason to tighten your plan, reduce expectations, or simply stand aside — not a reason to jump into a short position on its own."
+      "The stop decides both your rupee risk and your position size. A stop that is too tight gets hit by normal noise, turning good ideas into losses plus costs. A stop that is too wide forces a tiny position or invites oversized losses.",
+      "Placing the stop at a structural level also makes your trades testable: the rule 'stop ₹0.10 below the last swing low' can be coded and measured in Trading → Backtest, whereas 'stop where it feels right' cannot."
     ],
     how: [
-      "Open a replay in the Trading Practice Lab and find a section where price is clearly falling.",
-      "Mark the obvious swing highs and swing lows, skipping small one- or two-candle wiggles.",
-      "Label each swing high LH or HH and each swing low LL or HL relative to the one before it.",
-      "Find a chart that was in an uptrend and mark the first LH. Note what happened next — sometimes it led to a downtrend, sometimes the uptrend resumed.",
-      "Write down the most recent LH price; in a downtrend, that is the level whose break would challenge bearish structure.",
-      "Record in your Trading Journal how often the first LH was followed by a broken HL in your samples. This builds realistic expectations."
+      "Open Trading → Replay on a NIFTYBEES or BANKBEES 5m session and pause on a candidate long setup.",
+      "Write one sentence describing the trade idea, then identify the level that would prove it wrong (last swing low, range low or range midpoint).",
+      "Place the stop just beyond that level, adding a buffer at least as wide as the typical spread.",
+      "Calculate the stop distance and the resulting position size with the Day 22 formula.",
+      "If the stop is so wide that the size becomes tiny, or so tight that it sits inside normal candle noise, mark the setup as No-Trade.",
+      "In Trading → Paper, attach the stop-loss to the order before it is filled, never after.",
+      "Log ten stops in the Trading Journal with the level used and whether the stop was hit by structure or by noise."
     ],
     example: {
-      title: "Hypothetical stock XYZ, 15-minute chart (practice replay)",
+      title: "Hypothetical NIFTYBEES 5m long — structure-based stop (illustrative numbers only)",
       lines: [
-        "Swing high at $50.00, then price drops to a swing low at $48.50.",
-        "Bounce stalls at $49.40 — below $50.00, so that is a lower high (LH).",
-        "Price falls to $48.00 — below $48.50, so that is a lower low (LL).",
-        "Next bounce fails at $48.90 — another LH.",
-        "Sequence: LH + LL + LH → bearish structure; the last LH at $48.90 is the level to watch.",
-        "Nothing here predicts the next candle — it only describes who has been in control."
+        "Last swing low ₹268.60; buffer ₹0.10 → stop ₹268.50.",
+        "Hypothetical entry ₹270.00 → risk per unit = ₹270.00 - ₹268.50 = ₹1.50.",
+        "Units = ₹500 ÷ ₹1.50 = 333.33 → 333 units; value 333 × ₹270 = ₹89,910 (within capital).",
+        "Rupee risk at the stop = 333 × ₹1.50 = ₹499.50 = 1R (before costs).",
+        "A 'tight' stop at ₹269.80 (₹0.20) sits inside normal 5m noise — likely to be hit randomly.",
+        "Rule: the stop follows the structure; the size adjusts to the stop, not the other way round."
       ]
     },
     mistakes: [
-      "Buying because price 'has fallen a lot', ignoring that LH + LL says sellers are still in control.",
-      "Treating the first lower high as a confirmed downtrend, when the prior higher low has not broken yet.",
-      "Labelling a single red candle as a lower low instead of waiting for a clear swing.",
-      "Assuming bearish structure means you should short, when the lesson is about reading, not acting.",
-      "Ignoring the most recent LH, which is the level that tells you when bearish structure is being challenged."
+      "Placing the stop at a round rupee amount ('I will lose ₹300') instead of at a level that invalidates the idea.",
+      "Putting the stop exactly at the swing low with no buffer, where spread and wicks trigger it.",
+      "Moving the stop further away once price approaches it, which turns a 1R loss into a much larger one.",
+      "Trading thin ETFs where the spread alone is a large share of the stop distance.",
+      "Entering first and deciding the stop later."
     ],
     quiz: [
-      { q: "What is a lower high (LH)?", a: "A rally that fails and turns down below the previous swing high." },
-      { q: "What does LH + LL repeating tell you?", a: "Sellers have been in control — bearish structure, the basic definition of a downtrend." },
-      { q: "Why is the first LH in an uptrend only an early warning?", a: "The last higher low is still intact, so the uptrend structure has not actually broken yet." }
+      { q: "Where does a logical stop go for a long trade based on higher lows?", a: "Just below the last swing low, plus a small buffer." },
+      { q: "If the stop gets wider, what should happen to position size?", a: "It should get smaller so the rupee risk stays the same." },
+      { q: "What is slippage?", a: "The difference between the stop or intended price and the actual fill price." }
     ]
   },
 
   24: {
     what: [
-      "An uptrend is a series of higher highs and higher lows. One HH + HL is the start; several in a row is a trend. The more clean swings in the sequence, the more established the trend appears — though no trend lasts forever.",
-      "Trend traders usually look to buy pullbacks rather than chase. Chasing means buying after a big, extended move straight up, far from any logical stop. Buying a pullback means waiting for price to dip back toward the area of a likely higher low, where the risk to a logical stop is smaller.",
-      "The trend is considered intact until a higher low breaks. If price falls below the most recent HL, the HH + HL sequence is broken and the uptrend is in question. That broken HL is the structural line in the sand.",
-      "Higher timeframe context matters. A 'timeframe' is the period each candle covers (1-minute, 5-minute, daily). An uptrend on a 5-minute chart that sits inside a daily downtrend is fighting a bigger current. Checking one higher timeframe gives you that context."
+      "Risk/reward (R:R) compares the planned gain at the target with the planned loss at the stop. A trade that risks ₹500 to aim for ₹750 is 1:1.5, or a 1.5R target.",
+      "The break-even win rate is the percentage of trades you must win just to finish flat. Before costs it is 1 ÷ (1 + reward/risk). At 1:1 you need 50%; at 1:1.5 you need 40%; at 1:2 you need about 33.3%.",
+      "Costs change that. Every round trip pays brokerage (typically the lower of ₹20 or 0.03% per order at discount brokers), STT on intraday equity ETFs (about 0.025% on the sell side; gold and liquid ETFs differ), NSE transaction charges (about 0.00297%), SEBI fees (₹10 per crore), stamp duty (0.003% on the buy side) and 18% GST on brokerage, exchange and SEBI charges — plus spread and slippage. These rates change and are configurable in the app.",
+      "With costs, a win is smaller (gross win - costs) and a loss is bigger (gross loss + costs). The net break-even win rate = net loss ÷ (net win + net loss). This is the number to compare with your backtest win rate."
     ],
     why: [
-      "Most trend-following approaches are built on this simple idea: trade in the direction structure is already moving, enter on pullbacks, and accept you are wrong if the last higher low breaks. It gives you a direction, a location and an invalidation point all from price itself.",
-      "Chasing extended moves is one of the most common beginner habits. It usually means a far-away stop, a poor risk/reward and buying right before a natural pullback. Learning to wait is a skill you can practise safely in simulation."
+      "A strategy that looks profitable before costs can be a slow loser after them, especially intraday where moves are small and trades are frequent. Knowing your net break-even win rate stops you from celebrating a 45% win rate that actually loses money.",
+      "R:R and win rate always trade off. Bigger targets are hit less often; smaller targets are hit more often but costs take a larger share. Only the backtester, run after costs, can tell you where a given template lands."
     ],
     how: [
-      "In the Trading Practice Lab, find an uptrend on a higher timeframe (for example 1-hour) and note the direction.",
-      "Drop to your trading timeframe (for example 5-minute) and label the last three swings to confirm HH + HL.",
-      "Mark the most recent HL — that is where the uptrend would be in question if broken.",
-      "Instead of entering on a big green candle, wait in replay for a pullback toward a prior level or the previous swing area.",
-      "Log a hypothetical entry on the pullback in your Paper-trade/Simulation log, with the stop just beyond the HL.",
-      "Step forward and record whether the trend continued, ranged or broke the HL — every outcome is useful data.",
-      "Add a 'buy pullbacks, don't chase' rule to your Playbook in your own words."
+      "Use the cost calculator settings in Trading → Backtest to see the round-trip cost for your typical position size on NIFTYBEES.",
+      "Write your typical 1R in rupees (from Day 22) and the planned target in R.",
+      "Compute net win = target R × 1R - costs, and net loss = 1R + costs.",
+      "Compute net break-even win rate = net loss ÷ (net win + net loss).",
+      "Repeat for 1R, 1.5R and 2R targets and compare the gap between gross and net break-even.",
+      "Open a recent backtest report and compare its after-cost win rate with your net break-even number.",
+      "Record all three break-even rates in your Playbook."
     ],
     example: {
-      title: "Hypothetical stock XYZ, 5-minute chart, $10,000 practice account",
+      title: "Hypothetical break-even calculation, ~₹1,00,000 position on NIFTYBEES (illustrative)",
       lines: [
-        "1-hour chart: HH + HL sequence → higher timeframe context is up.",
-        "5-minute chart: last HL at $30.20, latest HH at $31.00.",
-        "Option A (chase): buy at $31.00 after a fast run; stop below HL at $30.10 → $0.90 risk per share.",
-        "Option B (pullback): wait for a dip to $30.50; stop at $30.10 → $0.40 risk per share.",
-        "Same invalidation level, but the pullback entry risks less than half as much per share.",
-        "If price later closes below $30.20, the HL has broken and the uptrend read is no longer valid."
+        "Per side ~₹99,900: brokerage ₹20 + ₹20 = ₹40; STT 0.025% on sell ~ ₹24.98; exchange 0.00297% on ₹1,99,800 ~ ₹5.93.",
+        "SEBI ~ ₹0.20; stamp 0.003% on buy ~ ₹3.00; GST 18% × (₹40 + ₹5.93 + ₹0.20) ~ ₹8.30.",
+        "Round-trip cost ~ ₹82, rounded to ₹80 here, before spread and slippage.",
+        "Plan: risk 1R = ₹500, target 1.5R = ₹750.",
+        "Gross break-even = 1 ÷ (1 + 1.5) = 40%.",
+        "Net win = ₹750 - ₹80 = ₹670; net loss = ₹500 + ₹80 = ₹580.",
+        "Net break-even = ₹580 ÷ (₹670 + ₹580) = ₹580 ÷ ₹1,250 = 46.4%.",
+        "Costs alone raised the required win rate by 6.4 percentage points."
       ]
     },
     mistakes: [
-      "Chasing a big candle far from structure, which forces a wide stop or no logical stop at all.",
-      "Calling something an uptrend after one up move, before a higher low has formed.",
-      "Ignoring a broken higher low because you still 'feel' bullish.",
-      "Trading a small-timeframe uptrend straight into a higher-timeframe downtrend without noticing.",
-      "Expecting every pullback to hold, when some pullbacks become the start of a reversal."
+      "Using the textbook break-even (40% at 1:1.5) and ignoring costs entirely.",
+      "Forgetting that STT and brokerage apply to every round trip, including scratch trades.",
+      "Choosing a far target only to improve R:R, without checking how often the backtest reaches it.",
+      "Assuming gold ETF cost structure is the same as equity ETFs — the STT treatment differs.",
+      "Comparing a backtest run without costs to a paper session with costs."
     ],
     quiz: [
-      { q: "When is an uptrend considered broken structurally?", a: "When price breaks below the most recent higher low." },
-      { q: "Why do trend traders prefer buying pullbacks to chasing?", a: "A pullback entry sits closer to a logical stop, so risk per share is smaller and the trade plan is clearer." },
-      { q: "What does checking a higher timeframe add?", a: "Context — it shows whether your smaller-timeframe trend agrees with or fights the bigger move." }
+      { q: "What is the gross break-even win rate at 1:2?", a: "1 ÷ (1 + 2) ~ 33.3%." },
+      { q: "How do costs change a win and a loss?", a: "A win becomes gross win - costs; a loss becomes gross loss + costs." },
+      { q: "Write the net break-even formula.", a: "Net loss ÷ (net win + net loss)." }
     ]
   },
 
   25: {
     what: [
-      "A downtrend is a series of lower highs and lower lows. Each rally fails below the last peak, and each decline pushes below the last trough.",
-      "In a downtrend, sellers tend to 'fade' rallies into lower highs. To fade means to trade against a short-term move — here, selling into a bounce rather than chasing price lower after a big drop. In this app you study this in simulation only; short selling carries extra risks and rules in real markets.",
-      "The downtrend is considered intact until a lower high breaks. If price rallies above the most recent LH, the LH + LL sequence is broken and the downtrend is in question.",
-      "'Don't fight the dominant direction' means: if structure is clearly bearish, buying every dip in hope of a bottom is betting against the evidence. You do not have to trade the downtrend — standing aside is always a valid choice — but you should not ignore it."
+      "A daily loss limit is the maximum the virtual account may lose in one session. When it is reached, you stop placing new trades for the day — no exceptions. It is usually set as a multiple of R, for example 3R.",
+      "A cooldown is a forced pause after a defined trigger, such as two consecutive losing trades. During the cooldown you may watch the chart and journal, but you cannot enter. Trading → Paper can enforce a daily loss cooldown so the rule does not depend on willpower.",
+      "Both rules exist because losses affect decisions. After a few losses, traders tend to enlarge size, loosen criteria or chase moves to recover — often called revenge trading. A hard limit removes that option.",
+      "These limits apply to closed and open losses. If an open position would push the day past the limit at its stop, the trade is too large for the remaining allowance."
     ],
     why: [
-      "Many beginners lose in simulation (and in real life) by repeatedly trying to catch the exact bottom of a falling chart. Reading downtrend structure gives you a clear, objective reason not to do that until structure actually changes.",
-      "Understanding downtrends also makes your uptrend reads better: you start to see trends as symmetric, defined by the same swing logic, rather than as 'good' and 'bad' markets."
+      "A single bad day can undo weeks of careful simulated results. Capping the day at a few R keeps any one session from dominating your record, so your statistics reflect the strategy rather than one emotional afternoon.",
+      "The cooldown also protects data quality: trades taken in frustration are not trades from your template, and they pollute the results you will compare with the backtest."
     ],
     how: [
-      "In the Trading Practice Lab, find a replay with clear LH + LL on your trading timeframe.",
-      "Label the last three swings and mark the most recent LH — the level that would break bearish structure.",
-      "Check one higher timeframe to see whether it agrees with the downtrend.",
-      "Practise patience: in replay, note where a rally stalls into a prior level near an LH rather than reacting to every red candle.",
-      "If you log a simulated trade, record the plan only (entry area, stop above the LH, reason) in your Paper-trade/Simulation log.",
-      "Mark every time you felt the urge to 'buy the bottom' in your Psychology journal and note what structure said at that moment."
+      "Choose a daily loss limit in R (e.g. 3R) and convert it to rupees using your risk per trade.",
+      "Choose a cooldown trigger (e.g. two consecutive losses) and a length (e.g. 30 minutes).",
+      "Enter both in Trading → Paper risk limits before starting the session.",
+      "Write the rules at the top of your Playbook and read them before each session.",
+      "During the session, after each loss, update your running daily P&L in R.",
+      "When the limit or cooldown triggers, stop, and write what you were feeling in the Psychology journal.",
+      "At session end, review the Paper session report to confirm the rules were respected."
     ],
     example: {
-      title: "Hypothetical stock XYZ, 15-minute chart (simulation only)",
+      title: "Hypothetical paper session with a 3R daily limit (illustrative numbers only)",
       lines: [
-        "Swings: LH $42.00 → LL $40.50 → LH $41.40 → LL $39.80.",
-        "Structure: LH + LL repeating → bearish.",
-        "Most recent LH is $41.40; a move above it would challenge the downtrend.",
-        "Price bounces to $41.10 and stalls near the prior LH area — a rally fading below the last high.",
-        "A simulated plan would place invalidation above $41.40, not at a random distance.",
-        "If price instead closes above $41.40, the downtrend read is invalid and you reassess."
+        "Virtual account ₹1,00,000; 1R = ₹500; daily limit 3R = ₹1,500.",
+        "Trade 1: -1R (-₹500 - ₹80 costs = -₹580).",
+        "Trade 2: -1R (-₹580). Two consecutive losses → 30-minute cooldown starts.",
+        "Running P&L = -₹1,160, which is 2.32R once costs are counted.",
+        "Remaining allowance = ₹1,500 - ₹1,160 = ₹340 — less than a full 1R trade at ₹580 all-in.",
+        "Rule outcome: no further trades today, even if a setup appears after the cooldown."
       ]
     },
     mistakes: [
-      "Repeatedly buying a falling chart to catch the exact bottom, against clear LH + LL structure.",
-      "Selling after a large drop far from any lower high, which is the downtrend version of chasing.",
-      "Ignoring a broken lower high because you were attached to the bearish view.",
-      "Assuming you must trade every trend, when standing aside is often the best simulated decision.",
-      "Forgetting that short selling has extra real-world risks that a simulation does not show."
+      "Setting the limit after the session has started, when emotions are already involved.",
+      "Counting the limit before costs, so the real loss exceeds the limit.",
+      "Overriding the cooldown 'because this setup is perfect'.",
+      "Doubling size on the next trade to recover the day's losses.",
+      "Ignoring open-position risk when calculating the remaining allowance."
     ],
     quiz: [
-      { q: "What defines a downtrend?", a: "A series of lower highs and lower lows." },
-      { q: "When is a downtrend structurally in question?", a: "When price breaks above the most recent lower high." },
-      { q: "What does 'fade a rally' mean in a downtrend?", a: "Trading against the short-term bounce, typically near a lower high, instead of chasing price lower." }
+      { q: "With 1R = ₹500, what is a 3R daily limit in rupees?", a: "₹1,500." },
+      { q: "What is a cooldown?", a: "A forced pause in trading after a trigger such as two consecutive losses." },
+      { q: "Why include costs when tracking the daily limit?", a: "Costs are real losses; ignoring them lets the day exceed the limit." }
     ]
   },
 
   26: {
     what: [
-      "A range is a period where price moves back and forth between two levels without making new higher highs or new lower lows. The top boundary is resistance (a level where selling has repeatedly stopped price) and the bottom is support (a level where buying has repeatedly stopped price).",
-      "In a range, structure is neutral. You might see a high, a low, a similar high, a similar low — no clear HH + HL or LH + LL sequence. Neither buyers nor sellers are in control.",
-      "Trend strategies tend to struggle in ranges. A 'breakout' through the top often fails and drops back inside; a pullback that looks like a higher low becomes just another touch of the middle. Recognising a range helps you avoid low-quality trades.",
-      "Ranges eventually break. When price finally closes and holds outside the range, a new trend may begin. Until then, the range is the context."
+      "A max-trades rule caps how many simulated trades you may take in one session, for example three. Once the cap is reached, you stop, regardless of results.",
+      "No-trade rules are written conditions under which you take no position at all. Examples for intraday ETFs: the spread is wider than a set number of paise; traded value is below a threshold; the session is choppy (Day 32); the first five minutes after 09:15 IST; an ETF trading at an unusual premium or discount to iNAV; or simply no setup that matches your template.",
+      "In Trading → Replay, No-Trade is one of the three decisions you can lock, alongside Long and Short. It is scored like any other decision: standing aside when the rules say stand aside is a correct process.",
+      "Every trade has a fixed cost drag. With round-trip costs around ₹80 on a ₹1,00,000 position, ten trades cost about ₹800 before a single rupee of edge — more than 1.5R at a ₹500 risk."
     ],
     why: [
-      "A large share of trading time is spent in ranges or choppy conditions. If you only know how to read trends, you will try to force trend trades into sideways markets and collect small, frustrating losses.",
-      "Simply labelling the market 'range' is a valuable decision. It can mean smaller size, waiting for the edges, or not trading at all — all of which protect your simulated account."
+      "Overtrading is one of the most common ways intraday traders lose: each extra trade adds costs and usually has lower quality than the first ones. A cap forces you to choose the best setups.",
+      "Written no-trade conditions make 'doing nothing' a deliberate decision instead of a failure, which reduces the urge to trade out of boredom."
     ],
     how: [
-      "In Chart Practice or a Trading Practice Lab replay, look for an area where price touched a similar high and a similar low at least twice each.",
-      "Draw the range top and bottom as zones, not single exact prices.",
-      "Confirm there is no new HH or LL inside the zone — if there is, it may be a trend, not a range.",
-      "Mark the middle of the range; trades taken in the middle have poor location on both sides.",
-      "Step the replay forward and note how many times price poked outside the range and came back before a real break.",
-      "Add a 'range → be selective or stand aside' rule to your Playbook and log observations in your Trading Journal."
+      "Decide a max-trades number for each paper session and enter it in Trading → Paper risk limits.",
+      "Write at least five no-trade conditions in your Playbook, each one measurable (spread, traded value, time, EMA slope, iNAV deviation).",
+      "Use Trading → Practice to run the ETF eligibility check on your watchlist before the open.",
+      "In Trading → Replay, play three sessions and lock No-Trade whenever a written condition applies.",
+      "Count how many decisions were No-Trade and note which condition triggered each one.",
+      "Review the Replay process score to see whether your No-Trade calls followed your rules."
     ],
     example: {
-      title: "Hypothetical stock XYZ, 5-minute chart (practice replay)",
+      title: "Hypothetical cost of overtrading (illustrative numbers only)",
       lines: [
-        "Price tops near $15.00 three times and bottoms near $14.20 twice.",
-        "No HH above $15.00 and no LL below $14.20 → range.",
-        "Range height: $15.00 − $14.20 = $0.80; midpoint ≈ $14.60.",
-        "A buy at $14.60 has $0.40 to resistance and $0.40 to support — no edge in location.",
-        "Price pokes to $15.08 then closes back inside — a failed breakout, common in ranges.",
-        "Later, price closes and holds above $15.00 with rising volume — the range may be breaking (still not certain)."
+        "Round-trip cost ~ ₹80 per trade on a ~₹1,00,000 NIFTYBEES position; 1R = ₹500.",
+        "Session A: 3 trades → costs = 3 × ₹80 = ₹240 = 0.48R.",
+        "Session B: 10 trades → costs = 10 × ₹80 = ₹800 = 1.6R.",
+        "Session B must earn 1.6R of gross edge just to break even on costs.",
+        "No-trade example: spread ₹0.05 on a ₹0.40 target = 12.5% of the move lost to spread alone → skip."
       ]
     },
     mistakes: [
-      "Applying trend-pullback setups inside a range, where they fail more often.",
-      "Entering in the middle of the range, where both directions have equal room and the location is poor.",
-      "Treating every poke above resistance as a confirmed breakout.",
-      "Drawing range edges as exact prices instead of zones, then being surprised by small overshoots.",
-      "Forgetting that ranges eventually end, and assuming the boundaries will hold forever."
+      "Treating a No-Trade day as wasted, then forcing a low-quality trade late in the session.",
+      "Writing vague no-trade rules ('if it looks messy') that cannot be checked.",
+      "Raising the max-trades cap mid-session after early losses.",
+      "Trading illiquid ETFs because they 'moved a lot', ignoring spread and traded value.",
+      "Counting only winning trades toward the cap."
     ],
     quiz: [
-      { q: "What defines a range?", a: "Price oscillating between support and resistance without making new higher highs or lower lows." },
-      { q: "Why is the middle of a range a poor place to enter?", a: "There is roughly equal distance to both boundaries, so there is no location advantage." },
-      { q: "Why do trend strategies struggle in ranges?", a: "There is no directional follow-through, so breakouts and pullbacks often fail and reverse." }
+      { q: "Ten trades at ₹80 round-trip cost each costs how much in R if 1R = ₹500?", a: "₹800 ÷ ₹500 = 1.6R." },
+      { q: "Name two measurable no-trade conditions.", a: "For example: spread above a set limit; traded value below a threshold; flat EMA; first five minutes." },
+      { q: "How is No-Trade treated in Trading → Replay?", a: "As a lockable decision that is scored for process like Long or Short." }
     ]
   },
 
   27: {
     what: [
-      "A reversal is when a trend changes direction. In structure terms, an uptrend reversal begins when price fails to make a new higher high (often forming a lower high instead) and then breaks below its last higher low. A downtrend reversal is the opposite: failure to make a new lower low, then a break above the last lower high.",
-      "That two-step process — failure to make a new extreme, then a break of the last HL or LH — is called a structure change (sometimes 'change of character'). It is what confirms a reversal.",
-      "One candle is not a reversal. A big red candle in an uptrend might just be a pullback that forms the next higher low. Only when the structural level breaks do you have evidence the trend has changed.",
-      "Calling reversals early — trying to pick the exact top or bottom — is low probability. Trends often continue longer than expected, and many 'tops' turn out to be pauses."
+      "Edge is the average amount a set of rules makes per trade over many trades. Costs are what you pay per trade regardless of outcome. A setup is only worth simulating if the expected move is large enough for edge to survive costs.",
+      "A practical way to compare them is cost per unit: round-trip cost ÷ units. On a ~₹1,00,000 position of 370 NIFTYBEES units at ₹270 with ~₹82 costs, cost per unit ~ ₹0.22 — about 0.08% of price. A target move of ₹0.30 would lose most of its value to costs.",
+      "A simple educational filter is: target move ≥ 3× cost per unit (plus spread). This is a starting threshold to test, not a law. Intraday ETF moves are often smaller than the same index's moves feel, so this filter removes many setups.",
+      "Price level, position size and ETF type all change cost per unit. Brokerage is capped at ₹20 per order, so very small positions pay a higher percentage; gold ETFs have no STT on intraday sells in the cost facts used here, so their cost per unit differs."
     ],
     why: [
-      "Reversals are where trends end, so they matter for both protecting simulated profits and avoiding new trades in a dying direction. They are also where beginners lose the most trying to predict the turn.",
-      "Waiting for structure to confirm means you will never catch the exact top or bottom. That is the trade-off: you give up part of the move in exchange for evidence instead of hope."
+      "Many beginner intraday plans are built around tiny moves that look fine on a chart but are mostly consumed by brokerage, STT and spread. Checking cost per unit against the target before trading keeps you from building a strategy whose only reliable result is paying costs.",
+      "It also explains why the backtester must always be run with costs switched on: a gross-profitable template can be net-negative."
     ],
     how: [
-      "In the Trading Practice Lab, find a replay where an uptrend ended. Label swings until the last HH.",
-      "Mark the point where price failed to exceed that HH (the lower high).",
-      "Mark the last HL and note the candle that closed below it — that is the structure change.",
-      "Compare how far price had moved from the top to the confirmation point; this is the 'cost' of waiting for evidence.",
-      "Repeat for a downtrend that reversed upward.",
-      "In your Trading Journal, note any reversal you would have called early and whether it was a real reversal or just a pullback."
+      "In Trading → Backtest, look at a trade list and note the cost charged per trade.",
+      "Divide that cost by the number of units to get cost per unit.",
+      "For each trade, compare the planned target move per unit with cost per unit.",
+      "Flag trades where the target is less than 3× cost per unit, and compare their net results with the rest.",
+      "Check the spread on the ETF in Trading → Markets or the Replay data and add it to the cost per unit.",
+      "Write your minimum worthwhile target move for NIFTYBEES and one other ETF in your Playbook."
     ],
     example: {
-      title: "Hypothetical stock XYZ, 15-minute chart (practice replay)",
+      title: "Hypothetical cost vs target check on NIFTYBEES (illustrative numbers only)",
       lines: [
-        "Uptrend swings: HL $60.00 → HH $63.00 → HL $61.50 → HH $64.00.",
-        "Next rally stalls at $63.40 — failed to exceed $64.00, so this is a lower high.",
-        "Price then closes at $61.30, below the last HL of $61.50 → structure change.",
-        "Top was $64.00; confirmation came near $61.30 — about $2.70 below the high.",
-        "Early sellers at $64.00 'guessed right' this time, but many similar guesses fail.",
-        "The reversal is now confirmed by structure, though the new direction is still not guaranteed."
+        "370 units at ₹270; round-trip cost ~ ₹82 → cost per unit = ₹82 ÷ 370 ~ ₹0.22.",
+        "Setup A: target move ₹0.30 → gross ₹111; net ₹111 - ₹82 = ₹29 — costs took about 74%.",
+        "Setup B: target move ₹1.20 → gross ₹444; net ₹444 - ₹82 = ₹362 — costs took about 18%.",
+        "Filter: target ≥ 3 × ₹0.22 = ₹0.66 per unit, plus spread.",
+        "Setup A fails the filter; Setup B passes. Passing does not mean B will work — only that costs do not rule it out."
       ]
     },
     mistakes: [
-      "Calling a reversal from a single large candle without any structural break.",
-      "Trying to pick the exact top or bottom, which has a low success rate.",
-      "Ignoring a confirmed structure change because you are still attached to the old trend.",
-      "Confusing a deep pullback that holds the last HL with a reversal.",
-      "Assuming a confirmed reversal guarantees a new trend, when price can also move into a range."
+      "Planning targets in ticks or paise without converting costs to the same per-unit terms.",
+      "Ignoring the spread, which is an extra cost on every entry and exit.",
+      "Assuming lower brokerage makes small moves profitable — STT and other charges remain.",
+      "Using a small position size where the ₹20-or-0.03% brokerage rule makes costs a larger percentage.",
+      "Reporting backtest results without costs because they 'look better'."
     ],
     quiz: [
-      { q: "What two steps confirm an uptrend reversal?", a: "Price fails to make a new higher high, then breaks below the last higher low." },
-      { q: "Why is one big candle not a reversal?", a: "It may just be a pullback; only a break of the structural level gives evidence the trend changed." },
-      { q: "What is the trade-off of waiting for confirmation?", a: "You miss the exact top or bottom but act on evidence rather than a guess." }
+      { q: "How do you calculate cost per unit?", a: "Round-trip cost ÷ number of units." },
+      { q: "With cost per unit ₹0.22, what minimum target does a 3× filter require?", a: "About ₹0.66 per unit, plus spread." },
+      { q: "Why can a gross-profitable strategy lose money net?", a: "Costs on every trade can exceed the small average gross edge." }
     ]
   },
 
   28: {
     what: [
-      "This week you learned to read market structure — the pattern of swing highs and lows. Here is the recap before you review.",
-      "Higher highs and higher lows (Day 22): each peak above the last and each pullback holding above the last low shows buyers in control. Lower highs and lower lows (Day 23): rallies failing below the last high and declines breaking the last low show sellers in control; the first LH in an uptrend is an early warning.",
-      "Uptrend (Day 24) and downtrend (Day 25): a series of HH + HL or LH + LL. Trend traders wait for pullbacks rather than chasing, and treat a broken HL (uptrend) or broken LH (downtrend) as the invalidation. Higher timeframes give context.",
-      "Range (Day 26): price bounded by support and resistance with no new HH or LL; trend setups fail more often and the middle is poor location. Reversal (Day 27): a failure to make a new extreme followed by a break of the last HL or LH — structure change confirms, single candles do not."
+      "This week you built a risk framework that every strategy in later phases uses. Day 22: size positions from a fixed rupee risk budget with units = risk budget ÷ (entry - stop), capped by virtual capital. Day 23: place stops where the trade idea is invalidated, with a buffer for spread.",
+      "Day 24: convert R:R into a net break-even win rate that includes round-trip costs. Day 25: cap each session with a daily loss limit and enforce a cooldown after consecutive losses. Day 26: limit trades per day and write measurable no-trade rules.",
+      "Day 27: compare target moves with cost per unit, so setups too small to survive costs are filtered out before you test them.",
+      "Together these rules do not create an edge — they protect the account while you find out, in the backtester and on paper, whether a template has one."
     ],
     why: [
-      "Review days are where knowledge turns into understanding. Reading about swings is easy; labelling them consistently on unfamiliar charts is the real skill. Revisiting your own notes shows you where your labelling was sloppy or where you jumped to conclusions.",
-      "Every later topic — indicators, stops, targets — assumes you can read structure. Fixing weak spots now makes the next two weeks much easier."
+      "Strategies in Phases 5 to 8 will have losing streaks; that is normal. Whether a losing streak is a learning experience or an account-ending event in your simulation depends on this week's rules.",
+      "Writing the rules down now means you will judge each strategy with the same yardstick, instead of changing risk rules to fit results."
     ],
     how: [
-      "Re-read this week's Trading Journal entries and practice-replay notes from Days 22–27.",
-      "Without looking at notes, write one sentence each defining HH, HL, LH, LL, range and reversal.",
-      "Open three fresh replays in the Trading Practice Lab and label each as uptrend, downtrend or range, marking the key invalidation swing.",
-      "Identify your weakest concept (for many it is telling a pullback from a reversal) and rewrite it in your own words.",
-      "Compare your new definitions to the lessons and correct any gaps.",
-      "Save your best insight or cleanest labelled example to the Knowledge Vault."
+      "Re-read the Risk module in Trading → Learn.",
+      "Write a one-page risk plan in your Playbook: risk %, sizing formula, stop rule, daily limit, cooldown, max trades, no-trade list, minimum target vs cost.",
+      "Set the matching limits in Trading → Paper.",
+      "Run one full Trading → Paper session on a replayed NIFTYBEES day, following the plan strictly.",
+      "Review the session report: did any trade exceed 1R, any rule get broken?",
+      "Record rule breaks in the Mistake Lab with the trigger that caused them.",
+      "Answer the quiz questions from Days 22-27 without notes."
     ],
     example: {
-      title: "Hypothetical self-review walkthrough",
+      title: "Hypothetical one-page risk plan summary (illustrative numbers only)",
       lines: [
-        "Journal re-read: on Day 24 I labelled a single up candle as an HH — mistake noted.",
-        "From memory: 'Uptrend = HH + HL; broken when the last HL breaks.' ✓",
-        "Replay 1: clear HH + HL → uptrend, invalidation at last HL.",
-        "Replay 2: similar highs and lows, no new extremes → range.",
-        "Replay 3: LH formed, then HL broke → structure change (reversal).",
-        "Weakest concept: pullback vs reversal. Rewritten: 'A pullback holds the last HL; a reversal breaks it.' Saved to Knowledge Vault."
+        "Virtual account ₹1,00,000; risk 0.5% → 1R = ₹500.",
+        "Units = ₹500 ÷ (entry - stop), rounded down, capped by capital.",
+        "Stop beyond swing low / range edge + buffer; never widened mid-trade.",
+        "Costs ~ ₹80 per round trip at ~₹1,00,000; 1.5R target → net break-even ~ 46.4%.",
+        "Daily limit 3R (₹1,500) incl. costs; cooldown 30 min after 2 losses; max 3 trades.",
+        "Skip if target < 3× cost per unit, spread too wide, or session choppy."
       ]
     },
     mistakes: [
-      "Skimming notes instead of re-labelling fresh charts, which tests recognition rather than skill.",
-      "Only reviewing the concepts you already find easy and skipping your weakest one.",
-      "Writing definitions while looking at the lesson, which hides what you actually remember.",
-      "Treating review day as a day off rather than the step that consolidates the week.",
-      "Not saving anything to the Knowledge Vault, so the insight is lost by next month."
+      "Writing a risk plan but not setting the matching limits in Trading → Paper.",
+      "Treating the risk plan as permanent before any strategy has been tested.",
+      "Changing risk % between strategies, which makes their results incomparable.",
+      "Skipping the review because the week was 'just theory'.",
+      "Believing good risk rules turn a negative-edge strategy into a positive one."
     ],
     quiz: [
-      { q: "What is the difference between a pullback and a reversal in an uptrend?", a: "A pullback holds above the last higher low; a reversal fails to make a new high and then breaks the last higher low." },
-      { q: "How do you recognise a range?", a: "Price moves between support and resistance without making new higher highs or lower lows." },
-      { q: "What level invalidates a downtrend?", a: "A break above the most recent lower high." }
+      { q: "What two inputs determine position size?", a: "The rupee risk budget and the distance from entry to stop (then the capital cap)." },
+      { q: "Why is net break-even higher than gross break-even?", a: "Costs shrink wins and enlarge losses." },
+      { q: "Can risk management create an edge?", a: "No — it limits damage while the edge (if any) is measured." }
     ]
   },
 
   29: {
     what: [
-      "A moving average (MA) is the average closing price over the last N candles, recalculated as each new candle closes. Because it 'moves' with each new candle, it draws a smooth line that shows the general direction of price without every wiggle.",
-      "There are two common types. A simple moving average (SMA) weights every candle equally. An exponential moving average (EMA) gives more weight to recent candles, so it reacts faster. Common lengths for day traders are 9, 20 and 50 periods.",
-      "Many traders use moving averages as dynamic levels: in a trend, price sometimes pulls back to a rising MA and bounces. 'Dynamic' means the level moves over time, unlike a horizontal support line. This is a tendency, not a rule — price slices through MAs all the time.",
-      "Moving averages always lag. They are built entirely from past prices, so they describe what has already happened. A faster MA (like the 9) lags less but gives more false signals; a slower one (like the 50) is smoother but slower to react."
+      "A moving average is the average of the last N closing prices, recalculated on every new bar. A simple moving average (SMA) weights every close equally. An exponential moving average (EMA) gives more weight to recent closes, so it reacts faster.",
+      "The EMA is calculated as: new EMA = previous EMA + k × (close - previous EMA), where k = 2 ÷ (N + 1). For a 20-period EMA, k = 2 ÷ 21 ~ 0.0952. On a 5-minute chart, the 20-EMA covers roughly the last 100 minutes of trading.",
+      "Slope is the direction the EMA is moving. A rising 20-EMA means recent closes are, on average, above older ones; a flat EMA means price is going sideways. Price above a rising EMA is a simple description of an intraday uptrend; price below a falling EMA describes a downtrend.",
+      "VWAP (volume-weighted average price, from Day 11) is a second reference. When price is above both a rising 20-EMA and VWAP, both the short-term average and the session's volume-weighted average agree that buyers have been in control so far."
     ],
     why: [
-      "A moving average gives a quick visual read of direction: rising line and price above it suggests upward bias; falling line and price below suggests downward. It can help a beginner see the trend that structure is already describing.",
-      "Knowing that MAs lag protects you from treating them as predictions. In a range, price crosses back and forth over the MA repeatedly, producing many misleading signals."
+      "Moving averages turn a subjective impression ('it looks like it is going up') into a rule a backtester can check. That is the first step from opinion to a testable template.",
+      "They also lag: by definition an average reacts after price moves. That is why they work better as filters for direction than as precise entry signals, and why they struggle in choppy sessions."
     ],
     how: [
-      "In the Trading Practice Lab, add a 20-period EMA to a replay chart.",
-      "Label structure first (HH/HL or LH/LL), then check whether the MA slope agrees.",
-      "Step forward and note each time price touched the MA: did it bounce, or slice through?",
-      "Add a 9 EMA and a 50 SMA and compare how quickly each reacts to a sharp move.",
-      "Find a range section and count how many times price crossed the 20 EMA — this shows the lag and whipsaw problem.",
-      "Write in your Trading Journal which MA length you will use for practice, and why — then stick with one."
+      "Open Trading → Replay on a NIFTYBEES 5m session with the 20-EMA and VWAP displayed.",
+      "Step through the first hour and note where the EMA is rising, falling and flat.",
+      "Mark each bar where price crosses the EMA, and count crosses per hour.",
+      "Note whether price is above or below VWAP at each EMA cross.",
+      "Repeat on GOLDBEES and compare how often the EMA flattens.",
+      "Write a one-line definition of 'rising EMA' you could test, e.g. the 20-EMA now is higher than it was 5 bars ago."
     ],
     example: {
-      title: "Hypothetical stock XYZ, 5-minute chart with a 20 EMA (practice replay)",
+      title: "Hypothetical 20-EMA update on NIFTYBEES 5m (illustrative numbers only)",
       lines: [
-        "Structure: HH + HL; price at $25.40, 20 EMA rising at $25.10.",
-        "Pullback dips to $25.12 near the EMA, then the next candle closes at $25.35.",
-        "The EMA acted as a dynamic level here — this time.",
-        "Later, price falls to $24.70 and the EMA only begins to flatten after the move.",
-        "The MA reacted after price did — that is the lag.",
-        "In the next range section, price crosses the EMA 6 times in 40 candles with no follow-through."
+        "k = 2 ÷ (20 + 1) ~ 0.0952.",
+        "Previous EMA ₹270.00; new close ₹270.60.",
+        "New EMA = ₹270.00 + 0.0952 × (₹270.60 - ₹270.00) = ₹270.00 + ₹0.057 ~ ₹270.06.",
+        "EMA five bars ago ₹269.70 → now ₹270.06 → rising by ₹0.36.",
+        "Price ₹270.60 is above the rising EMA and above VWAP ₹269.90 → uptrend filter passes on this bar."
       ]
     },
     mistakes: [
-      "Treating a moving average as a prediction, when it only summarises past prices.",
-      "Expecting price to bounce exactly off an MA every time, when it often slices through.",
-      "Using MA crossovers in a range, where whipsaws make them unreliable.",
-      "Stacking many MA lengths on one chart until it becomes unreadable.",
-      "Ignoring structure and trading only the MA, which puts the lagging tool ahead of price itself."
+      "Treating a price cross of the EMA as a buy or sell signal by itself.",
+      "Ignoring slope: price above a flat EMA says little about trend.",
+      "Changing the EMA length every day to match what just happened.",
+      "Forgetting that EMA values depend on the timeframe — a 20-EMA on 1m is very different from one on 15m.",
+      "Expecting moving averages to predict turns rather than describe them."
     ],
     quiz: [
-      { q: "What is the main difference between an SMA and an EMA?", a: "An SMA weights all periods equally; an EMA gives more weight to recent prices, so it reacts faster." },
-      { q: "Why do moving averages lag?", a: "They are calculated only from past prices, so they react after price has moved." },
-      { q: "In what market condition do MAs give the most misleading signals?", a: "In ranges or choppy markets, where price crosses back and forth over the average." }
+      { q: "What is k for a 20-period EMA?", a: "2 ÷ 21 ~ 0.0952." },
+      { q: "Why does an EMA react faster than an SMA?", a: "It gives more weight to recent closes." },
+      { q: "What does a flat 20-EMA suggest?", a: "Price is moving sideways; there is no clear intraday trend." }
     ]
   },
 
   30: {
     what: [
-      "The Relative Strength Index (RSI) is a momentum oscillator. Momentum is how fast price is changing; an oscillator is an indicator that moves between fixed bounds. RSI compares the size of recent up moves to recent down moves (commonly over 14 periods) and plots the result on a scale from 0 to 100.",
-      "By convention, readings above 70 are called 'overbought' and below 30 'oversold'. These are reference zones, not buy or sell signals. Overbought simply means price has risen quickly relative to recent history — it does not mean price must fall.",
-      "Strong trends can stay extended. In a powerful uptrend, RSI can sit above 70 for a long time while price keeps rising; in a strong downtrend it can stay below 30. Selling just because RSI is above 70 has hurt many beginners.",
-      "Divergence is when price and RSI disagree. Bearish divergence: price makes a higher high but RSI makes a lower high, suggesting momentum is weakening. Bullish divergence is the opposite. Divergence is a warning, not a reversal signal — structure still needs to confirm."
+      "The trend entry template in this course has two filters and one trigger, all for long trades on a 5-minute chart. Filter 1: the close is above a rising 20-EMA. Filter 2: the close is above session VWAP. Trigger: a candle closes above the prior swing high. The short version mirrors these rules and can be tested in simulation.",
+      "The prior swing high is the most recent peak with lower highs on both sides (Day 17). A close above it means buyers pushed price past the last point where sellers had won — a continuation of higher highs.",
+      "Entry happens at the open of the next bar after the trigger candle closes. This matches how the backtester fills orders: it cannot know a candle's close until the candle has finished, so filling inside that same candle would be look-ahead bias.",
+      "This is a template to test, not a system that always works. Its value is that every part is objective, so you can measure it in Trading → Backtest after costs and see whether it has any edge on a given ETF and timeframe."
     ],
     why: [
-      "RSI gives you a quick sense of whether a move is speeding up or slowing down. Used alongside structure, it can help you notice a trend losing energy or a pullback that is unusually deep.",
-      "Understanding its limits matters just as much. Treating 70 and 30 as automatic signals is one of the most common indicator misuses."
+      "Without written rules, entries drift with mood: chasing after big candles, hesitating on clean setups. A fixed trigger lets you compare your Replay decisions with the rules and measure where you deviate.",
+      "Requiring both filters reduces trades in sessions without direction, which reduces cost drag — though it also means fewer trades to learn from."
     ],
     how: [
-      "Add RSI (14) to a replay chart in the Trading Practice Lab.",
-      "Find a strong uptrend and count how many candles RSI stayed above 70 while price kept rising.",
-      "Find a swing where price made a higher high and check whether RSI also made a higher high or diverged.",
-      "For each divergence you find, step forward and record whether structure actually changed (an HL broke) or the trend continued.",
-      "Write down the RSI reading at pullback lows in an uptrend — you may notice they stay well above 30.",
-      "Summarise in your Trading Journal: 'RSI 70/30 are zones, divergence is a warning, structure confirms.'"
+      "Write the template in your Playbook: 5m, close > rising 20-EMA, close > VWAP, close > prior swing high, enter next bar open.",
+      "Open Trading → Replay on a NIFTYBEES 5m session and mark swing highs as they form, without looking ahead.",
+      "On each candle close, check filter 1, filter 2, then the trigger, in that order.",
+      "When all three pass, lock Long and record the next bar's open as the hypothetical entry.",
+      "Calculate the stop below the last swing low and size the position with the Day 22 formula.",
+      "Check the target move against cost per unit (Day 27) and skip if it fails.",
+      "Log ten triggers and which filter blocked any setups that looked tempting."
     ],
     example: {
-      title: "Hypothetical stock XYZ, 5-minute chart with RSI(14) (practice replay)",
+      title: "Hypothetical NIFTYBEES 5m trend entry (illustrative numbers only)",
       lines: [
-        "Price rallies from $12.00 to $13.20; RSI rises to 78 ('overbought').",
-        "Price continues to $13.60 while RSI stays between 70 and 80 for 15 candles.",
-        "Selling at the first 70+ reading would have meant fighting a still-rising trend.",
-        "Next: price makes a higher high at $13.75, but RSI peaks at 66 — bearish divergence.",
-        "Price then breaks the last HL at $13.30 → structure confirms the warning.",
-        "Divergence alone did not decide anything; the structure break did."
+        "20-EMA ₹269.80 and rising; VWAP ₹269.60; prior swing high ₹270.40.",
+        "Candle closes at ₹270.45 → above EMA, above VWAP, above swing high → trigger.",
+        "Entry at next bar open: ₹270.50.",
+        "Last swing low ₹269.10; buffer ₹0.10 → stop ₹269.00 → risk per unit ₹1.50.",
+        "Units = ₹500 ÷ ₹1.50 = 333; value 333 × ₹270.50 = ₹90,076.50 (within capital).",
+        "Risk at stop = 333 × ₹1.50 = ₹499.50 (1R) before costs of about ₹80."
       ]
     },
     mistakes: [
-      "Selling simply because RSI is above 70, ignoring that strong trends stay overbought.",
-      "Buying simply because RSI is below 30, when downtrends can stay oversold for a long time.",
-      "Acting on divergence alone without waiting for a structure change.",
-      "Changing RSI settings repeatedly to make past charts look better (curve-fitting).",
-      "Forgetting that RSI is calculated from price, so it cannot know something price does not."
+      "Entering intrabar before the trigger candle has closed, which a backtest cannot reproduce.",
+      "Accepting a falling or flat EMA because price is 'above it anyway'.",
+      "Using a minor one-candle wiggle as the prior swing high.",
+      "Skipping the VWAP filter on days you feel bullish.",
+      "Assuming the template works because a few Replay examples looked good."
     ],
     quiz: [
-      { q: "What range does RSI move within, and what are the common reference zones?", a: "0 to 100; above 70 is often called overbought and below 30 oversold." },
-      { q: "Is RSI above 70 a sell signal?", a: "No — it is a reference zone; strong trends can stay above 70 for a long time." },
-      { q: "What is bearish divergence?", a: "Price makes a higher high while RSI makes a lower high, warning that momentum may be weakening." }
+      { q: "What are the two filters in the trend template?", a: "Close above a rising 20-EMA and close above VWAP on 5m." },
+      { q: "Why enter at the next bar's open?", a: "The trigger candle's close is only known after it finishes; filling earlier is look-ahead." },
+      { q: "What is the trigger?", a: "A candle close above the prior swing high." }
     ]
   },
 
   31: {
     what: [
-      "Volume is the number of shares (or contracts) traded during a candle. It is usually shown as bars under the price chart. High volume means many participants were active; low volume means few were.",
-      "Volume measures participation. When price breaks above resistance with volume clearly higher than recent bars, it suggests many traders are acting on that move — what traders call conviction. A breakout on thin volume has less participation behind it and is more likely to fail.",
-      "Volume confirms; it rarely leads on its own. A big volume bar tells you something important happened, but not always which direction will follow. Read it alongside structure and levels.",
-      "Volume has a daily rhythm. In many stock markets the session open usually has the most volume, it tends to drop around midday, and it often picks up again into the close. Comparing a bar to the volume typical for that time of day is more useful than comparing it to the open."
+      "The initial stop for a trend long sits below the last swing low plus a buffer (Day 23). It defines 1R and does not move further away.",
+      "A trailing stop moves in the direction of the trade as it progresses. In this template, each time a new higher low forms, the stop is raised to just below it. The stop never moves down.",
+      "An alternative exit is a 5-minute close below the 20-EMA: the trend filter that justified the entry no longer holds. This usually exits earlier than a swing-low trail and gives up less profit but also catches fewer large moves.",
+      "Intraday templates also have a time exit: all positions are closed before the end of the session (for example by 15:15 IST), because this course does not hold positions overnight."
     ],
     why: [
-      "Volume helps you judge how much weight to put on a move. Two identical-looking breakouts can have very different participation behind them, and volume is one of the few direct measures of that.",
-      "It also explains why the open is so volatile and why midday moves are often slow and unreliable — useful context for when you choose to practise."
+      "Entries get most of the attention, but exits decide the size of wins and losses, and therefore expectancy. Two traders with the same entry and different exits can have opposite results.",
+      "Testing exits separately in the backtester shows which one suits a given ETF: quieter ETFs may need a fixed target, trending sessions may favour a trail."
     ],
     how: [
-      "Turn on volume bars in a Trading Practice Lab replay.",
-      "Mark the first 30 minutes and note how volume compares to the middle of the day.",
-      "Find three breakouts through a level and compare each breakout bar's volume to the average of the previous 10–20 bars.",
-      "Step forward and record whether high-volume breakouts held more often than low-volume ones in your sample.",
-      "Look for big volume spikes at swing highs or lows and note what happened next — sometimes continuation, sometimes reversal.",
-      "Log your findings in the Backtesting journal; small samples are noisy, so keep adding over time."
+      "Write two exit variants in your Playbook: (A) trail under each new higher low; (B) exit on a 5m close below the 20-EMA.",
+      "Add a time exit at a fixed time before 15:30 IST to both variants.",
+      "In Trading → Backtest, run the trend template on NIFTYBEES 5m with exit A, costs on.",
+      "Run it again with exit B on the same period and ETF.",
+      "Compare net expectancy in R, average win, average loss and maximum drawdown — not just win rate.",
+      "In Trading → Replay, practise moving the stop only when a new higher low is confirmed.",
+      "Record which exit you will use going forward and why."
     ],
     example: {
-      title: "Hypothetical stock XYZ, 5-minute chart with volume (practice replay)",
+      title: "Hypothetical trailing stop on a NIFTYBEES long (illustrative numbers only)",
       lines: [
-        "Resistance at $8.00; average volume of last 20 bars ≈ 50,000 shares.",
-        "Breakout A at 10:05: close $8.06 on 140,000 shares (~2.8× average) — strong participation.",
-        "Price holds above $8.00 and the next pullback forms a higher low.",
-        "Breakout B at 12:40: close $8.48 above $8.45 on 35,000 shares (~0.7× average).",
-        "Price drifts back below $8.45 within 4 bars — a low-participation move that failed.",
-        "Higher volume did not guarantee A would work; it just added evidence."
+        "Entry ₹270.50; initial stop ₹269.00 (1R = ₹1.50 per unit, 333 units).",
+        "New higher low at ₹270.20 → stop raised to ₹270.10 (risk now reduced).",
+        "Next higher low at ₹271.00 → stop raised to ₹270.90.",
+        "Price drops and stop fills at ₹270.90 → gain ₹0.40 per unit × 333 = ₹133.20 gross.",
+        "Net after ~₹80 costs ~ ₹53 ~ +0.11R — a small win despite a ₹1.00 move in the trade's favour at one point.",
+        "Exit B (close below EMA) might have exited earlier or later — only the backtest can compare them."
       ]
     },
     mistakes: [
-      "Treating a volume spike as a directional signal on its own, without structure.",
-      "Comparing midday volume to the open and concluding every midday bar is 'low'.",
-      "Trusting low-volume breakouts as much as high-volume ones.",
-      "Assuming high volume guarantees follow-through, when it only shows participation.",
-      "Drawing firm conclusions from a handful of examples instead of a larger logged sample."
+      "Moving the trailing stop down to 'give the trade room'.",
+      "Trailing so tightly that normal pullbacks always stop you out.",
+      "Switching exit methods mid-trade based on emotion.",
+      "Holding past the time exit hoping for a bigger move.",
+      "Judging exits by one memorable trade instead of a full backtest sample."
     ],
     quiz: [
-      { q: "What does volume measure?", a: "How many shares or contracts were traded — a measure of participation." },
-      { q: "Why is a low-volume breakout considered suspect?", a: "Fewer participants are behind it, so it is more likely to fail and fall back." },
-      { q: "When does volume usually peak during the trading day?", a: "Usually around the session open, with activity often picking up again near the close." }
+      { q: "When is the trailing stop raised in this template?", a: "When a new higher low forms; it moves to just below it." },
+      { q: "What is the alternative exit described?", a: "A 5m close below the 20-EMA." },
+      { q: "Why is there a time exit?", a: "The course is intraday only; positions are closed before the session ends." }
     ]
   },
 
   32: {
     what: [
-      "VWAP stands for Volume-Weighted Average Price. It is the average price traded during the session, where prices that traded on more volume count more. It is calculated by summing (price × volume) for each bar and dividing by total volume so far.",
-      "VWAP resets every session. At the open it starts fresh, so early in the day it moves a lot; later, with more volume included, it becomes steadier. It is an intraday tool and has no meaning carried over from yesterday (unless you use special anchored versions).",
-      "Many intraday traders treat VWAP as a fair-value reference — roughly the average price participants have paid today. When price is above VWAP, buyers have been in control intraday on average; below VWAP, sellers have. Some large participants also benchmark their execution against it.",
-      "Like any indicator, VWAP is derived from past price and volume, so it lags. Price often crosses VWAP back and forth in choppy sessions, and a single cross is not a signal on its own."
+      "A choppy session is one where price moves back and forth without making progress: it repeatedly crosses the 20-EMA and VWAP, and swing highs and lows overlap. Trend templates tend to produce a string of small losses plus costs in these conditions.",
+      "The efficiency ratio (ER) measures how directly price travelled. ER = |close now - close N bars ago| ÷ sum of |close-to-close changes| over those N bars. An ER near 1 means price moved almost in a straight line; an ER near 0 means lots of movement with little net progress.",
+      "A flat EMA is a second chop signal. One testable definition: the absolute change in the 20-EMA over the last 10 bars is less than a small percentage of price (for example 0.05%).",
+      "The template rule is: skip trend entries when ER over the last 10 bars is below a threshold (e.g. 0.30) or the EMA is flat. These thresholds are starting values to test in the backtester, not proven settings."
     ],
     why: [
-      "VWAP gives a simple, widely watched intraday reference. Because many traders look at it, price reactions around it are common — which makes it useful context for location and bias.",
-      "It also helps you avoid chasing: buying far above VWAP after a big run often means paying well above the day's average with little nearby support."
+      "Filters that remove losing conditions often help more than better entries. Avoiding chop reduces the number of trades, cost drag and the frustration that leads to rule breaks.",
+      "Measuring chop with numbers rather than impressions also stops you from deciding after the fact that a losing day 'was obviously choppy'."
     ],
     how: [
-      "Add VWAP to an intraday replay in the Trading Practice Lab and confirm it starts fresh at the session open.",
-      "Note where price is relative to VWAP at 30 minutes, 1 hour and 2 hours into the session.",
-      "Combine with structure: an uptrend holding above VWAP is a more consistent read than an uptrend constantly crossing it.",
-      "Watch pullbacks to VWAP and record whether price held, sliced through, or chopped around it.",
-      "Measure how far price got from VWAP before snapping back on extended days.",
-      "Record a VWAP rule for practice in your Playbook, e.g. 'only consider long simulations above VWAP when structure is bullish'."
+      "Open Trading → Replay on three NIFTYBEES or BANKBEES 5m sessions.",
+      "At several points, record the close now, the close 10 bars ago, and the 10 bar-to-bar changes.",
+      "Calculate ER and note whether it is above or below 0.30.",
+      "Check the 20-EMA change over 10 bars as a percentage of price.",
+      "Compare your calculations with whether trend triggers at those times worked.",
+      "In Trading → Backtest, run the trend template with and without the chop filter and compare trade count and net expectancy.",
+      "Write the filter you will keep in your Playbook, with the test result that supports it."
     ],
     example: {
-      title: "Hypothetical stock XYZ, intraday 5-minute chart (practice replay)",
+      title: "Hypothetical efficiency ratio on NIFTYBEES 5m (illustrative numbers only)",
       lines: [
-        "Bar 1: price $10.00, volume 1,000 → price × volume = 10,000.",
-        "Bar 2: price $10.20, volume 3,000 → 30,600.",
-        "VWAP = (10,000 + 30,600) ÷ (1,000 + 3,000) = 40,600 ÷ 4,000 = $10.15.",
-        "Note it is closer to $10.20 because more volume traded there.",
-        "Mid-morning: price $10.60, VWAP $10.30, structure HH + HL → buyers in control intraday.",
-        "Next day VWAP resets at the open; yesterday's $10.30 no longer applies."
+        "Close now ₹270.40; close 10 bars ago ₹270.00 → net move = ₹0.40.",
+        "Sum of the 10 absolute bar-to-bar changes = ₹2.00.",
+        "ER = ₹0.40 ÷ ₹2.00 = 0.20 → below 0.30 → choppy → skip.",
+        "Another stretch: net move ₹1.20, path ₹1.60 → ER = 0.75 → directional.",
+        "EMA check: 20-EMA moved ₹0.08 over 10 bars; 0.05% of ₹270 = ₹0.135 → flat → skip."
       ]
     },
     mistakes: [
-      "Carrying yesterday's VWAP into today, forgetting that it resets every session.",
-      "Treating every VWAP cross as a buy or sell signal in choppy conditions.",
-      "Trusting VWAP heavily in the first few minutes, when it is based on very little volume.",
-      "Chasing far above VWAP and assuming the line will act as nearby support.",
-      "Using VWAP alone without structure or levels."
+      "Labelling a day choppy only after it produced losses.",
+      "Picking a threshold that perfectly fits one week of data (overfitting).",
+      "Using ER on too few bars, where a single candle dominates.",
+      "Overriding the filter because a breakout 'looked strong'.",
+      "Expecting the filter to remove all losing trades — it only reduces some."
     ],
     quiz: [
-      { q: "How is VWAP calculated?", a: "Sum of (price × volume) divided by total volume, accumulated through the session." },
-      { q: "How often does standard VWAP reset?", a: "Every trading session — it starts fresh at the open." },
-      { q: "What does price above VWAP suggest intraday?", a: "Buyers have been in control on average today; it is context, not a guarantee." }
+      { q: "What is the efficiency ratio formula?", a: "|close now - close N bars ago| ÷ sum of |bar-to-bar changes| over N bars." },
+      { q: "Net move ₹0.30, total path ₹1.50 — what is ER?", a: "0.20, which suggests chop." },
+      { q: "Are the ER and EMA thresholds proven settings?", a: "No — they are starting values to test in the backtester." }
     ]
   },
 
   33: {
     what: [
-      "Every indicator — moving averages, RSI, VWAP and the rest — is a calculation of past price and/or volume. They do not contain hidden information; they repackage what is already on the chart.",
-      "Because they use past data, indicators lag. By the time an MA turns or RSI crosses a level, price has already moved. Faster settings lag less but produce more false signals; slower settings are smoother but later. There is no setting that removes this trade-off.",
-      "Indicators also conflict. RSI can say 'overbought' while price is above VWAP and a rising EMA. If you stack several indicators, you can usually find one that agrees with whatever you already wanted to do — which creates false confidence.",
-      "More indicators does not mean more accuracy. Many of them measure similar things, so adding them just repeats the same information. The practical approach is: price, structure and levels first; one indicator, used only as confirmation."
+      "Trading → Replay plays historical ETF sessions candle by candle. Before each new candle is revealed, you lock one decision: Long, Short or No-Trade. You cannot change it after the reveal.",
+      "The process score measures whether your decisions followed your written rules — filters, trigger, stop and size — rather than whether the trade made money. A rule-following trade that loses still scores well on process; a lucky rule-breaking trade does not.",
+      "This separation matters because short-term outcomes are noisy. A good process can lose several times in a row, and a bad process can win by chance. Over many trades, process is what you control.",
+      "Today is practice for the trend template from Days 29-32: EMA and VWAP filters, swing-high trigger, swing-low stop, trailing exit and chop filter."
     ],
     why: [
-      "Beginners often believe the right combination of indicators will reveal what price will do next. That search wastes months and leads to cluttered charts and hesitant decisions. Knowing the limits early lets you focus on what actually drives your read.",
-      "Accepting uncertainty is part of trading education. No indicator, alone or combined, makes outcomes certain."
+      "Backtests apply rules perfectly. Humans do not. Replay reveals the gap between the rules and how you actually apply them in real time — hesitation, chasing, skipping the chop filter.",
+      "Building that consistency in Replay first means your later paper-trading results are more likely to resemble the backtest."
     ],
     how: [
-      "Open a replay with MA, RSI and VWAP all on, then remove all but one.",
-      "On the clean chart, label structure and key levels first, then glance at the one indicator.",
-      "Find two moments where your indicators disagreed and write down what structure said instead.",
-      "Measure the lag: note the candle where price turned and the candle where your indicator turned.",
-      "Choose a single indicator for the next two weeks of practice and record why in your Strategy Lab notes.",
-      "In your Psychology journal, note any time you added an indicator just to justify a trade you already wanted."
+      "Write the full trend checklist on one card: filters, trigger, entry, stop, size, exit, chop filter, cost check.",
+      "Open Trading → Replay on a NIFTYBEES 5m session you have not seen before.",
+      "On each candle, run the checklist and lock Long, Short or No-Trade before revealing the next bar.",
+      "When you enter, note entry, stop, units and planned exit immediately.",
+      "Complete three sessions, including at least one on BANKBEES or ITBEES.",
+      "Review the process score and list every rule deviation.",
+      "Log deviations in the Mistake Lab with what you felt at the time."
     ],
     example: {
-      title: "Hypothetical stock XYZ, 5-minute chart (practice replay)",
+      title: "Hypothetical Replay session review (illustrative numbers only)",
       lines: [
-        "Price turns down from a high at $18.40 on bar 50.",
-        "9 EMA starts sloping down on bar 53; 20 EMA on bar 57 → 3 and 7 bars of lag.",
-        "At bar 52, RSI reads 72 ('overbought'), price is above VWAP, 20 EMA still rising.",
-        "Three indicators, mixed messages — easy to pick the one that agrees with you.",
-        "Structure: the last HL at $17.90 is still intact, so the uptrend read stands until it breaks.",
-        "Lesson: the structural level gave the clearest decision point; the indicators came later."
+        "Decisions locked: 48 candles → 41 No-Trade, 5 Long, 2 Short.",
+        "Rule-following trades: 4 of 7; process score shown as 4 ÷ 7 ~ 57%.",
+        "Deviation 1: entered before the trigger candle closed (chasing).",
+        "Deviation 2: ignored ER below 0.30; trade lost 1R plus costs.",
+        "Deviation 3: moved the stop down once.",
+        "Outcome P&L was slightly positive, but the process score shows the rules were not followed."
       ]
     },
     mistakes: [
-      "Believing an indicator knows something price does not, when it is only derived from price.",
-      "Adding indicators until one agrees with the trade you already wanted.",
-      "Constantly tweaking indicator settings to fit past charts.",
-      "Letting a lagging signal override a clear structural break.",
-      "Cluttering the chart so much that you cannot see price and levels."
+      "Judging the session by P&L instead of process score.",
+      "Skipping the checklist on fast candles.",
+      "Replaying a session you remember, which leaks future information.",
+      "Locking Long on most candles because No-Trade feels unproductive.",
+      "Not recording deviations, so the same mistake repeats."
     ],
     quiz: [
-      { q: "What are indicators calculated from?", a: "Past price and/or volume — they do not contain extra information." },
-      { q: "Why doesn't stacking many indicators improve accuracy?", a: "They often measure similar things, can conflict, and give false confidence by letting you pick one that agrees." },
-      { q: "What should come first in your chart read?", a: "Price, structure and levels; one indicator is used only as confirmation." }
+      { q: "What does the process score measure?", a: "Whether decisions followed your written rules, not whether they made money." },
+      { q: "Why replay unfamiliar sessions?", a: "Remembering the outcome is a form of look-ahead." },
+      { q: "Is a losing rule-following trade a bad trade?", a: "Not on process; it can be a correct decision with an unlucky outcome." }
     ]
   },
 
   34: {
     what: [
-      "Today you combine three things into one simple read: structure for direction, levels for location, and one indicator for confirmation.",
-      "Direction (structure): is the market making HH + HL, LH + LL, or ranging? This tells you which side, if any, you would consider in simulation.",
-      "Location (levels): where is price relative to support, resistance, prior swings or the day's high and low? A good location is near a level where you can define a nearby invalidation point, rather than in the middle of nowhere.",
-      "Confirmation (one indicator): does your single chosen indicator agree, for example price holding above VWAP or a rising 20 EMA? If it disagrees, you either wait or skip. This three-step read — direction, location, confirmation — is the foundation of a strategy. Simple beats complex because you can repeat it, journal it and test it."
+      "Trading → Backtest applies a strategy's rules to historical ETF data. You choose the ETF, date range, timeframe (1m, 5m or 15m) and strategy. Signals use only completed bars and fill on the next bar, so there is no look-ahead. The Indian cost model deducts brokerage, STT, exchange charges, SEBI fees, stamp duty and GST.",
+      "The data is split into a training period and an out-of-sample period. You may adjust settings while looking at training results; the out-of-sample period is a separate check that you have not tuned on. If performance collapses out-of-sample, the training result was probably fitted to noise.",
+      "Expectancy is the average result per trade: (win rate × average win) - (loss rate × average loss). Measured in R after costs, it tells you whether the template made or lost money per unit of risk on that data.",
+      "Trade count matters. Thirty or forty trades can produce a positive result by chance. Treat small samples as 'not enough evidence', not as proof."
     ],
     why: [
-      "A clear, repeatable read lets you compare trades fairly. If every trade uses a different reason, your journal cannot tell you what works. If every trade passes the same three checks, you can backtest and improve it.",
-      "Keeping it simple also reduces decision fatigue, which matters most in fast intraday conditions."
+      "Replay shows whether you can follow the rules; the backtester shows what the rules did on a lot more historical data than you could replay by hand. Both are needed.",
+      "Running the backtest after costs is where many intraday ideas fail. Better to learn that here, with simulated data, than to assume an edge exists."
     ],
     how: [
-      "Write your three-step checklist in your Playbook: Structure → direction, Level → location, Indicator → confirmation.",
-      "Open a Trading Practice Lab replay and, before stepping forward, answer each step in one line.",
-      "If any step fails, write 'no trade' and continue — skipping is a valid outcome.",
-      "When all three agree, log a hypothetical entry, stop and target in your Paper-trade/Simulation log.",
-      "Repeat for at least 10 setups and record results in the Backtesting journal.",
-      "Review which step most often caused you to skip — that tells you what conditions you see most."
+      "Open Trading → Backtest, select NIFTYBEES, 5m, and the Trend strategy.",
+      "Set a date range with a training period and a later out-of-sample period.",
+      "Confirm costs are switched on and review the cost settings.",
+      "Run the backtest and read trade count, win rate, average win and loss in R, expectancy, profit factor and maximum drawdown.",
+      "Run the out-of-sample period without changing settings and compare.",
+      "Repeat on BANKBEES or JUNIORBEES to see if results transfer across ETFs.",
+      "Save the report and log net expectancy and trade count in the Trading Journal."
     ],
     example: {
-      title: "Hypothetical stock XYZ, 5-minute chart, three-step read",
+      title: "Hypothetical Trend backtest report — invented numbers for learning",
       lines: [
-        "Structure: HH $22.50, HL $22.00, HH $22.80 → direction up.",
-        "Location: pullback to $22.30, near prior resistance-turned-support at $22.30.",
-        "Confirmation (one indicator): price holding above VWAP at $22.15. ✓",
-        "Plan (simulation): entry $22.35, stop $21.95 (below the HL), risk $0.40 per share.",
-        "Target near the prior high area $23.15 → reward $0.80 → about 2R.",
-        "If VWAP had been above price, the read fails confirmation → no trade."
+        "Training: 60 trades; win rate 41%; average win +1.8R; average loss -1.0R (gross).",
+        "Gross expectancy = 0.41 × 1.8 - 0.59 × 1.0 = 0.738 - 0.590 = +0.148R.",
+        "Costs ~ ₹80 on ₹500 risk = 0.16R per trade.",
+        "Net expectancy ~ 0.148R - 0.16R = -0.012R per trade — roughly break-even to slightly negative.",
+        "Out-of-sample: 25 trades; net expectancy -0.10R; too few trades to conclude much either way.",
+        "Reading: no demonstrated edge after costs on this hypothetical sample; next step is to test the chop filter or another ETF, not to trade it."
       ]
     },
     mistakes: [
-      "Skipping the structure step and starting with the indicator.",
-      "Taking trades in poor locations because direction and indicator agreed.",
-      "Adding a second and third indicator 'just to be sure', which brings back conflict.",
-      "Forcing a trade when one step fails instead of writing 'no trade'.",
-      "Changing the checklist after every losing trade, so it never gets tested properly."
+      "Running the backtest with costs off and reporting the gross result.",
+      "Tuning settings on the out-of-sample period until it looks good.",
+      "Trusting a result built on a handful of trades.",
+      "Focusing on win rate while ignoring average win, average loss and drawdown.",
+      "Assuming a backtest result will repeat in the future."
     ],
     quiz: [
-      { q: "What are the three steps of the simple read?", a: "Structure for direction, levels for location, one indicator for confirmation." },
-      { q: "What should you do if one of the three steps fails?", a: "Wait or skip — 'no trade' is a valid result." },
-      { q: "Why does a simple, repeatable read help learning?", a: "Every trade uses the same criteria, so your journal and backtests can show what actually works." }
+      { q: "What is expectancy?", a: "(Win rate × average win) - (loss rate × average loss), ideally in R after costs." },
+      { q: "Why keep an out-of-sample period?", a: "To check results on data the settings were not tuned on." },
+      { q: "Gross expectancy +0.15R and costs 0.16R per trade — net?", a: "About -0.01R per trade." }
     ]
   },
 
   35: {
     what: [
-      "This week you learned what indicators are, how the common ones work, and — most importantly — their limits. Here is the recap.",
-      "Moving averages (Day 29): average price over N periods (SMA equal weights, EMA favours recent bars). They show direction and can act as dynamic levels, but always lag. RSI (Day 30): momentum oscillator on a 0–100 scale; 70/30 are reference zones, not signals; strong trends stay extended; divergence is a warning that structure must confirm.",
-      "Volume (Day 31): measures participation; breakouts with clearly higher volume show conviction, low-volume moves are suspect, and the open usually has the most volume. VWAP (Day 32): volume-weighted average price that resets each session; above it buyers have controlled the day on average, below it sellers have.",
-      "Indicator limitations (Day 33): all indicators are derived from price, they lag and can conflict, and more of them does not mean more accuracy. Context + one indicator (Day 34): structure → direction, levels → location, indicator → confirmation. Simple beats complex."
+      "This week turned trend-following into a testable template. Day 29: the 20-EMA and VWAP describe intraday direction; slope matters. Day 30: enter on a close above the prior swing high when price is above a rising 20-EMA and above VWAP, filling on the next bar.",
+      "Day 31: the initial stop sits below the last swing low; exits either trail under new higher lows or trigger on a close below the 20-EMA, with a time exit before the session ends. Day 32: skip trades when the efficiency ratio is low or the EMA is flat.",
+      "Day 33: Replay measured whether you could follow the rules, through the process score. Day 34: the backtester measured what the rules did on historical data, after costs, on training and out-of-sample periods.",
+      "The honest conclusion for most learners at this point is uncertain: the template is clearly defined, but whether it has an edge on a given ETF and timeframe depends on after-cost, out-of-sample evidence that may be weak or negative."
     ],
     why: [
-      "Review is where you check that you understand indicators as tools, not answers. If you still feel tempted to trade off RSI 70 or every VWAP cross, this is the day to catch it.",
-      "Next week is risk management, which uses structure and levels to place stops. A clean, consistent chart read makes that much easier."
+      "Reviewing the whole template together shows how each part interacts: a chop filter changes trade count, which changes cost drag, which changes expectancy.",
+      "It also builds the habit of writing down what the evidence says, including 'not proven', rather than keeping only the parts that feel good."
     ],
     how: [
-      "Re-read this week's Trading Journal and Backtesting journal entries from Days 29–34.",
-      "From memory, write one sentence each on MA, RSI, volume and VWAP, including one limitation of each.",
-      "Run the three-step read on three new replays in the Trading Practice Lab using only your chosen indicator.",
-      "Identify your weakest concept (often RSI divergence or VWAP behaviour early in the session) and rewrite it in your own words.",
-      "Check your definitions against the lessons and fix any errors.",
-      "Save your three-step checklist and your best insight to the Knowledge Vault."
+      "Re-read the Trend module in Trading → Learn.",
+      "Write the complete trend template in your Playbook with every rule and parameter.",
+      "Re-run the Trend backtest on BANKBEES 5m with costs on and the chop filter on.",
+      "Compare training and out-of-sample expectancy, trade count and maximum drawdown with your NIFTYBEES run.",
+      "Review your Replay process scores from Day 33 and note the most frequent deviation.",
+      "Ask the AI Coach in Trading → Ask AI to quiz you on the template rules.",
+      "Write a three-line verdict: what worked, what did not, what to test next."
     ],
     example: {
-      title: "Hypothetical self-review walkthrough",
+      title: "Hypothetical trend template summary (illustrative numbers only)",
       lines: [
-        "Journal re-read: on Day 30 I wrote 'RSI 75 → sell' — corrected to 'RSI 75 = extended, not a signal'.",
-        "From memory: 'VWAP = Σ(price × volume) ÷ Σ volume, resets daily.' ✓",
-        "Replay 1: uptrend, pullback to level, above VWAP → all three checks pass.",
-        "Replay 2: range, price around VWAP → structure fails → no trade.",
-        "Replay 3: downtrend but price above VWAP → conflict → no trade.",
-        "Weakest concept: divergence. Rewritten: 'Divergence warns; a structure break confirms.' Saved to Knowledge Vault."
+        "Filters: 5m close > rising 20-EMA and > VWAP; skip if ER(10) < 0.30 or EMA flat.",
+        "Trigger: close > prior swing high; enter next bar open.",
+        "Stop: below last swing low + ₹0.10; size = ₹500 ÷ stop distance, capped by capital.",
+        "Exit: trail under new higher lows; close all by the time exit.",
+        "Hypothetical results: NIFTYBEES net -0.01R (60 trades), BANKBEES net +0.04R (45 trades).",
+        "Verdict: no clear after-cost edge yet; samples too small; keep testing, do not assume."
       ]
     },
     mistakes: [
-      "Reviewing indicator definitions but not their limitations.",
-      "Adding a new indicator during review week instead of consolidating the one you chose.",
-      "Writing answers while looking at the lessons, which hides gaps in memory.",
-      "Skipping the no-trade replays, which are just as important as the trades.",
-      "Not saving the checklist to the Knowledge Vault, so you rebuild it from scratch later."
+      "Keeping only the ETF or period that looked best and discarding the rest.",
+      "Changing several parameters at once, so you cannot tell which change mattered.",
+      "Treating a weekly review as optional.",
+      "Calling the template 'working' based on Replay P&L rather than backtest evidence.",
+      "Forgetting that the same template can behave very differently on gold or sector ETFs."
     ],
     quiz: [
-      { q: "Name one limitation shared by all indicators.", a: "They are derived from past price/volume, so they lag (and can conflict with each other)." },
-      { q: "What is the difference between VWAP and a moving average?", a: "VWAP weights prices by volume and resets each session; a moving average covers a fixed number of periods regardless of session." },
-      { q: "What role should a single indicator play in your read?", a: "Confirmation only, after structure has given direction and levels have given location." }
+      { q: "List the trend template's entry conditions.", a: "Close above a rising 20-EMA, above VWAP, and above the prior swing high; enter next bar open." },
+      { q: "What does the chop filter do?", a: "Skips trades when ER is low or the EMA is flat." },
+      { q: "What evidence should decide whether the template has an edge?", a: "Out-of-sample backtest results after costs, with enough trades." }
     ]
   },
 
   36: {
     what: [
-      "A stop-loss (or 'stop') is the price at which you exit a trade because your idea has been proven wrong. It is decided before you enter. In this app you practise stops in simulation; in real markets a stop order may also fill at a worse price than planned (called slippage), especially in fast moves.",
-      "A good stop sits at a logical invalidation point — a price that, if reached, means the reason for the trade no longer holds. For a long trade in an uptrend, that is usually just beyond the last higher low or below a support level. A random distance like 'always 10 cents' ignores what the chart is saying.",
-      "Every trade needs a stop, decided before entry. Without one, you have no way to calculate position size or risk/reward, and a small loss can quietly become a large one.",
-      "Never widen a stop mid-trade. Moving it further away when price approaches it means you are increasing risk on a trade that is already going against you — the opposite of the plan."
+      "A breakout is a move through a price level where price previously stalled. For a strategy to be testable, the level must be objective — something a backtester can calculate without judgement.",
+      "The prior N-bar high is the highest high of the last N completed bars, for example the last 20 bars on a 5m chart (about 100 minutes). A close above it means price has exceeded every high in that window.",
+      "The opening range is the high and low of the first part of the session, for example 09:15 to 09:30 IST. The previous day's high and low are also widely watched, especially on liquid index ETFs like NIFTYBEES and BANKBEES.",
+      "Hand-drawn trendlines and 'zones' can be useful for reading charts, but they are hard to test consistently. This course's breakout template uses only the objective levels above."
     ],
     why: [
-      "The stop is the single most important number in a trade plan, because it defines how much you can lose. Position sizing, risk/reward and daily loss limits all depend on it.",
-      "Placing stops at logical levels also improves your learning: when a stop is hit, you know your idea was actually wrong, not that you were shaken out by normal noise."
+      "Using objective levels means your Replay decisions and your backtest are testing the same thing. If you draw levels by eye, the backtester and you will disagree about which breakouts happened.",
+      "Levels where many participants look are more likely to see increased activity when crossed — though that activity can go either way, which is why false breakouts get their own lesson."
     ],
     how: [
-      "Before any simulated entry, identify the structural level that would invalidate the idea (last HL, support, range edge).",
-      "Place the stop a small buffer beyond that level, not exactly on it, to allow for normal noise.",
-      "Write the stop price in your Paper-trade/Simulation log before you click enter.",
-      "If the stop would be so far away that the trade no longer makes sense, skip the trade rather than moving the stop closer to an illogical spot.",
-      "During the trade, allow the stop to stay or move in your favour only — never further away.",
-      "After each stopped-out trade, note in your Trading Journal whether the invalidation was real or the stop was placed poorly."
+      "Open Trading → Replay on a NIFTYBEES 5m session.",
+      "Mark the previous day's high and low before the session starts.",
+      "After 09:30 IST, mark the opening range high and low.",
+      "As the session progresses, track the rolling 20-bar high and low.",
+      "Each time price closes beyond one of these levels, note which level it was and what happened in the next five bars.",
+      "Repeat on four more sessions, including one on GOLDBEES.",
+      "Record which level types produced the cleanest follow-through in your sample."
     ],
     example: {
-      title: "Hypothetical stock XYZ, long setup in simulation",
+      title: "Hypothetical levels on a NIFTYBEES 5m session (illustrative numbers only)",
       lines: [
-        "Structure: uptrend; last higher low at $40.00.",
-        "Planned entry on a pullback: $40.60.",
-        "Logical stop: just below the HL with a small buffer → $39.90.",
-        "Stop distance = $40.60 − $39.90 = $0.70 per share.",
-        "Random stop alternative: 'always $0.20' → $40.40, inside normal pullback noise above the HL.",
-        "If price reaches $39.90, the HL has broken — the idea is wrong and the trade is closed as planned."
+        "Previous day high ₹271.60; previous day low ₹268.40.",
+        "Opening range (09:15 to 09:30): high ₹271.00, low ₹269.80 → width ₹1.20.",
+        "At 11:00, 20-bar high = ₹270.90 (it includes only completed bars).",
+        "Candle closes at ₹271.05 → above the 20-bar high and the opening range high.",
+        "Next level overhead: previous day high ₹271.60, ₹0.55 away — a possible limit on the move."
       ]
     },
     mistakes: [
-      "Entering without a stop and 'deciding later', which usually means deciding emotionally.",
-      "Using a fixed random distance that ignores structure and levels.",
-      "Placing the stop exactly on an obvious level, where normal noise often tags it.",
-      "Widening the stop when price approaches it, which increases risk on a losing trade.",
-      "Assuming a stop always fills at the exact price, forgetting slippage in fast real markets."
+      "Drawing levels by eye that cannot be reproduced in a backtest.",
+      "Including the current, unfinished bar in the N-bar high, which is look-ahead.",
+      "Ignoring a nearby higher level that leaves too little room before resistance.",
+      "Treating every touch of a level as a breakout, without requiring a close.",
+      "Using too many levels until every candle is near one."
     ],
     quiz: [
-      { q: "Where should a stop-loss be placed?", a: "At a logical invalidation point, slightly beyond a level or swing that would prove the idea wrong." },
-      { q: "When should you decide your stop?", a: "Before entering the trade." },
-      { q: "Why should you never widen a stop mid-trade?", a: "It increases risk on a trade that is already going against you and breaks your plan." }
+      { q: "What is a prior N-bar high?", a: "The highest high of the last N completed bars." },
+      { q: "Give the opening range in this course's example.", a: "High and low from 09:15 to 09:30 IST." },
+      { q: "Why prefer objective levels for this template?", a: "They can be calculated the same way in Replay and in the backtester." }
     ]
   },
 
   37: {
     what: [
-      "Position size is how many shares (or units) you trade. It should be calculated from your risk, not guessed or chosen because a round number 'feels right'.",
-      "The formula is: position size = risk amount ÷ stop distance. The risk amount is the money you are willing to lose if the stop is hit (for example 1% of the account). The stop distance is the gap between your entry and your stop, per share.",
-      "This means a wider stop leads to a smaller size, and a tighter stop leads to a larger size. The money at risk stays roughly the same on every trade; only the share count changes.",
-      "You calculate before every trade. Also check that the resulting position value fits within your simulated account's buying power, and remember real trading adds costs (commissions, spreads, slippage) not included in the basic formula."
+      "Relative volume compares a bar's volume with recent average volume: relative volume = bar volume ÷ average volume of the last N bars. A value of 1.5× means the bar traded 50% more units than usual.",
+      "The breakout template requires the breakout candle's relative volume to be ≥ 1.5×. The idea is that a move through a level with more participation is less likely to be a few small orders pushing price through.",
+      "Intraday volume follows a pattern: it is usually high near the open and close and lower around midday. Comparing a midday bar with an average that includes the opening bars can understate relative volume, so compare like with like where possible.",
+      "For ETFs, also check traded value (price × volume) and spread. Many NSE ETFs are thinly traded; a 2× spike on a tiny base can still be very little money. Market makers provide quotes, but quoted size may be small."
     ],
     why: [
-      "Position sizing is what turns a stop-loss into actual risk control. Two traders with identical stops can have wildly different results if one buys 100 shares and the other 1,000.",
-      "Keeping risk constant per trade also makes your journal meaningful: every loss is about the same size, so you can measure results in R (multiples of risk) and compare trades fairly."
+      "Volume is one of the few independent pieces of information beyond price. As a filter it can reduce the number of low-participation breakouts — though it cannot guarantee follow-through.",
+      "Filtering on traded value and spread protects the simulation from setups that would be expensive or unrealistic to fill."
     ],
     how: [
-      "Decide your risk per trade as a percentage (this course uses 1% or less in examples).",
-      "Convert it to money: account × risk % = risk amount.",
-      "Mark your entry and logical stop, then compute stop distance = entry − stop (for a long).",
-      "Divide: risk amount ÷ stop distance = shares. Round down, never up.",
-      "Check position value (shares × entry) against your simulated buying power.",
-      "Record the full calculation in your Paper-trade/Simulation log before entering.",
-      "Practise the calculation on five different stop distances until it is automatic."
+      "In Trading → Replay, display volume and a 20-bar average volume on NIFTYBEES 5m.",
+      "For each close beyond a level, calculate relative volume = bar volume ÷ 20-bar average.",
+      "Mark breakouts with relative volume ≥ 1.5× and those below it.",
+      "Note what happened over the next five bars for each group.",
+      "Calculate traded value for the breakout bar and compare with your minimum traded value rule.",
+      "Repeat on a less liquid ETF such as CPSEETF or PSUBNKBEES and note how volume and spread differ.",
+      "Record ten breakouts and their relative volume in the Trading Journal."
     ],
     example: {
-      title: "Hypothetical $10,000 practice account, stock XYZ",
+      title: "Hypothetical relative volume checks (illustrative numbers only)",
       lines: [
-        "Risk per trade: 1% × $10,000 = $100.",
-        "Trade A: entry $20.00, stop $19.50 → stop distance $0.50.",
-        "Size A = $100 ÷ $0.50 = 200 shares (position value $4,000).",
-        "Trade B: entry $20.00, stop $19.00 → stop distance $1.00.",
-        "Size B = $100 ÷ $1.00 = 100 shares (position value $2,000).",
-        "Both trades lose about $100 if stopped (before costs) — the wider stop simply gets a smaller size."
+        "20-bar average volume on NIFTYBEES 5m: 40,000 units.",
+        "Breakout bar A: 70,000 units → 70,000 ÷ 40,000 = 1.75× → passes (≥ 1.5×).",
+        "Breakout bar B: 50,000 units → 1.25× → fails the filter.",
+        "Traded value of bar A ~ 70,000 × ₹271 ~ ₹1.9 crore.",
+        "Thin ETF bar C: 3,000 units vs 1,500 average → 2.0×, but traded value ~ ₹1.5 lakh and spread wide → skip.",
+        "Passing the volume filter only means the rule is met — not that the breakout will hold."
       ]
     },
     mistakes: [
-      "Choosing a round share count like 100 or 500 regardless of the stop distance.",
-      "Rounding the share count up, which risks more than planned.",
-      "Moving the stop closer just to buy more shares, instead of using the logical stop.",
-      "Forgetting to check whether the position value exceeds simulated buying power.",
-      "Ignoring commissions, spreads and slippage, which make actual losses slightly larger than planned."
+      "Looking only at units and ignoring traded value.",
+      "Comparing midday volume with an opening-heavy average without thinking about the session pattern.",
+      "Using the volume of the unfinished current bar.",
+      "Treating a high-volume breakout as certain to follow through.",
+      "Lowering the threshold whenever a favourite setup fails it."
     ],
     quiz: [
-      { q: "What is the position size formula?", a: "Position size = risk amount ÷ stop distance per share." },
-      { q: "With a $10,000 account, 1% risk and a $0.25 stop, how many shares?", a: "$100 ÷ $0.25 = 400 shares." },
-      { q: "What happens to size when the stop gets wider?", a: "Size gets smaller, so the money at risk stays the same." }
+      { q: "Bar volume 60,000, average 40,000 — relative volume?", a: "1.5×, which meets the ≥ 1.5× rule." },
+      { q: "Why check traded value for ETFs?", a: "A big relative spike on a thin ETF can still be very little money and a wide spread." },
+      { q: "Does volume confirmation guarantee a breakout holds?", a: "No — it is a filter to test, not a guarantee." }
     ]
   },
 
   38: {
     what: [
-      "Risk/reward (R:R) compares what you could lose on a trade to what you hope to gain. Risk is the distance from entry to stop; reward is the distance from entry to target.",
-      "Traders often call one unit of risk '1R'. If your stop is $0.50 away, 1R = $0.50 per share. A target $1.00 away is then 2R, and the trade is described as 1:2 risk/reward. Measuring results in R lets you compare trades of different sizes.",
-      "R:R and win rate must be considered together. Win rate is the percentage of trades that hit the target. Breakeven win rate = 1 ÷ (1 + reward/risk). At 1:2, that is 1 ÷ 3 ≈ 33%, so you need to be right about 34% of the time just to break even before costs. Higher R:R needs a lower win rate — but higher targets are also hit less often.",
-      "Targets must be realistic. A 1:5 target that sits beyond strong resistance looks good on paper but rarely gets hit. Base targets on levels — prior highs, range edges, the day's high — then check what R that gives."
+      "A false breakout (sometimes called a failed breakout) happens when price closes beyond a level and then closes back inside the range. The move through the level did not hold.",
+      "A wick through a level is not a breakout in this course: the template requires a candle close beyond the level. That avoids reacting to brief spikes, but even a close beyond the level can still fail.",
+      "The template's false-breakout rule is: if, after entry, a 5m candle closes back inside the range (below the breakout level for a long), exit at the next bar open, even if the stop has not been hit. This often cuts the loss to less than 1R.",
+      "False breakouts are common. In many backtests a large share of breakout signals fail. The aim is not to avoid them all but to keep their cost small and measure how often they happen on each ETF."
     ],
     why: [
-      "Without R:R, you might take trades that risk $1 to make $0.20 and need to be right almost every time to survive. Thinking in R lets you judge whether a setup is worth taking before you enter.",
-      "It also explains why a strategy can lose more often than it wins and still be positive in a simulation — or win often and still lose overall."
+      "Without a defined false-breakout exit, traders often hold a failed breakout down to the full stop, or worse, hope it recovers. A written rule turns the failure into a small, planned loss.",
+      "Counting false breakouts in the backtester shows which ETFs and times of day produce cleaner breakouts — information you cannot get from a few memorable examples."
     ],
     how: [
-      "For each simulated setup, mark entry and logical stop; calculate 1R = entry − stop.",
-      "Find the nearest realistic target at a level (prior high, resistance, range edge).",
-      "Compute R:R = (target − entry) ÷ (entry − stop).",
-      "Set a minimum R:R for your Playbook (many educational examples use 1.5R or 2R) and skip setups below it.",
-      "Record results in R in your Backtesting journal: +2R, −1R, +0.5R, and so on.",
-      "After 20+ trades, compute win rate and average R to see whether they work together."
+      "Write the false-breakout rule in your Playbook: close back inside the level → exit next bar open.",
+      "In Trading → Replay, find five breakouts on NIFTYBEES or BANKBEES 5m.",
+      "After each simulated entry, check every candle close against the breakout level.",
+      "When a candle closes back inside, lock the exit and record the loss in R.",
+      "Tag each breakout as held or false, and note the time of day.",
+      "In Trading → Backtest, check the breakout report for the share of trades closed by the false-breakout rule.",
+      "Log the false-breakout frequency for each ETF you tested."
     ],
     example: {
-      title: "Hypothetical stock XYZ, long setup in simulation",
+      title: "Hypothetical false breakout on NIFTYBEES 5m (illustrative numbers only)",
       lines: [
-        "Entry $15.00, stop $14.60 → 1R = $0.40 per share.",
-        "Nearest resistance at $15.80 → reward $0.80 → 0.80 ÷ 0.40 = 2R (1:2).",
-        "Breakeven win rate at 1:2 = 1 ÷ (1 + 2) ≈ 33.3% before costs.",
-        "10 trades at 1:2 with 4 wins: 4 × (+2R) + 6 × (−1R) = +8R − 6R = +2R.",
-        "Same 10 trades with 3 wins: 3 × (+2R) + 7 × (−1R) = −1R.",
-        "A 1:5 target at $17.00 would sit beyond resistance — unrealistic, so 2R is used."
+        "Opening range high ₹271.00; candle closes at ₹271.15 with volume 1.6× → entry next open ₹271.20.",
+        "Stop at ₹270.45 (inside the range) → risk per unit ₹0.75.",
+        "Two bars later a candle closes at ₹270.90 — back inside the range → false breakout.",
+        "Exit next bar open ₹270.85 → loss ₹0.35 per unit, about 0.47R before costs.",
+        "Without the rule, price later touched ₹270.45 → full -1R loss."
       ]
     },
     mistakes: [
-      "Looking only at win rate and ignoring how big wins are compared with losses.",
-      "Setting large R targets beyond obvious resistance just to make the ratio look good.",
-      "Moving targets closer mid-trade out of fear, which shrinks your average win.",
-      "Calculating R:R after entering instead of before.",
-      "Forgetting that costs (commissions, slippage) raise the real breakeven win rate."
+      "Treating a wick beyond the level as a breakout.",
+      "Ignoring a close back inside because 'it might go back up'.",
+      "Exiting on any small pullback rather than a close back inside the range.",
+      "Assuming volume confirmation removes false breakouts.",
+      "Remembering only the breakouts that worked."
     ],
     quiz: [
-      { q: "What is 1R?", a: "The distance from entry to stop — one unit of risk." },
-      { q: "What breakeven win rate does a 1:2 risk/reward need (before costs)?", a: "About 33% — 1 ÷ (1 + 2)." },
-      { q: "Where should targets come from?", a: "Realistic levels such as prior highs, resistance or range edges, then converted to R." }
+      { q: "Define a false breakout in this course.", a: "A close beyond a level followed by a close back inside the range." },
+      { q: "What does the false-breakout rule tell you to do?", a: "Exit at the next bar open after a close back inside, even before the stop." },
+      { q: "Why count false breakouts in the backtester?", a: "To measure how often they happen per ETF and time of day instead of relying on memory." }
     ]
   },
 
   39: {
     what: [
-      "A maximum daily loss is a hard limit on how much you can lose in one day. When you hit it, you stop trading for the rest of the day — no exceptions. In this course it is expressed in R, typically 2R to 3R.",
-      "If your risk per trade is 1% and your daily max is 3R, you stop after losing 3% in a day. That can be three full losing trades, or a mix of losses and partial losses that add up to −3R.",
-      "The limit protects against tilt. Tilt is an emotional state after losses where frustration leads to rushed, oversized or off-plan trades to 'win it back'. Tilt is how one bad day becomes a disaster.",
-      "The limit is non-negotiable once hit. It only works if you treat it as a rule decided in advance, not a suggestion you reconsider in the moment."
+      "The breakout template's long version: the level is the prior 20-bar high or opening range high. Trigger: a 5m candle closes above the level with relative volume ≥ 1.5×. Entry: the next bar's open.",
+      "Stop: inside the range — either the range midpoint or just below the range low — so the stop is placed where 'price has left the range' is clearly wrong. A midpoint stop is tighter; a range-low stop is wider and gives more room.",
+      "Target: a fixed multiple of R (for example 2R), checked against costs with the Day 27 filter. Exits also include the false-breakout rule and a time exit before the session ends.",
+      "Size still comes from the risk budget: units = ₹500 ÷ (entry - stop), capped by virtual capital. Tight breakout stops often hit the capital cap, which makes the actual rupee risk smaller and costs a larger share of R."
     ],
     why: [
-      "Losing streaks are normal for any strategy. What separates survivable bad days from account-damaging ones is usually not the first losses, but what you do after them. A daily limit cuts that chain.",
-      "Practising the rule in simulation builds the habit before it ever matters with real consequences."
+      "A complete plan — entry, stop, target, size, exits — written before entry is what makes a breakout trade testable and repeatable. Missing any one part leaves room for improvisation.",
+      "Seeing how the capital cap and costs interact with tight stops explains why some breakout setups look attractive on a chart but are weak in R after costs."
     ],
     how: [
-      "Choose a daily max in R (for example 3R) and write it at the top of your Playbook.",
-      "Convert it to money at the start of each practice session: daily max = risk per trade × R limit.",
-      "Track your running total in R in your Paper-trade/Simulation log after every trade.",
-      "When the total reaches the limit, close the practice session immediately.",
-      "Write a short Psychology journal entry about how you felt when you hit it.",
-      "Review weekly: on days you hit the limit, what happened in the trades leading up to it?"
+      "Write the full breakout plan in your Playbook: level, trigger, entry, stop choice, target, false-breakout exit, time exit.",
+      "Open Trading → Paper on a replayed NIFTYBEES session and set your watchlist and risk limits.",
+      "When a candle closes above the level, check relative volume ≥ 1.5×.",
+      "Calculate stop, units (with capital cap) and target before placing the order.",
+      "Check that the target move per unit is ≥ 3× cost per unit.",
+      "Place the order with stop-loss and take-profit attached.",
+      "Manage only by the written exits and log the trade in the session journal."
     ],
     example: {
-      title: "Hypothetical $10,000 practice account, 1% risk, 3R daily max",
+      title: "Hypothetical breakout plan on NIFTYBEES 5m (illustrative numbers only)",
       lines: [
-        "1R = 1% × $10,000 = $100; daily max = 3 × $100 = $300.",
-        "Trade 1: −1R (−$100). Running total: −1R.",
-        "Trade 2: +0.5R (+$50). Running total: −0.5R.",
-        "Trade 3: −1R; Trade 4: −1R. Running total: −2.5R (−$250).",
-        "Trade 5: −0.5R. Running total: −3R (−$300) → daily max hit, session ends.",
-        "Without the rule, a frustrated 'win it back' trade at triple size could have turned −3R into −6R."
+        "Opening range ₹269.80 to ₹271.00; midpoint ₹270.40.",
+        "Close ₹271.15 with 1.6× volume → entry next open ₹271.20.",
+        "Stop just below midpoint: ₹270.45 → risk per unit ₹0.75.",
+        "Units = ₹500 ÷ ₹0.75 = 666; value 666 × ₹271.20 = ₹1,80,619 → over capital.",
+        "Capital cap: ₹1,00,000 ÷ ₹271.20 = 368 units; actual risk = 368 × ₹0.75 = ₹276.",
+        "Target 2R = ₹271.20 + 2 × ₹0.75 = ₹272.70 → gross win 368 × ₹1.50 = ₹552.",
+        "Costs ~ ₹82 = 0.30R of ₹276; net win ~ ₹470 (1.70R), net loss ~ ₹358 (1.30R).",
+        "Net break-even = ₹358 ÷ (₹470 + ₹358) ~ 43.2%, versus 33.3% before costs."
       ]
     },
     mistakes: [
-      "Not setting a daily limit until after a bad day has already happened.",
-      "Raising the limit mid-session because you feel the next trade will recover the losses.",
-      "Switching to a different account or simulation after hitting the limit.",
-      "Increasing size after losses to win it back, which is the core of tilt.",
-      "Only counting full losses and ignoring partial losses in the running total."
+      "Placing the stop just below the breakout level, where normal retests trigger it.",
+      "Ignoring the capital cap and assuming the full ₹500 risk applies.",
+      "Setting a 2R target that sits beyond a nearby previous-day high without noting it.",
+      "Removing the take-profit mid-trade to 'let it run' outside the written rules.",
+      "Forgetting to convert costs into R when the actual risk is smaller than the budget."
     ],
     quiz: [
-      { q: "What is a maximum daily loss?", a: "A hard limit, often 2–3R, after which you stop trading for the day." },
-      { q: "With 1% risk on a $10,000 account and a 2R daily max, what is the limit in money?", a: "2 × $100 = $200." },
-      { q: "What is tilt?", a: "An emotional state after losses that leads to rushed, oversized or off-plan trades." }
+      { q: "What are the two trigger conditions?", a: "A 5m close above the level and relative volume ≥ 1.5×." },
+      { q: "Where does the stop go in the breakout template?", a: "Inside the range — the midpoint or just below the range low." },
+      { q: "Why can costs be a bigger share of R on breakouts?", a: "Tight stops hit the capital cap, so the actual rupee risk is smaller while costs stay the same." }
     ]
   },
 
   40: {
     what: [
-      "A maximum number of trades is a daily cap — for example three trades — after which you stop, regardless of whether you are up or down.",
-      "Overtrading means taking more trades than your plan supports, usually low-quality ones taken out of boredom, excitement or frustration. It is one of the most common beginner mistakes.",
-      "Each trade carries costs — commissions, spreads and slippage in real markets — and every extra low-quality trade dilutes the results of your good ones. This is what traders mean when they say overtrading 'erodes your edge'. An edge is a small statistical advantage a strategy may have over many trades; it is never a guarantee.",
-      "A trade cap forces selectivity. Knowing you only have three trades makes you wait for setups that pass your full checklist. Fewer, higher-quality trades usually beat many average ones."
+      "An opening-range breakout (ORB) uses the high and low of the first part of the session as the level. In this course the default opening range is 09:15 to 09:30 IST (three 5m bars), after the pre-open session from 09:00 to 09:15.",
+      "The ORB template: wait for the opening range to complete; go long on a 5m close above the range high with relative volume ≥ 1.5× (short version mirrors on the range low). Stop inside the range; exit on a close back inside; target in R; time exit before the close.",
+      "Two width filters matter. If the range is too narrow, the stop is tiny, the capital cap binds and costs dominate. If the range is too wide, the stop is far and the target may be unrealistic. One testable rule: skip if range width is below 3× cost per unit or above a set percentage of price.",
+      "A signal cutoff time — for example no new ORB entries after 11:00 IST — keeps the template focused on the opening move and avoids late-session signals that have little time to work."
     ],
     why: [
-      "Beginners often feel they must be trading to be learning. In practice, the skill is in waiting and choosing. A cap turns that into a concrete rule.",
-      "Stopping after the cap even when you are winning also matters: a good start often breeds overconfidence and sloppy trades that give the gains back."
+      "The open is often the most active period for liquid index ETFs, and the opening range gives a clear, objective level each day. That makes ORB one of the simplest breakout variants to test.",
+      "It also has a common failure: in quiet sessions the range is narrow and both sides get broken. The width filter and false-breakout rule are designed to limit that cost."
     ],
     how: [
-      "Set a daily trade cap in your Playbook (for example 3) before your practice session starts.",
-      "Before each simulated trade, confirm it passes your full checklist (structure, level, one indicator, stop, size, R:R).",
-      "Number your trades in the Paper-trade/Simulation log: 1/3, 2/3, 3/3.",
-      "After trade 3, close the session — win or lose.",
-      "Grade each trade A/B/C for quality in your Trading Journal.",
-      "After two weeks, compare results from A-grade trades to C-grade trades."
+      "Write the ORB rules in your Playbook, including width filters and cutoff time.",
+      "Open Trading → Replay on a JUNIORBEES 5m session and pause at 09:30 IST.",
+      "Record the opening range high, low and width, and compare width with your filters.",
+      "Step forward and lock Long, Short or No-Trade on each candle until the cutoff.",
+      "Apply the false-breakout exit and time exit to any position.",
+      "Repeat for five mornings and note which were skipped by the width filter.",
+      "Compare JUNIORBEES with NIFTYBEES for range width, volume and spread."
     ],
     example: {
-      title: "Hypothetical practice comparison over 10 sessions",
+      title: "Hypothetical ORB morning on JUNIORBEES 5m (illustrative numbers only)",
       lines: [
-        "Without a cap: 80 trades, average −0.05R after costs → total −4R.",
-        "Many trades were mid-range entries graded C.",
-        "With a 3-trade cap: 28 trades (some days fewer), average +0.25R → total +7R.",
-        "The capped sessions skipped most C-grade trades.",
-        "These numbers are hypothetical and illustrate selectivity — they are not a promise of results.",
-        "Takeaway logged: 'The cap made me wait for my checklist.'"
+        "Opening range 09:15 to 09:30: high ₹720.00, low ₹716.40 → width ₹3.60 (0.50% of price).",
+        "Filters (hypothetical): width ≥ 3× cost per unit and ≤ 0.80% of price → passes.",
+        "10:05: candle closes ₹720.60 with 1.8× volume → entry next open ₹720.70.",
+        "Stop at midpoint ₹718.20 - ₹0.10 = ₹718.10 → risk per unit ₹2.60.",
+        "Units = ₹500 ÷ ₹2.60 = 192; value 192 × ₹720.70 = ₹1,38,374 → capital cap 138 units.",
+        "Actual risk = 138 × ₹2.60 = ₹358.80; target 2R = ₹720.70 + ₹5.20 = ₹725.90.",
+        "Another morning: range width ₹0.90 (0.13%) → too narrow vs costs → No-Trade."
       ]
     },
     mistakes: [
-      "Treating the cap as a target to reach every day instead of a maximum.",
-      "Continuing after the cap because you are winning and feel in the zone.",
-      "Continuing after the cap because you are losing and want to recover.",
-      "Taking quick 'scratch' trades that you do not count toward the cap.",
-      "Lowering your checklist standards to use up the remaining trades."
+      "Entering inside the first 15 minutes before the range is complete.",
+      "Trading every ORB regardless of range width.",
+      "Taking late-session ORB signals after the cutoff.",
+      "Treating the ORB on gold ETFs the same as on equity index ETFs, though their opens behave differently.",
+      "Forgetting that both sides of a narrow range can be broken in the same session."
     ],
     quiz: [
-      { q: "Why does a daily trade cap help?", a: "It forces selectivity, so you only take trades that fully meet your plan." },
-      { q: "Should you stop after the cap if you are winning?", a: "Yes — the cap applies win or lose, protecting against overconfidence." },
-      { q: "What is overtrading?", a: "Taking more trades than your plan supports, usually low-quality ones driven by emotion." }
+      { q: "What is the opening range in this course?", a: "The high and low from 09:15 to 09:30 IST." },
+      { q: "Why skip a very narrow opening range?", a: "The stop is tiny, the capital cap binds and costs take a large share of R." },
+      { q: "What does a signal cutoff time do?", a: "It prevents new ORB entries late in the session, e.g. after 11:00 IST." }
     ]
   },
 
   41: {
     what: [
-      "Risk per trade is the fixed fraction of your account you are willing to lose if a single trade hits its stop. Educational material commonly uses 0.5% to 1%.",
-      "Keeping it small means a normal losing streak cannot destroy the account. Ten losses in a row at 1% leaves about 90% of the account — a setback. Ten losses at 10% leaves about 35% — devastating, and you then need roughly a 187% gain just to get back to where you started.",
-      "Losses and recoveries are not symmetrical. A 10% drawdown needs about an 11% gain to recover; a 50% drawdown needs 100%. A drawdown is the decline from an account's peak to its low. Small risk keeps drawdowns in the range you can recover from.",
-      "Risk is chosen before reward. You decide how much you can lose first, then calculate size and check the target. Consistency over excitement: the same small risk on every trade beats big bets on 'sure things', because nothing in trading is sure."
+      "Today you run the breakout template in Trading → Backtest: ETF, date range, 5m timeframe, Breakout strategy, costs on. The backtester uses only completed bars for levels and volume, fills on the next bar, and applies the Indian cost model.",
+      "An ablation test compares a strategy with and without one rule. Running the breakout template with the volume filter on and off shows whether the filter improves net expectancy, or only reduces trade count.",
+      "Key metrics: trade count, win rate, average win and loss in R, net expectancy, profit factor (gross profits ÷ gross losses), maximum drawdown, and the share of trades closed by the false-breakout rule.",
+      "As with the trend backtest, training results are only a hypothesis. The out-of-sample period is the check, and a few dozen trades are rarely enough to draw firm conclusions."
     ],
     why: [
-      "Any strategy, even a sound one, will have losing streaks. Your risk per trade decides whether you survive them long enough to learn. It is the most important protection you control.",
-      "A fixed risk also keeps your emotions steadier: no single trade can hurt you badly, so you can follow your plan instead of reacting to fear."
+      "The volume filter, range-width filter and false-breakout rule all sound sensible. Only the backtest, after costs and out-of-sample, can show whether they help on a specific ETF and timeframe.",
+      "Comparing variants on the same data and periods also teaches you to change one thing at a time, which is the core habit of honest testing."
     ],
     how: [
-      "Choose a fixed risk per trade for practice (for example 0.5% or 1%) and write it in your Playbook.",
-      "Use the Day 37 formula on every simulated trade: risk amount ÷ stop distance = shares.",
-      "Do not increase risk because a setup 'looks perfect' — every trade uses the same percentage.",
-      "Simulate a 10-trade losing streak on paper at your chosen risk and at 5% or 10%, and compare the ending balances.",
-      "Track your simulated account's peak and current drawdown in your Trading Journal weekly.",
-      "Write in your Psychology journal how a 1% loss feels versus how you imagine a 10% loss would feel."
+      "Open Trading → Backtest, select NIFTYBEES, 5m, Breakout strategy, costs on.",
+      "Set the same training and out-of-sample periods you used for the trend backtest.",
+      "Run with the volume filter on (≥ 1.5×) and save the report.",
+      "Run again with the volume filter off and save the report.",
+      "Compare net expectancy, trade count, profit factor, drawdown and false-breakout share.",
+      "Run the better variant on the out-of-sample period without changing settings.",
+      "Log both variants and the out-of-sample result in the Trading Journal."
     ],
     example: {
-      title: "Hypothetical $10,000 practice account, 10 losses in a row",
+      title: "Hypothetical Breakout backtest comparison — invented numbers for learning",
       lines: [
-        "At 1% risk per trade (compounding): $10,000 × 0.99^10 ≈ $9,044 → down ~9.6%.",
-        "Gain needed to recover: 10,000 ÷ 9,044 − 1 ≈ 10.6%.",
-        "At 10% risk per trade: $10,000 × 0.90^10 ≈ $3,487 → down ~65%.",
-        "Gain needed to recover: 10,000 ÷ 3,487 − 1 ≈ 187%.",
-        "Same strategy, same losing streak — risk per trade decided the outcome.",
-        "Losing streaks of this length are possible even for reasonable strategies over many trades."
+        "Volume filter OFF (training): 120 trades; win 36%; avg win +1.9R; avg loss -0.8R (gross).",
+        "Gross expectancy = 0.36 × 1.9 - 0.64 × 0.8 = 0.684 - 0.512 = +0.172R; costs 0.25R → net -0.078R.",
+        "Volume filter ON (training): 55 trades; win 42%; avg win +1.9R; avg loss -0.8R (gross).",
+        "Gross = 0.42 × 1.9 - 0.58 × 0.8 = 0.798 - 0.464 = +0.334R; costs 0.25R → net +0.084R.",
+        "Out-of-sample, filter ON: 22 trades, net -0.03R — the training advantage did not clearly hold.",
+        "Reading: the filter may help, but evidence is thin; more data and other ETFs are needed."
       ]
     },
     mistakes: [
-      "Raising risk on a 'high-confidence' trade, which assumes certainty that does not exist.",
-      "Increasing risk after losses to recover faster, which deepens drawdowns.",
-      "Choosing size first and only then working out how much is at risk.",
-      "Underestimating how common long losing streaks are over hundreds of trades.",
-      "Ignoring the asymmetry between losses and the gains needed to recover them."
+      "Changing several rules between runs, so the effect of the volume filter cannot be isolated.",
+      "Comparing variants on different date ranges.",
+      "Preferring the variant with the highest win rate regardless of net expectancy.",
+      "Ignoring that the filtered version has far fewer trades, which makes its result less reliable.",
+      "Tuning the volume threshold on the out-of-sample period."
     ],
     quiz: [
-      { q: "What range of risk per trade is commonly used in educational material?", a: "About 0.5% to 1% of the account per trade." },
-      { q: "Roughly what gain is needed to recover from a 50% drawdown?", a: "100%." },
-      { q: "What does 'risk is chosen before reward' mean?", a: "You decide the maximum you can lose first, then size the position and check the target." }
+      { q: "What is an ablation test?", a: "Comparing a strategy with and without one rule on the same data." },
+      { q: "Gross expectancy +0.33R, costs 0.25R — net?", a: "About +0.08R per trade, before checking out-of-sample." },
+      { q: "Why is a 22-trade out-of-sample result weak evidence?", a: "Small samples can swing positive or negative by chance." }
     ]
   },
 
   42: {
     what: [
-      "This week you learned the rules that keep a practice account alive. Here is the recap.",
-      "Stop-loss (Day 36): the price where your idea is proven wrong, placed at a logical invalidation point beyond a level or swing, decided before entry and never widened. Position sizing (Day 37): size = risk amount ÷ stop distance; wider stops mean smaller size; risk stays constant; calculate every time.",
-      "Risk/reward (Day 38): 1R is the distance to your stop; targets are measured in R and should sit at realistic levels; at 1:2 the breakeven win rate is about 33% before costs, so R:R and win rate must be read together. Maximum daily loss (Day 39): a hard limit, often 2–3R, that ends the session and protects against tilt.",
-      "Maximum number of trades (Day 40): a daily cap that forces selectivity and stops overtrading, win or lose. Risk per trade (Day 41): a small, fixed fraction (commonly 0.5–1%) so losing streaks are survivable; losses and recoveries are asymmetric, and risk is chosen before reward."
+      "This week built a breakout template. Day 36: use objective levels — prior N-bar high/low, opening range, previous day high/low. Day 37: require relative volume ≥ 1.5× and check traded value and spread. Day 38: a close back inside the range is a false breakout, and the rule is to exit.",
+      "Day 39: enter on the next bar after a close beyond the level, stop inside the range, target in R, size from the risk budget with the capital cap. Day 40: the opening-range breakout adds width filters and a signal cutoff time.",
+      "Day 41: the backtester compared the template with and without the volume filter, after costs, on training and out-of-sample periods.",
+      "As with the trend template, the honest summary is that this is a clearly defined template to keep testing. Results in your backtests — not the logic of the rules — decide whether it deserves more practice."
     ],
     why: [
-      "Risk management is the part of trading education that most directly decides whether a learner survives long enough to improve. It does not make any trade more likely to win; it makes losing trades survivable.",
-      "These rules only work as a system: stop → size → R:R → daily limits. Reviewing them together shows where one weak link could undo the others."
+      "Breakout and trend templates often overlap — a trend entry above a swing high is a kind of breakout. Reviewing both shows where they differ: breakouts depend on levels and volume, trends on slope and structure.",
+      "A written review now gives you a baseline to compare with the pullback and range strategies in the next two phases."
     ],
     how: [
-      "Re-read this week's Trading Journal, Paper-trade/Simulation log and Psychology journal entries from Days 36–41.",
-      "From memory, write your full risk rule set: risk %, daily max in R, trade cap, minimum R:R, stop rules.",
-      "Work through three hypothetical setups by hand: stop, size, target, R:R.",
-      "Check your simulation log for any rule breaks (widened stop, extra trade, oversized position) and note the trigger.",
-      "Identify your weakest concept and rewrite it in your own words.",
-      "Save your final risk rule set to the Playbook and your best insight to the Knowledge Vault."
+      "Re-read the Breakout module in Trading → Learn.",
+      "Write the complete breakout template in your Playbook with all parameters.",
+      "Run one Trading → Paper session on a replayed NIFTYBEES day using only the breakout rules and your risk plan.",
+      "Review the Paper session report: rule-following, risk limits, costs, false-breakout exits.",
+      "Compare paper results with your Day 41 backtest, noting differences caused by your execution.",
+      "Use the Strategy Lab to note the template's version and test results.",
+      "Write a three-line verdict: what the evidence shows, what is untested, what to test next."
     ],
     example: {
-      title: "Hypothetical self-review walkthrough, $10,000 practice account",
+      title: "Hypothetical breakout template summary (illustrative numbers only)",
       lines: [
-        "Rules from memory: 1% risk, 3R daily max, 3-trade cap, min 2R, stops at structure. ✓",
-        "Setup check: entry $30.00, stop $29.60 → 1R = $0.40; size = $100 ÷ $0.40 = 250 shares.",
-        "Target at resistance $30.80 → reward $0.80 → 2R ✓ meets minimum.",
-        "Log review: on Day 39 I took a 4th trade after hitting the cap — rule break found.",
-        "Trigger noted in Psychology journal: frustration after two losses.",
-        "Weakest concept: breakeven win rate. Rewritten: '1 ÷ (1 + R:R)'. Saved to Knowledge Vault."
+        "Level: opening range high or prior 20-bar high (completed bars only).",
+        "Trigger: 5m close above level, relative volume ≥ 1.5×; enter next bar open.",
+        "Stop: inside range (midpoint); size = ₹500 ÷ stop distance, capped by ₹1,00,000 capital.",
+        "Exits: 2R target; close back inside → exit; time exit; no entries after 11:00 IST for ORB.",
+        "Hypothetical backtest: training net +0.08R (55 trades), out-of-sample net -0.03R (22 trades).",
+        "Verdict: not proven; continue testing on more ETFs and periods, after costs."
       ]
     },
     mistakes: [
-      "Reviewing each rule on its own instead of how they work together as a system.",
-      "Ignoring rule breaks in your log because the trade happened to be profitable.",
-      "Doing the position size maths in your head instead of writing it out.",
-      "Loosening a rule during review because it 'cost' you a winner.",
-      "Not saving the final rule set, so it drifts from week to week."
+      "Calling the template 'working' after a good training result alone.",
+      "Mixing trend and breakout rules mid-session without writing a new template.",
+      "Skipping the paper session because the backtest already ran.",
+      "Ignoring how the capital cap and costs change R on tight breakout stops.",
+      "Moving on to the next strategy without recording this week's results."
     ],
     quiz: [
-      { q: "With a $10,000 practice account, 1% risk and a $0.50 stop, what is the position size?", a: "$100 ÷ $0.50 = 200 shares." },
-      { q: "Why should a stop never be widened mid-trade?", a: "It increases risk on a trade already going against you and breaks the size calculation." },
-      { q: "Why use a daily loss limit and a trade cap together?", a: "The loss limit caps damage on bad days, and the trade cap prevents overtrading on any day — together they protect against tilt." }
+      { q: "What three objective levels does the breakout template use?", a: "Prior N-bar high/low, opening range high/low, previous day high/low." },
+      { q: "What is the volume rule?", a: "The breakout candle's volume must be ≥ 1.5× the recent average." },
+      { q: "What decides whether the template deserves more practice?", a: "After-cost, out-of-sample backtest evidence with enough trades." }
     ]
   }
 };

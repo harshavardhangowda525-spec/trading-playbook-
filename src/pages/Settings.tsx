@@ -22,7 +22,7 @@ const SYNC_LABEL: Record<SyncStatus, { text: string; tone: string }> = {
 
 /** Preferences that survive a fresh start (everything else is progress and is erased). */
 const KEEP_ON_RESTART: Record<string, string[] | '*'> = {
-  settings: ['profile', 'assistantPrefs', 'lessonVideos', 'marketsViewer'],
+  settings: ['profile', 'assistantPrefs', 'lessonVideos', 'marketsViewer', 'etfConfig'],
   datasets: '*', // imported CSV market data
 };
 

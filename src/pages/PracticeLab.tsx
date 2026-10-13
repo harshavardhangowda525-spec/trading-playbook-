@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { ArrowRight, Database, History, Pause, Play, PlayCircle, RotateCcw, ScanSearch } from 'lucide-react';
+import { ArrowRight, Database, FlaskConical, History, Pause, Play, PlayCircle, RotateCcw, ScanSearch } from 'lucide-react';
 import { CountUp, RingMeter, cx } from '../components/ui';
 import { DataImport } from '../components/practice/DataImport';
 import { PracticeLibrary } from '../components/practice/PracticeLibrary';
@@ -10,6 +10,10 @@ import { MistakeHeatmap } from '../components/practice/MistakeHeatmap';
 import { ReplayWorkspace } from '../components/practice/ReplayWorkspace';
 import { MarketsViewer } from '../components/practice/MarketsViewer';
 import { AssistantChat } from '../components/assistant/AssistantChat';
+import { EtfBacktest } from '../components/etf/EtfBacktest';
+import { EtfPaper } from '../components/etf/EtfPaper';
+import { EtfCourse } from '../components/etf/EtfCourse';
+import { EtfEligibilityCheck, EtfWorkflow } from '../components/etf/EtfWorkflow';
 import { useCollection, useDoc, useNow, useToday } from '../lib/hooks';
 import { useJourneyDay } from '../lib/data';
 import { celebrate } from '../lib/events';
@@ -31,7 +35,7 @@ const fade = (i = 0) => ({
   transition: { duration: 0.6, delay: i * 0.07, ease },
 });
 
-/** TRADING PRACTICE LAB — /trading, /trading/replay, /trading/markets, /trading/ask, /trading/history, /trading/learn */
+/** ETF TRADING PRACTICE LAB — /trading, /trading/{learn,replay,backtest,paper,markets,ask,history} */
 export function PracticeLab() {
   const { pathname } = useLocation();
   const sub = pathname.replace(/^\/trading\/?/, '');
@@ -41,9 +45,9 @@ export function PracticeLab() {
     <div className="pl">
       <header className="pl-head">
         <div>
-          <div className="eyebrow">Simulation only · educational</div>
-          <h1 className="pl-title">Trading Practice Lab</h1>
-          <p className="pl-tagline">Study the past. Make the decision. Test the setup. Improve the process.</p>
+          <div className="eyebrow">ETF day trading · simulation only · educational</div>
+          <h1 className="pl-title">ETF Trading Lab</h1>
+          <p className="pl-tagline">Learn the rules. Backtest them honestly. Paper-trade with discipline. Improve the process.</p>
         </div>
         <div className="pl-head-actions">
           <button className="btn" onClick={() => setImportOpen(true)}>
@@ -64,7 +68,15 @@ export function PracticeLab() {
             </div>
           </>
         ) : sub === 'learn' ? (
-          <PracticeLearn />
+          <>
+            <EtfCourse />
+            <div style={{ height: 16 }} />
+            <PracticeLearn />
+          </>
+        ) : sub === 'backtest' ? (
+          <EtfBacktest />
+        ) : sub === 'paper' ? (
+          <EtfPaper />
         ) : sub === 'markets' ? (
           <MarketsViewer />
         ) : sub === 'ask' ? (
@@ -86,16 +98,23 @@ export function PracticeLab() {
 const MODES = [
   {
     key: 'historical',
-    title: 'Historical Practice',
-    text: 'Study a real historical chart up to a point, make one decision, then reveal what happened.',
+    title: 'Replay',
+    text: 'Study a real ETF session up to a point, lock one decision, then reveal what happened.',
     to: '/trading/replay?mode=historical',
     icon: ScanSearch,
   },
   {
-    key: 'simulation',
-    title: 'Simulation',
-    text: 'Replay real market movement candle by candle and manage a simulated decision as it unfolds.',
-    to: '/trading/replay?mode=simulation',
+    key: 'backtest',
+    title: 'Backtest',
+    text: 'Test a strategy on historical ETF data with costs, no look-ahead and out-of-sample checks.',
+    to: '/trading/backtest',
+    icon: FlaskConical,
+  },
+  {
+    key: 'paper',
+    title: 'Paper Trading',
+    text: 'Trade a replayed historical session with virtual money, real costs and hard risk limits.',
+    to: '/trading/paper',
     icon: PlayCircle,
   },
   {
@@ -186,6 +205,15 @@ function PracticeHome() {
         <motion.section className="glass pad" {...fade(6)}>
           <PracticeTimer />
         </motion.section>
+      </div>
+
+      <div className="etf-home-row">
+        <motion.div {...fade(6)}>
+          <EtfWorkflow />
+        </motion.div>
+        <motion.div {...fade(7)}>
+          <EtfEligibilityCheck />
+        </motion.div>
       </div>
 
       <motion.section {...fade(7)}>

@@ -1,0 +1,647 @@
+/* ─── ETF day-trading module (Backtest · Paper · Course · Workflow) ───── */
+.etf {
+  display: grid;
+  gap: 16px;
+}
+.etf-panel {
+  display: grid;
+  gap: 12px;
+  min-width: 0;
+}
+.etf-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.etf-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-display);
+  font-size: 18px;
+  margin-top: 4px;
+}
+.etf-sub {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 6px;
+  font-family: var(--font-display);
+  font-size: 12px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--gold-soft);
+}
+.etf-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 10px 14px;
+  align-items: end;
+}
+.etf-grid.two {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+.etf-two {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+.etf-source {
+  color: var(--muted);
+  overflow-wrap: anywhere;
+}
+.pos {
+  color: var(--good);
+}
+.neg {
+  color: var(--bad);
+}
+.flip {
+  transform: rotate(180deg);
+}
+.etf-empty {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+.etf-empty p {
+  margin: 4px 0 0;
+}
+.etf-warn {
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+  padding: 10px 12px;
+  border-radius: var(--radius);
+  border: 1px solid rgba(220, 191, 135, 0.35);
+  background: rgba(220, 191, 135, 0.06);
+  font-size: 13px;
+  line-height: 1.55;
+}
+.etf-warn svg {
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+.etf-warnings {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 6px;
+  font-size: 13.5px;
+  line-height: 1.55;
+}
+.etf-warnings li {
+  display: flex;
+  gap: 8px;
+}
+.etf-warnings svg {
+  flex-shrink: 0;
+  margin-top: 3px;
+  color: var(--warn);
+}
+/* strategies */
+.etf-strats {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+  gap: 8px;
+}
+.etf-strat {
+  display: grid;
+  gap: 4px;
+  text-align: left;
+  padding: 12px 14px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--glass);
+  color: var(--text);
+  font: inherit;
+  cursor: pointer;
+}
+.etf-strat span {
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: var(--muted);
+}
+.etf-strat.on {
+  border-color: var(--gold);
+  background: rgba(212, 181, 124, 0.07);
+}
+.etf-rules summary {
+  cursor: pointer;
+  font-size: 13px;
+  color: var(--text-2);
+}
+.etf-rules[open] {
+  display: grid;
+  gap: 10px;
+}
+.etf-rule b {
+  font-size: 13px;
+}
+.etf-rule ul,
+.etf-rule-list {
+  margin: 4px 0 0;
+  padding-left: 18px;
+  font-size: 13.5px;
+  line-height: 1.6;
+  color: var(--text-2);
+}
+/* settings */
+.etf-settings {
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+}
+.etf-settings-toggle {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  background: none;
+  border: 0;
+  color: var(--text-2);
+  font: inherit;
+  font-size: 13px;
+  text-align: left;
+  cursor: pointer;
+}
+.etf-settings-body {
+  display: grid;
+  gap: 10px;
+  padding: 0 12px 12px;
+}
+/* eligibility */
+.etf-elig {
+  border: 1px solid var(--line);
+  border-left: 3px solid var(--muted);
+  border-radius: var(--radius);
+  padding: 10px 12px;
+  display: grid;
+  gap: 8px;
+}
+.etf-elig.eligible {
+  border-left-color: var(--good);
+}
+.etf-elig.caution {
+  border-left-color: var(--warn);
+}
+.etf-elig.not-eligible {
+  border-left-color: var(--bad);
+}
+.etf-elig-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.etf-checks {
+  display: grid;
+  gap: 4px;
+}
+.etf-check {
+  display: grid;
+  grid-template-columns: 16px minmax(0, 1fr) auto;
+  gap: 2px 8px;
+  align-items: center;
+  font-size: 13px;
+}
+.etf-check .n {
+  grid-column: 2 / -1;
+}
+.etf-check.pass svg {
+  color: var(--good);
+}
+.etf-check.fail svg {
+  color: var(--bad);
+}
+.etf-check.info svg {
+  color: var(--muted);
+}
+/* tables */
+.etf-table-wrap {
+  overflow-x: auto;
+  max-width: 100%;
+}
+.etf-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+.etf-table th,
+.etf-table td {
+  padding: 7px 10px;
+  border-bottom: 1px solid var(--line);
+  text-align: left;
+  white-space: nowrap;
+}
+.etf-table th {
+  font-weight: 400;
+  color: var(--muted);
+  font-size: 12px;
+}
+.etf-chart {
+  padding: 10px;
+  display: grid;
+  gap: 6px;
+  min-width: 0;
+}
+.etf-chart-head {
+  color: var(--muted);
+  padding: 2px 4px;
+  overflow-wrap: anywhere;
+}
+.etf-results {
+  display: grid;
+  gap: 16px;
+}
+.etf-runs {
+  display: grid;
+  gap: 6px;
+}
+.etf-run {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto auto;
+  gap: 10px;
+  align-items: center;
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--glass);
+  color: var(--text);
+  font: inherit;
+  text-align: left;
+}
+.etf-run.btnlike {
+  grid-template-columns: minmax(0, 1fr) auto;
+  cursor: pointer;
+}
+/* report */
+.etf-report {
+  display: grid;
+  gap: 14px;
+}
+.etf-report-title {
+  font-family: var(--font-display);
+  font-size: 17px;
+}
+.etf-report-sec ul {
+  margin: 6px 0 0;
+  padding-left: 18px;
+  font-size: 13.5px;
+  line-height: 1.6;
+  color: var(--text-2);
+}
+.etf-report-h {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+}
+.etf-tag {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 2px 7px;
+  border-radius: 999px;
+  border: 1px solid var(--line-strong);
+}
+.etf-tag.measured {
+  color: var(--good);
+  border-color: rgba(185, 207, 168, 0.4);
+}
+.etf-tag.assumption {
+  color: var(--warn);
+  border-color: rgba(220, 191, 135, 0.4);
+}
+.etf-tag.suggestion {
+  color: var(--violet-soft);
+  border-color: rgba(196, 185, 230, 0.4);
+}
+.etf-kv {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 6px 16px;
+  margin-top: 6px;
+}
+.etf-kv div {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  font-size: 13px;
+  padding: 5px 0;
+  border-bottom: 1px solid var(--line);
+}
+.etf-kv span {
+  color: var(--muted);
+}
+.etf-kv b {
+  font-family: var(--font-mono);
+  font-weight: 400;
+  text-align: right;
+}
+/* paper */
+.etf-account {
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+}
+.etf-balance {
+  font-family: var(--font-display);
+  font-size: 26px;
+}
+.etf-cooldown {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  font-size: 13px;
+  color: var(--warn);
+  max-width: 420px;
+}
+.etf-chips,
+.etf-symbols {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.etf-paper {
+  display: grid;
+  gap: 16px;
+}
+.etf-session-bar {
+  grid-template-columns: auto auto auto 1fr;
+  align-items: center;
+  justify-items: start;
+}
+.etf-session-bar > :last-child {
+  justify-self: end;
+}
+.etf-hist-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  border: 1px solid rgba(220, 191, 135, 0.45);
+  color: var(--warn);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.06em;
+}
+.etf-stats {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 10px;
+}
+.etf-stat {
+  display: grid;
+  gap: 4px;
+  padding: 12px 14px;
+}
+.etf-stat b {
+  font-weight: 400;
+  font-size: 15px;
+}
+.etf-paper-main {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 340px;
+  gap: 16px;
+  align-items: start;
+}
+.etf-ticket {
+  display: grid;
+  gap: 10px;
+}
+.etf-pretrade {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 14px;
+  font-size: 12.5px;
+  color: var(--muted);
+}
+.etf-pretrade b {
+  color: var(--text);
+  font-weight: 400;
+}
+.etf-errors {
+  margin: 0;
+  padding-left: 18px;
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: var(--bad);
+}
+.etf-pos {
+  display: grid;
+  gap: 6px;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--line);
+}
+.etf-pos .field {
+  width: 110px;
+}
+.etf-orders,
+.etf-log {
+  display: grid;
+  gap: 4px;
+  max-height: 260px;
+  overflow-y: auto;
+}
+.etf-order,
+.etf-log-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 10px;
+  font-size: 13px;
+  padding: 5px 0;
+  border-bottom: 1px solid var(--line);
+}
+.etf-status {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.etf-order.rejected .etf-status,
+.etf-log-row.reject,
+.etf-log-row.violation {
+  color: var(--bad);
+}
+.etf-log-row.risk {
+  color: var(--warn);
+}
+.etf-log-row.fill .etf-status,
+.etf-order.filled .etf-status {
+  color: var(--good);
+}
+.etf-review {
+  display: grid;
+  gap: 6px;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--line);
+}
+/* course */
+.etf-modules {
+  display: grid;
+  gap: 8px;
+}
+.etf-module {
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--glass);
+}
+.etf-module.open {
+  border-color: var(--line-strong);
+}
+.etf-module-head {
+  width: 100%;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto auto;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  background: none;
+  border: 0;
+  color: var(--text);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+.etf-module-text {
+  display: grid;
+  gap: 2px;
+}
+.etf-letter {
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  border: 1px solid var(--gold);
+  color: var(--gold-soft);
+  font-family: var(--font-display);
+}
+.etf-steps {
+  display: flex;
+  gap: 3px;
+}
+.etf-steps i {
+  width: 14px;
+  height: 4px;
+  border-radius: 2px;
+  background: var(--line-strong);
+}
+.etf-steps i.on {
+  background: var(--gold);
+}
+.etf-module-body {
+  display: grid;
+  gap: 12px;
+  padding: 0 14px 14px;
+}
+.etf-progress {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto minmax(0, 1fr);
+  gap: 8px 10px;
+  align-items: center;
+  font-size: 13px;
+}
+/* workflow & home */
+.etf-home-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+  gap: 16px;
+  margin-top: 22px;
+}
+.etf-workflow {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 4px;
+}
+.etf-workflow li {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  gap: 10px;
+  align-items: center;
+  font-size: 13.5px;
+  padding: 5px 0;
+  border-bottom: 1px solid var(--line);
+}
+.etf-workflow li.done span {
+  color: var(--muted);
+}
+.etf-regimes {
+  display: grid;
+  gap: 6px;
+}
+.etf-regime {
+  display: grid;
+  grid-template-columns: 120px minmax(0, 1fr) 44px;
+  gap: 8px;
+  align-items: center;
+  font-size: 12.5px;
+}
+.etf-regime i {
+  height: 4px;
+  border-radius: 2px;
+  background: var(--gold);
+}
+@media (max-width: 1000px) {
+  .etf-paper-main,
+  .etf-home-row {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .etf-stats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (max-width: 640px) {
+  .etf-two,
+  .etf-grid.two,
+  .etf-progress {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .etf-progress {
+    grid-template-columns: auto minmax(0, 1fr);
+  }
+  .etf-session-bar,
+  .etf-account {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .etf-session-bar > :last-child {
+    justify-self: stretch;
+  }
+  .etf-run {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+  .etf-run > :nth-child(2) {
+    grid-column: 1 / -1;
+    grid-row: 2;
+  }
+  .etf-module-head {
+    grid-template-columns: auto minmax(0, 1fr) auto;
+  }
+  .etf-steps {
+    display: none;
+  }
+}
+.etf-panel > *,
+.etf > *,
+.etf-paper > *,
+.etf-results > * {
+  min-width: 0;
+}
+.etf-panel .btn {
+  max-width: 100%;
+  white-space: normal;
+}
+.etf-check .v {
+  overflow-wrap: anywhere;
+  text-align: right;
+}

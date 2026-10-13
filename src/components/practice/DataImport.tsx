@@ -6,10 +6,23 @@ import { useCollection } from '../../lib/hooks';
 import { newId } from '../../lib/store';
 import { DATASETS, INTERVALS, fmtPrice, fmtTime, type Dataset, type Interval } from '../../lib/market';
 import { MAX_IMPORT_ROWS, countGaps, parseMarketCSV, type ParseResult } from '../../lib/csv';
+import { fetchUpstox, upstoxAvailable, upstoxDataset } from '../../lib/etf/upstox';
+import { ETFS, etfBySymbol } from '../../lib/etf/universe';
+import { SESSIONS, fmtLocal } from '../../lib/etf/calendar';
 import '../../styles/practice-data.css';
 
 const EASE = [0.22, 1, 0.36, 1] as const;
 const EXCHANGES = new Set(['BINANCE', 'COINBASE', 'KRAKEN', 'BITSTAMP', 'BYBIT', 'NASDAQ', 'NYSE', 'AMEX', 'ARCA', 'BATS', 'CBOE', 'CME', 'CME_MINI', 'FX', 'FX_IDC', 'OANDA', 'FOREXCOM', 'FXCM', 'PEPPERSTONE', 'TVC', 'SP', 'CAPITALCOM', 'ICMARKETS', 'SAXO']);
+
+const TZ_OFFSET = { IST: 19800, UTC: 0 } as const;
+type Tz = keyof typeof TZ_OFFSET;
+
+/** Format a bar time in the ETF's exchange time zone (UTC when unknown). */
+function fmtBar(t: number, symbol: string, interval?: Interval) {
+  const etf = etfBySymbol(symbol);
+  if (!etf) return fmtTime(t, interval);
+  return fmtLocal(t, SESSIONS[etf.exchange], true).replace(interval === '1d' ? / \d\d:\d\d \w+$/ : /$^/, '');
+}
 
 const tfLabel = (i: Interval | null) => (i ? INTERVALS.find((x) => x.key === i)!.label : '—');
 const n0 = (n: number) => n.toLocaleString();
@@ -41,6 +54,13 @@ interface Parsed {
   gaps: number;
 }
 
+function parse(text: string, fileName: string, tz: Tz): Parsed {
+  const result = parseMarketCSV(text, fileName, { naiveOffsetSec: TZ_OFFSET[tz] });
+  const truncated = Math.max(0, result.candles.length - MAX_IMPORT_ROWS);
+  const candles = truncated ? result.candles.slice(-MAX_IMPORT_ROWS) : result.candles;
+  return { fileName, result, truncated, candles, gaps: truncated ? countGaps(candles, result.baseInterval) : result.gaps };
+}
+
 export function DataImport({ open, onClose, onImported }: { open: boolean; onClose: () => void; onImported?: (ds: Dataset) => void }) {
   const { items: datasets, save, remove } = useCollection<Dataset>(DATASETS);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -49,6 +69,8 @@ export function DataImport({ open, onClose, onImported }: { open: boolean; onClo
   const [readError, setReadError] = useState<string | null>(null);
   const [parsed, setParsed] = useState<Parsed | null>(null);
   const [symbol, setSymbol] = useState('');
+  const [tz, setTz] = useState<Tz>('IST');
+  const [rawText, setRawText] = useState<{ text: string; name: string } | null>(null);
   const [name, setName] = useState('');
   const [showIssues, setShowIssues] = useState(false);
   const [savedMsg, setSavedMsg] = useState<string | null>(null);
@@ -74,11 +96,10 @@ export function DataImport({ open, onClose, onImported }: { open: boolean; onClo
     try {
       if (file.size > 80 * 1024 * 1024) throw new Error('This file is larger than 80 MB — export a shorter date range.');
       const text = await file.text();
-      const result = parseMarketCSV(text, file.name);
-      const truncated = Math.max(0, result.candles.length - MAX_IMPORT_ROWS);
-      const candles = truncated ? result.candles.slice(-MAX_IMPORT_ROWS) : result.candles;
-      setParsed({ fileName: file.name, result, truncated, candles, gaps: truncated ? countGaps(candles, result.baseInterval) : result.gaps });
-      setSymbol(guessSymbol(file.name));
+      setRawText({ text, name: file.name });
+      setParsed(parse(text, file.name, tz));
+      const guess = guessSymbol(file.name);
+      setSymbol(etfBySymbol(guess) ? guess : '');
       setName('');
     } catch (e) {
       setParsed(null);
@@ -87,7 +108,13 @@ export function DataImport({ open, onClose, onImported }: { open: boolean; onClo
       setReading(false);
       if (inputRef.current) inputRef.current.value = '';
     }
-  }, []);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [tz]);
+
+  const changeTz = (next: Tz) => {
+    setTz(next);
+    if (rawText) setParsed(parse(rawText.text, rawText.name, next));
+  };
 
   const onDrop = (e: DragEvent) => {
     e.preventDefault();
@@ -96,7 +123,7 @@ export function DataImport({ open, onClose, onImported }: { open: boolean; onClo
   };
 
   const r = parsed?.result;
-  const canSave = !!parsed && !!r && !r.fatal && !!r.baseInterval && parsed.candles.length >= 2 && symbol.trim().length > 0;
+  const canSave = !!parsed && !!r && !r.fatal && !!r.baseInterval && parsed.candles.length >= 2 && !!etfBySymbol(symbol);
   const autoName = parsed && r ? `${symbol.trim().toUpperCase() || 'Dataset'} ${tfLabel(r.baseInterval)} · ${parsed.fileName.replace(/\.[^.]+$/, '')}` : '';
 
   const doSave = () => {
@@ -112,6 +139,9 @@ export function DataImport({ open, onClose, onImported }: { open: boolean; onClo
       rows: r.rows,
       rejected: r.rejected,
       gaps: parsed.gaps,
+      exchange: etfBySymbol(symbol)!.exchange,
+      tz,
+      source: 'csv',
     };
     try {
       save(ds);
@@ -132,7 +162,7 @@ export function DataImport({ open, onClose, onImported }: { open: boolean; onClo
     <Modal open={open} onClose={onClose} title="Import historical data" wide>
       <div className="pd-import">
         <div className="pd-import-intro">
-          <p>Bring your own real market history — a CSV export from TradingView, Yahoo Finance or your broker. It stays in your workspace and is used for chart replay practice only.</p>
+          <p>Bring your own real ETF history — an intraday (1m, 5m or 15m) CSV export from your broker or charting platform. It stays in your workspace and is used for replay, backtesting and paper trading only. ETFs only: pick which ETF the file contains.</p>
           <Badge />
         </div>
 
@@ -208,7 +238,7 @@ export function DataImport({ open, onClose, onImported }: { open: boolean; onClo
                       small
                       value={
                         parsed.candles.length
-                          ? `${fmtTime(parsed.candles[0].t, r.baseInterval ?? undefined)} → ${fmtTime(parsed.candles[parsed.candles.length - 1].t, r.baseInterval ?? undefined)}`
+                          ? `${fmtBar(parsed.candles[0].t, symbol, r.baseInterval ?? undefined)} → ${fmtBar(parsed.candles[parsed.candles.length - 1].t, symbol, r.baseInterval ?? undefined)}`
                           : '—'
                       }
                     />
@@ -289,7 +319,7 @@ export function DataImport({ open, onClose, onImported }: { open: boolean; onClo
                           </thead>
                           <tbody>
                             {first.map((k) => (
-                              <PreviewRow key={k.t} k={k} interval={r.baseInterval} />
+                              <PreviewRow key={k.t} k={k} interval={r.baseInterval} symbol={symbol} />
                             ))}
                             {parsed.candles.length > 6 && (
                               <tr className="pd-sep">
@@ -297,7 +327,7 @@ export function DataImport({ open, onClose, onImported }: { open: boolean; onClo
                               </tr>
                             )}
                             {last.map((k) => (
-                              <PreviewRow key={k.t} k={k} interval={r.baseInterval} />
+                              <PreviewRow key={k.t} k={k} interval={r.baseInterval} symbol={symbol} />
                             ))}
                           </tbody>
                         </table>
@@ -306,8 +336,25 @@ export function DataImport({ open, onClose, onImported }: { open: boolean; onClo
                   )}
 
                   <div className="pd-form">
-                    <Field label="Symbol / market *">
-                      <input className="input" value={symbol} maxLength={24} placeholder="e.g. SPY, EURUSD" onChange={(e) => setSymbol(e.target.value)} />
+                    <Field label="ETF *">
+                      <select className="select" value={symbol} onChange={(e) => setSymbol(e.target.value)} aria-label="ETF">
+                        <option value="">Choose the ETF in this file…</option>
+                        {(['NSE', 'US'] as const).map((x) => (
+                          <optgroup key={x} label={x === 'NSE' ? 'India · NSE' : 'United States'}>
+                            {ETFS.filter((e) => e.exchange === x).map((e) => (
+                              <option key={e.symbol} value={e.symbol}>
+                                {e.symbol} — {e.name}
+                              </option>
+                            ))}
+                          </optgroup>
+                        ))}
+                      </select>
+                    </Field>
+                    <Field label="Timestamps without a time zone are in">
+                      <select className="select" value={tz} onChange={(e) => changeTz(e.target.value as Tz)} aria-label="Time zone of the file">
+                        <option value="IST">IST (India, UTC+05:30) — Indian broker exports</option>
+                        <option value="UTC">UTC — e.g. TradingView / exports with a zone</option>
+                      </select>
                     </Field>
                     <Field label="Dataset name">
                       <input className="input" value={name} maxLength={80} placeholder={autoName} onChange={(e) => setName(e.target.value)} />
@@ -327,7 +374,7 @@ export function DataImport({ open, onClose, onImported }: { open: boolean; onClo
                   {r.fatal ? 'Choose another file' : 'Discard'}
                 </button>
                 {!r.fatal && (
-                  <motion.button type="button" className="btn btn-primary" disabled={!canSave} onClick={doSave} whileTap={{ scale: 0.98 }} title={!symbol.trim() ? 'Enter a symbol first' : undefined}>
+                  <motion.button type="button" className="btn btn-primary" disabled={!canSave} onClick={doSave} whileTap={{ scale: 0.98 }} title={!etfBySymbol(symbol) ? 'Choose the ETF first' : undefined}>
                     Save dataset
                   </motion.button>
                 )}
@@ -335,6 +382,8 @@ export function DataImport({ open, onClose, onImported }: { open: boolean; onClo
             </motion.section>
           )}
         </AnimatePresence>
+
+        <UpstoxFetch onSaved={(ds) => { save(ds); setSavedMsg(`Saved “${ds.name}” — ${n0(ds.candles.length)} candles from Upstox.`); onImported?.(ds); }} />
 
         <section className="pd-datasets">
           <div className="pd-label">Imported datasets · {datasets.length}</div>
@@ -349,7 +398,7 @@ export function DataImport({ open, onClose, onImported }: { open: boolean; onClo
                     <span>{ds.name}</span>
                   </div>
                   <div className="pd-ds-meta">
-                    {tfLabel(ds.baseInterval)} · {ds.candles.length ? `${fmtTime(ds.candles[0].t, '1d')} → ${fmtTime(ds.candles[ds.candles.length - 1].t, '1d')}` : 'empty'} · {n0(ds.candles.length)} candles
+                    {tfLabel(ds.baseInterval)} · {ds.candles.length ? `${fmtBar(ds.candles[0].t, ds.symbol, '1d')} → ${fmtBar(ds.candles[ds.candles.length - 1].t, ds.symbol, '1d')}` : 'empty'} · {n0(ds.candles.length)} candles
                     {ds.gaps ? ` · ${n0(ds.gaps)} gaps` : ''}
                   </div>
                 </div>
@@ -385,6 +434,72 @@ export function DataImport({ open, onClose, onImported }: { open: boolean; onClo
   );
 }
 
+/** Optional connector: real NSE ETF candles from Upstox via the project's own Supabase function. */
+function UpstoxFetch({ onSaved }: { onSaved: (ds: Dataset) => void }) {
+  const available = upstoxAvailable();
+  const today = new Date().toISOString().slice(0, 10);
+  const monthAgo = new Date(Date.now() - 30 * 86400000).toISOString().slice(0, 10);
+  const [sym, setSym] = useState('NIFTYBEES');
+  const [iv, setIv] = useState<1 | 5 | 15>(5);
+  const [from, setFrom] = useState(monthAgo);
+  const [to, setTo] = useState(today);
+  const [busy, setBusy] = useState(false);
+  const [err, setErr] = useState<string | null>(null);
+  const run = async () => {
+    setBusy(true);
+    setErr(null);
+    try {
+      const req = { symbol: sym, interval: iv, from, to };
+      const res = await fetchUpstox(req);
+      onSaved(upstoxDataset(newId(), req, res));
+    } catch (e) {
+      setErr(e instanceof Error ? e.message : String(e));
+    } finally {
+      setBusy(false);
+    }
+  };
+  return (
+    <section className="pd-upstox">
+      <div className="pd-label">Fetch real NSE ETF history · Upstox (optional)</div>
+      {!available ? (
+        <div className="pd-note">
+          <Info size={14} />
+          <span>Needs Cloud Accounts and the <code>etf-candles</code> Supabase function holding your read-only Upstox Analytics Token — see <code>docs/upstox-setup.md</code> in the repository. Until then, import a CSV above.</span>
+        </div>
+      ) : (
+        <>
+          <div className="pd-upstox-row">
+            <select className="select" value={sym} onChange={(e) => setSym(e.target.value)} aria-label="ETF to fetch">
+              {ETFS.filter((e) => e.exchange === 'NSE').map((e) => (
+                <option key={e.symbol} value={e.symbol}>
+                  {e.symbol}
+                </option>
+              ))}
+            </select>
+            <select className="select" value={iv} onChange={(e) => setIv(Number(e.target.value) as 1 | 5 | 15)} aria-label="Timeframe">
+              <option value={1}>1 minute</option>
+              <option value={5}>5 minutes</option>
+              <option value={15}>15 minutes</option>
+            </select>
+            <input className="input" type="date" value={from} max={to} onChange={(e) => setFrom(e.target.value)} aria-label="From date" />
+            <input className="input" type="date" value={to} min={from} max={today} onChange={(e) => setTo(e.target.value)} aria-label="To date" />
+            <button type="button" className="btn btn-primary" disabled={busy} onClick={() => void run()}>
+              {busy ? 'Fetching…' : 'Fetch & save'}
+            </button>
+          </div>
+          <p className="pd-range">Historical data from the Upstox Historical Candle API, saved with its source and fetch time. Nothing is filled in or adjusted; failures are shown, never replaced with other data.</p>
+          {err && (
+            <div className="pd-note bad" role="alert">
+              <AlertTriangle size={14} />
+              {err}
+            </div>
+          )}
+        </>
+      )}
+    </section>
+  );
+}
+
 function Stat({ label, value, tone, small }: { label: string; value: string; tone?: 'bad' | 'warn'; small?: boolean }) {
   return (
     <div className="pd-stat">
@@ -394,10 +509,10 @@ function Stat({ label, value, tone, small }: { label: string; value: string; ton
   );
 }
 
-function PreviewRow({ k, interval }: { k: { t: number; o: number; h: number; l: number; c: number; v: number }; interval: Interval | null }) {
+function PreviewRow({ k, interval, symbol }: { k: { t: number; o: number; h: number; l: number; c: number; v: number }; interval: Interval | null; symbol: string }) {
   return (
     <tr>
-      <td>{fmtTime(k.t, interval ?? undefined)}</td>
+      <td>{fmtBar(k.t, symbol, interval ?? undefined)}</td>
       <td>{fmtPrice(k.o)}</td>
       <td>{fmtPrice(k.h)}</td>
       <td>{fmtPrice(k.l)}</td>

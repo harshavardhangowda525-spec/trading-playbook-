@@ -1,946 +1,955 @@
 import type { LessonContent } from './types';
 
-// Days 64-84: Trading Psychology, Playbook Creation, Final Evaluation.
-// Educational content only — not financial advice. All practice in this app is simulated
-// (paper trading / historical replay). Every number in an example is hypothetical.
+// Days 64-84: Paper Trading, Psychology & Playbook, Final Evaluation (ETF-only).
+// Educational content only — not financial advice. All practice in this app is simulated:
+// Trading → Paper uses virtual money on replayed HISTORICAL sessions. Every number in an
+// example is hypothetical. Cost rates change over time and are configurable in the app.
 
 export const CONTENT: Record<number, LessonContent> = {
   64: {
     what: [
-      "FOMO stands for Fear Of Missing Out. In trading it is the urge to jump into a move because price is already running and you feel you will be left behind. The trigger is not your setup — it is the sight of a big green (or red) candle and the story in your head that this is the move everyone else is catching.",
-      "FOMO usually shows up as chasing: entering after the move is already extended, far away from any level where your stop would make sense. Because the entry is late, the stop has to be wide (or is skipped entirely) and the remaining room to a target is small, so the reward-to-risk ratio quietly collapses.",
-      "A second form is entering without a setup at all. You did not plan the trade before the session, the conditions on your checklist are not met, but price is moving so you click anyway. In your journal these trades tend to share one feature: you cannot name the setup that justified them.",
-      "The antidote is simple to say and hard to do: plan before price moves, and accept that there is always another trade. Markets open every day. Missing one move costs you nothing; chasing one can cost you a full R or more, plus the confidence and discipline you have been building."
+      "Paper trading means placing simulated orders with virtual money. In this app, Trading → Paper replays a real historical NSE session for the ETFs you choose, bar by bar, and lets you trade it as if it were live. Every price you see is labelled HISTORICAL — nothing is a live quote and no real order ever reaches an exchange or broker.",
+      "The Paper simulator has the tools a real trading screen has: a watchlist, market and limit orders, stop-loss and take-profit, and position tracking. It also has guard rails: risk limits that reject orders that are too big, a maximum number of trades, a daily loss limit that triggers a cooldown, and a required trade reason before any entry. At the end you get a session journal and report.",
+      "Setup comes before the first order. You decide your virtual account size, risk per trade (for example 0.5% of the virtual account), daily loss limit, maximum trades per session, which ETFs you are allowed to trade and which tested strategy you will use. These numbers should match what you studied in Phase 4 and tested in Phase 9.",
+      "The most important rule is attitude: treat virtual rupees as if they mattered. If you trade paper money carelessly — huge size, no stops, random entries — the results tell you nothing about your process. The point of paper trading is to rehearse disciplined execution, not to chase a big simulated number."
     ],
     why: [
-      "FOMO trades are among the most common entries in beginner Mistake Labs because they feel urgent and exciting. They break almost every rule at once — no setup, poor location, unclear stop, rushed sizing. Learning to recognise the feeling early protects both your simulated account and the integrity of your practice data.",
-      "If your simulation results are full of FOMO trades, your statistics stop measuring your strategy and start measuring your impulses. Removing them is the fastest way to get honest data about whether your setup actually works."
+      "A backtest shows how fixed rules behaved on past data; it cannot show how you behave when bars arrive one at a time and you must decide without knowing what comes next. Paper trading on replayed sessions adds that human element while keeping everything simulated and risk-free.",
+      "Rules written before the first session are your defence against making them up as you go. If the limits are set in advance and enforced by the simulator, every session becomes a clean test of whether you can follow a plan."
     ],
     how: [
-      "Before each practice session, write your watchlist and the exact setup you are looking for in the Trading Journal mindset check. If a trade is not on that list, it is not a trade today.",
-      "Add an if-then rule to the Psychology Rules section of your Playbook: 'If price has already moved more than my planned distance from the level, then I do not enter — I mark it as a missed trade.'",
-      "In the Trading Practice Lab, replay a session and deliberately note every moment you felt the urge to chase. Do not take those trades; just timestamp them. Afterwards, check what happened — often the chased move reversed or offered a better pullback.",
-      "When you feel FOMO, use a 60-second breathing pause: hands off the mouse, four slow breaths, then read your entry checklist out loud. If any box is unticked, the answer is no.",
-      "Log every FOMO entry (or near-entry) in the Psychology journal with the emotion, intensity (1-10) and what you saw on the chart that triggered it.",
-      "Tag FOMO trades in the Mistake Lab so Analytics can show you how they perform compared with planned trades. Seeing the numbers side by side is a powerful deterrent.",
-      "Keep a 'missed trades' list. Recording a missed move without taking it trains your brain that missing a trade is a normal, safe outcome."
+      "Open Trading → Paper and read the session settings. Confirm that the session date shown is a HISTORICAL replay and that the account is virtual.",
+      "Set the virtual account size and risk per trade. Use the same numbers you used in Backtest so results can be compared later.",
+      "Set the daily loss limit (for example 2R or 1% of the virtual account) and the maximum trades per session (for example 3). Leave the cooldown switched on.",
+      "Add two or three liquid ETFs to the watchlist, such as NIFTYBEES and BANKBEES. Run the ETF eligibility check in Trading → Practice first: volume, traded value and spread.",
+      "Choose the one strategy you will trade — the one with the most honest backtest from Phase 9 — and write its entry, stop and exit rules in the session notes.",
+      "Confirm the cost model in the app reflects current brokerage, STT, exchange charges, stamp duty and GST. Rates change, so check the settings rather than assuming.",
+      "Write a short paper-trading rules list in the Trading Journal: what you will trade, how much you will risk, and when you will stop for the day."
     ],
     example: {
-      title: "Hypothetical journal entry — a FOMO near-miss in replay",
+      title: "Sample paper-trading setup (HYPOTHETICAL numbers)",
       lines: [
-        "Session: historical replay, hypothetical practice account.",
-        "Plan: only take pullbacks to the morning support level with a confirmation candle.",
-        "10:05 — price ran hard away from the level, about 3× my normal stop distance in one candle. Urge to buy: 8/10.",
-        "Action: breathing pause, re-read entry checklist. 'Pullback to level' was unticked → no trade. Logged as a missed trade.",
-        "10:40 — price pulled back toward the level, a valid setup formed and I took it with a normal stop (hypothetical 1R risk).",
-        "Lesson: the chase entry would have needed a stop three times wider for the same target. Waiting cost me nothing."
+        "Virtual account: ₹1,00,000 (simulated). Risk per trade: 0.5% = ₹500.",
+        "Daily loss limit: ₹1,000 (2R) → cooldown for the rest of the session.",
+        "Max trades per session: 3. Trade reason required before every entry.",
+        "Watchlist: NIFTYBEES, BANKBEES (both passed the eligibility check on volume and spread).",
+        "Strategy: VWAP pullback in an uptrend, 5m chart — rules copied from my backtest notes.",
+        "Session window: 09:30-14:45 IST; flat before 15:15. Prices shown are HISTORICAL replay data."
       ]
     },
     mistakes: [
-      "Entering after a large candle because it 'looks strong' — late entries force wide stops and shrink your reward-to-risk.",
-      "Moving your stop further away to make a chase trade 'fit' — this raises your risk without improving the setup.",
-      "Trading tickers that were not on your pre-session plan — unplanned trades bypass all the thinking you did when calm.",
-      "Treating a missed move as a loss — it is not, and believing it is fuels the next impulsive entry.",
-      "Not journaling near-misses — the urges you resisted are valuable data about your triggers."
+      "Treating virtual money as play money — oversized or random trades make the results meaningless.",
+      "Starting without setting risk limits, then inventing them halfway through the session.",
+      "Using a different account size or risk per trade than the backtest, so results cannot be compared.",
+      "Adding many thinly traded ETFs to the watchlist instead of two or three liquid ones.",
+      "Trading a strategy that was never backtested because it 'looked good' on one chart.",
+      "Forgetting that paper fills on replayed data can be kinder than reality, especially in illiquid ETFs."
     ],
     quiz: [
-      { q: "What are the two most common forms of FOMO trading?", a: "Chasing an already-extended move, and entering without a planned setup." },
-      { q: "Why does a chase entry damage reward-to-risk?", a: "The late entry forces a wider stop while leaving less room to the target." },
-      { q: "What simple belief helps neutralise FOMO?", a: "There is always another trade — missing one move costs nothing." }
+      { q: "What does Trading → Paper actually replay?", a: "Real historical NSE sessions, bar by bar, with virtual money and prices labelled HISTORICAL." },
+      { q: "Name three limits you should set before the first paper order.", a: "Risk per trade, daily loss limit (with cooldown) and maximum trades per session." },
+      { q: "Why match paper settings to your backtest settings?", a: "So paper results and backtest results can be compared fairly later." }
     ]
   },
 
   65: {
     what: [
-      "Fear and greed are the two emotions most traders name first, and both are normal human reactions to uncertainty and money (even simulated money). They are not character flaws; they are signals. The problem is when they make your decisions instead of your rules.",
-      "Fear shows up as hesitation and early exits. You see a valid setup but do not take it, or you take it and close at the first wiggle against you, long before your stop or target is reached. Over time fear cuts off your winners and leaves your strategy unable to show its real edge.",
-      "Greed shows up as oversizing and refusing to exit. You increase position size because you feel sure, or you hold past your target hoping for more, sometimes watching a winner turn into a loss. Greed also appears as removing the target entirely 'just this once'.",
-      "Both are reduced by the same tools: fixed risk per trade and fixed rules decided before the trade. When the risk is small and predetermined, a single outcome matters less, so fear eases. When the exit is written in advance, there is nothing to negotiate in the moment, so greed has less room."
+      "A pre-session plan is a short written document you complete before the first bar of the paper session. It answers four questions: which ETFs am I watching, where are the key levels, what exact setup am I looking for, and under what conditions will I not trade at all today.",
+      "The watchlist should be small — two or three ETFs. More symbols means more screens, more temptation and less attention for each. Choose ETFs that pass the liquidity check: enough volume and traded value, a tight spread and price close to iNAV. For a beginner, broad index ETFs like NIFTYBEES or BANKBEES are usually easier to read than thin sector ETFs.",
+      "Key levels give the plan structure: previous day high and low, previous close, any gap, the opening range once it forms, and VWAP during the session. You mark these on the chart before trading so that entries happen at levels you chose calmly, not at prices that simply look exciting.",
+      "No-trade conditions are as important as the setup. Examples: the spread is wider than usual, the ETF is trading at an unusual premium or discount to iNAV, the first 15 minutes are wildly volatile, the market is choppy around VWAP, or you feel tired, rushed or upset. If any condition is true, the plan says to wait or skip the session."
     ],
     why: [
-      "Your strategy's statistics assume you take every valid setup and manage it the same way. Fear-driven skipped trades and greed-driven held trades both distort that. You end up trading a different, untested strategy without realising it.",
-      "Learning to notice which emotion is active, and letting the written rule decide, is one of the core skills measured by the psychology and discipline areas of your Evaluation dashboard."
+      "Decisions made in advance, while calm, are better than decisions made in the middle of a fast bar. A written plan moves most of the thinking out of the session so that in the moment you only need to check whether the conditions match.",
+      "The plan also makes your review honest. After the session you can compare what you did with what you said you would do, which is the real measure of progress in simulation."
     ],
     how: [
-      "Fix your risk per trade in the Risk Rules section of your Playbook (for example, a hypothetical 1% of the practice account) and never change it mid-session.",
-      "Before entering any trade in the Trading Practice Lab, write the stop and target first. If you cannot write both, you are not ready to enter.",
-      "Add two if-then rules to Psychology Rules: 'If I want to exit before stop or target, then I wait for the candle to close and re-check my exit rules' and 'If I want to hold past target, then I take the planned exit — no exceptions.'",
-      "After each trade, rate fear and greed from 0-10 in the Psychology journal. Look for patterns: which one is louder for you?",
-      "Use the Mistake Lab tags 'early exit', 'skipped valid setup', 'oversized' and 'moved target' so Analytics can show how often each one occurs.",
-      "Review your process score in the Practice Lab rather than profit. A trade that followed the rules and lost is a good trade; one that broke rules and won is a mistake."
+      "In Trading → Paper, pick the historical session date and add your two or three ETFs to the watchlist. Do not look ahead at the session's later bars.",
+      "Check each ETF's previous-day chart in the replay view and mark previous high, low and close as levels.",
+      "Run the ETF eligibility check in Trading → Practice: volume, traded value, spread and premium/discount to iNAV. Remove any ETF that fails.",
+      "Write the one setup you will trade, with its entry trigger, stop placement and target, copied from your strategy notes.",
+      "Write at least three no-trade conditions, including one about your own state (tired, rushed, upset).",
+      "Set your session window, for example no entries in the first 15 minutes and none after 14:45 IST.",
+      "Save the plan in the Paper session journal so it appears next to the session report afterwards."
     ],
     example: {
-      title: "Hypothetical if-then rule set for fear and greed",
+      title: "Sample pre-session plan (HYPOTHETICAL, historical replay)",
       lines: [
-        "Fixed risk: hypothetical 1% of the practice account per trade, calculated before entry.",
-        "IF a valid setup appears and I hesitate → THEN I read the checklist; if all boxes are ticked, I enter at my planned size.",
-        "IF price moves against me but has not hit my stop → THEN I do nothing until the stop or a written exit rule triggers.",
-        "IF price reaches my target → THEN I exit as planned, even if it 'looks like it will keep going'.",
-        "IF I feel sure enough to size up → THEN I keep the same size and note the feeling in my journal.",
-        "Post-trade: rate fear and greed 0-10; review weekly in Analytics."
+        "Watchlist: NIFTYBEES, BANKBEES. Both passed liquidity and spread checks.",
+        "NIFTYBEES levels: prev high ₹262.40, prev low ₹259.80, prev close ₹261.10 (hypothetical).",
+        "Setup: long pullback to VWAP in an uptrend on 5m, after the opening range breaks up.",
+        "Stop: below the pullback low. Target: 2R or previous high, whichever comes first.",
+        "No-trade: spread above 0.05%, price chopping across VWAP 4+ times, gap larger than 1%, me feeling rushed.",
+        "Window: entries 09:30-14:45 IST only; max 3 trades; stop for the day at -2R."
       ]
     },
     mistakes: [
-      "Closing a trade at the first small pullback — fear-driven early exits cut winners short and break your R:R.",
-      "Skipping valid setups after a loss — your edge only works if you take every qualifying trade.",
-      "Increasing size because you 'feel confident' — feelings are not evidence and larger size amplifies emotions.",
-      "Removing or moving the target to hold for more — this replaces a tested rule with a hope.",
-      "Judging trades by profit instead of process — it rewards greed and punishes correct, disciplined losses."
+      "Watching ten ETFs and missing the setup on the two that mattered.",
+      "Writing a vague setup such as 'buy if strong' that cannot be checked in the moment.",
+      "Skipping no-trade conditions, so every session becomes a trading session.",
+      "Peeking at later bars of the historical session while planning, which ruins the simulation.",
+      "Not saving the plan, which makes the post-session review guesswork."
     ],
     quiz: [
-      { q: "How does fear typically show up in trading behaviour?", a: "Hesitating on valid setups and exiting trades too early." },
-      { q: "How does greed typically show up?", a: "Oversizing positions and holding past planned targets." },
-      { q: "What reduces both fear and greed?", a: "Fixed, small risk per trade and exit rules written before entering." }
+      { q: "What four questions does a pre-session plan answer?", a: "Which ETFs, where the key levels are, what exact setup, and when not to trade." },
+      { q: "Why keep the watchlist to two or three ETFs?", a: "Fewer symbols means more attention per chart and less temptation to take unplanned trades." },
+      { q: "Give one no-trade condition about yourself.", a: "Feeling tired, rushed or upset before the session." }
     ]
   },
 
   66: {
     what: [
-      "Revenge trading is trying to win back a loss immediately. After a losing trade, frustration or embarrassment creates a strong urge to 'get it back' — so you enter again quickly, often with bigger size and a weaker setup than usual.",
-      "It is triggered by losses, especially unexpected or quick ones, or a loss that came from breaking a rule. The emotional logic is that the next trade will fix the feeling. In reality, the next trade is taken in the worst possible mental state: rushed, angry and focused on money rather than process.",
-      "Revenge trading tends to spiral. One revenge trade loses, which creates more frustration, which leads to another, larger trade. A normal small losing day can become a very large one within an hour. This pattern appears often in simulation journals too, which is why it is worth fixing while practice is still risk-free.",
-      "Two structural rules stop the spiral: a mandatory pause after a loss, and a maximum daily loss after which you stop for the day. These rules work because they are decided in advance, when you are calm, and do not rely on willpower in the heated moment."
+      "Executing the plan means the session follows the document you wrote, not the other way around. As historical bars appear one by one in Trading → Paper, your only job is to ask: is my planned setup present right now, on a watchlist ETF, inside my session window, with no no-trade condition active?",
+      "When the answer is yes, you place the order with all parts attached: entry (market or limit), stop-loss, take-profit or exit plan, and a size calculated from your risk per trade. The Paper simulator asks for a trade reason before it accepts the entry. A good reason names the setup and the level, for example 'VWAP pullback long, uptrend, held VWAP with a bullish close'.",
+      "Order type matters. A limit order sets the price you are willing to pay and may not fill; a market order fills at the next available simulated price and can include slippage. In thin ETFs a market order can fill noticeably away from the last price, so many traders prefer limits near the level.",
+      "When the answer is no, you do nothing. A session with zero trades because the setup never appeared is a perfectly executed session. In your review, a skipped invalid trade counts exactly as much as a well-executed valid one."
     ],
     why: [
-      "A single revenge spiral can undo weeks of careful work. Your strategy might be sound, but if one bad day per month wipes out the gains, your results will look like the strategy failed when in fact the process did.",
-      "Building the habit of pausing in simulation means the reflex already exists if you ever trade in any other context. It also keeps your practice data clean so your Analytics reflect your real strategy."
+      "Execution is where most strategies fail in practice. The same rules that look good in a backtest stop working if you enter early, late, without a stop or with the wrong size. Practising clean execution in simulation builds the habit without any real-money consequences.",
+      "The required trade reason forces a pause between impulse and click. If you cannot write the reason in one sentence that matches your plan, you have found a trade you should not take."
     ],
     how: [
-      "Set a max daily loss in the Risk Rules section of your Playbook (for example, a hypothetical 2R or 3R) and a max number of losing trades per session.",
-      "Add a post-loss cool-off rule to Psychology Rules: 'After any loss, I step away from the screen for at least 10 minutes before considering another trade.' Use a phone timer.",
-      "During the cool-off, write a short Psychology journal entry: what happened, did I follow my rules, what am I feeling (1-10), what do I want to do next?",
-      "Before the next entry, complete the Trading Journal mindset check again. If anger or frustration is above your threshold (for example 6/10), the session ends.",
-      "Tag any trade taken within 10 minutes of a loss as 'post-loss' in the Mistake Lab. Compare its results with your normal trades in Analytics.",
-      "In the Trading Practice Lab, practise the routine: replay a session, and when a loss occurs, actually take the full pause before continuing the replay.",
-      "If you hit the max daily loss, close the platform and do a non-trading review task instead — this keeps the streak habit without adding risk."
+      "Open your saved plan next to the Paper chart before starting the replay.",
+      "Advance the replay bar by bar. Do not skip ahead; make every decision with only the bars visible.",
+      "When the setup appears, calculate size: risk per trade / (entry - stop). Round down to whole units.",
+      "Choose the order type. Prefer a limit near your level in thinner ETFs; note expected slippage if you use market.",
+      "Attach the stop-loss and take-profit when placing the order, then write the trade reason the simulator asks for.",
+      "If the setup does not appear, log 'no valid setup' at the end of each hour so you stay engaged without forcing trades.",
+      "At session end, open the session report and compare each trade with the plan line by line."
     ],
     example: {
-      title: "Hypothetical post-loss routine log",
+      title: "Sample paper trade execution (HYPOTHETICAL numbers)",
       lines: [
-        "Trade 1 (hypothetical): valid setup, stopped out for -1R. Rules followed: yes.",
-        "Feeling: frustrated 7/10, urge to re-enter immediately with double size.",
-        "Action: started 10-minute timer, walked away, wrote this entry.",
-        "After pause: frustration 4/10. Mindset check passed. Re-read entry rules.",
-        "Next 30 minutes: no valid setup appeared, so no trade. Daily loss stayed at -1R, well within the hypothetical 3R limit.",
-        "Note: without the pause I would have taken an unplanned trade at twice the size."
+        "10:20 — NIFTYBEES pulls back to VWAP at ₹261.40 and closes bullish (historical replay).",
+        "Plan check: uptrend yes, VWAP pullback yes, inside window yes, no-trade conditions none.",
+        "Stop below pullback low: ₹260.90 → risk per unit ₹0.50.",
+        "Size: ₹500 / ₹0.50 = 1,000 units. Limit buy at ₹261.40, take-profit at ₹262.40 (2R).",
+        "Trade reason: 'VWAP pullback long in uptrend, bullish close at VWAP, stop below swing low.'",
+        "Later, BANKBEES spikes up with no pullback → not my setup → no trade, logged as skipped."
       ]
     },
     mistakes: [
-      "Re-entering within minutes of a loss — your judgement is at its weakest right after a frustrating outcome.",
-      "Doubling size to recover faster — it doubles the damage if the revenge trade also loses.",
-      "Having no written max daily loss — without a hard limit there is nothing to stop a spiral.",
-      "Skipping the pause because 'this setup is obvious' — the feeling of obviousness is itself a sign of emotional bias.",
-      "Ignoring rule-following losses — a loss that followed the plan is normal and needs no 'revenge' at all."
+      "Entering before the trigger bar closes because you 'know' it will work.",
+      "Placing the order first and adding the stop later — or forgetting it.",
+      "Writing a vague trade reason like 'looks good' just to get past the prompt.",
+      "Using market orders in thin ETFs and ignoring the slippage in the review.",
+      "Feeling a zero-trade session was wasted and forcing a trade near the close.",
+      "Calculating size from feeling instead of from the stop distance."
     ],
     quiz: [
-      { q: "What usually triggers revenge trading?", a: "A loss, especially a fast or frustrating one, creating an urge to win it back immediately." },
-      { q: "Name two rules that stop a revenge spiral.", a: "A mandatory pause after a loss and a maximum daily loss limit." },
-      { q: "Why decide these rules in advance?", a: "Because in the heated moment willpower is weak; pre-commitments made while calm do the work." }
+      { q: "What four checks come before every paper entry?", a: "Planned setup present, watchlist ETF, inside session window, no no-trade condition active." },
+      { q: "How do you calculate position size?", a: "Risk per trade divided by the distance from entry to stop, rounded down." },
+      { q: "Is a session with no trades a failure?", a: "No — if the setup never appeared, not trading is correct execution." }
     ]
   },
 
   67: {
     what: [
-      "Overtrading means taking more trades than your strategy actually produces. It usually comes from boredom and impatience: the market is quiet, nothing on your checklist has appeared, and sitting still feels unproductive, so you start finding reasons to trade.",
-      "Your edge lives only in your setup. The backtest you ran measured a specific set of conditions. Any trade outside those conditions is, by definition, untested — statistically it is noise, and once costs and errors are added it tends to have a negative expectancy.",
-      "Waiting is a skill, not a lack of action. Professional processes in many fields involve long periods of observation with brief periods of execution. A session where you watched carefully and took zero trades because none qualified is a successful session.",
-      "A trade cap — a maximum number of trades per session — is the simplest guardrail. It forces you to be selective, because each trade 'spends' one of a limited number of slots."
+      "Managing an open trade means following the exit plan you wrote before entry. There are only a few legitimate reasons to exit: the stop is hit, the target is hit, the trailing rule says exit, the setup is invalidated by a specific condition you defined, or the session window is ending.",
+      "The stop-loss is the one thing you must never move against yourself. Widening a stop to avoid being stopped out turns a planned 1R loss into an unplanned larger one. Moving it in your favour — for example to break-even after price reaches 1R, if your rules say so — is allowed when it is written in advance.",
+      "Take-profit orders and trailing rules decide winners. If your plan says target 2R, the take-profit order does the work. If your plan says trail below each higher swing low on the 5m chart, you update the stop only at those points. What you avoid is exiting early because a red candle scared you, or removing the target because you hope for more.",
+      "Intraday means flat by the close. In Paper you should close all positions before your session end time, for example 15:15 IST, so you practise the habit of not carrying intraday trades overnight."
     ],
     why: [
-      "Overtrading dilutes your results. Ten trades of which four are real setups will look worse than the four alone, and you may wrongly conclude your strategy does not work.",
-      "Patience also protects attention. Every unnecessary trade uses mental energy you need for the real setup when it finally comes."
+      "The time between entry and exit is where emotion is strongest. Fear says exit now; hope says hold longer. Both replace your tested rules with a guess. If your exits change from trade to trade, your results no longer reflect the strategy you backtested.",
+      "Clean trade management keeps losses small and lets valid winners reach their planned target, which is what makes a positive expectancy possible at all."
     ],
     how: [
-      "Write a trade cap in Risk Rules (for example, a maximum of 3 trades per session) and track it on a sticky note or in the Trading Journal as you go.",
-      "In the Trading Practice Lab, run a replay of a slow session and practise waiting. Count how many times you felt the urge to trade and how many valid setups actually appeared.",
-      "Before every entry ask the setup question: 'Which named setup from my Playbook is this?' If you cannot answer in one sentence, do not trade.",
-      "Give boredom a job: during quiet periods, mark levels, update your watchlist, or write in the Psychology journal instead of looking for trades.",
-      "Use Analytics to compare trades tagged with a named setup against trades tagged 'no setup' or 'boredom'.",
-      "Log a 'no-trade session' as a win in your timetable streak if you followed your process. Consistency counts, not activity."
+      "Before entering, write the exit plan in the trade reason: stop level, target or trailing rule, and invalidation condition.",
+      "Place the stop-loss and take-profit orders in Paper at entry so the simulator handles them.",
+      "While the trade is open, advance bar by bar and only touch the orders when a written rule says to.",
+      "If you feel the urge to exit early or widen the stop, write the urge and the reason in the session journal instead of acting.",
+      "If using a trailing stop, move it only at the predefined points and only in your favour.",
+      "Close any open position before your session end time and mark it 'time exit' in the journal.",
+      "After the session, label each exit as rule-based or emotional and count them."
     ],
     example: {
-      title: "Hypothetical session tally — patience practice",
+      title: "Sample trade-management rules (HYPOTHETICAL)",
       lines: [
-        "Replay session, hypothetical practice account, trade cap: 3.",
-        "Urges to trade noted: 9.",
-        "Valid setups per Playbook checklist: 2.",
-        "Trades taken: 2 (both named setups). Result: +1.8R and -1R, net +0.8R (hypothetical).",
-        "If I had taken all 9 urges, my backtest suggests most would have had no measurable edge.",
-        "Process score: 9/10 — waited, respected the cap, journaled boredom twice."
+        "Entry: BANKBEES long ₹505.20, stop ₹504.20 (1R = ₹1.00 per unit), target ₹507.20 (2R).",
+        "Rule 1: If price reaches ₹506.20 (+1R), then move stop to entry ₹505.20.",
+        "Rule 2: If a 5m bar closes back below VWAP, then exit at market (invalidation).",
+        "Rule 3: If 15:10 IST arrives and the trade is open, then close it.",
+        "Replay: price reached +1R, stop moved to break-even; target filled at ₹507.20 (+2R simulated).",
+        "Journal: wanted to exit at +0.6R on a red bar — logged the urge, did not act."
       ]
     },
     mistakes: [
-      "Trading because the market is quiet and you feel you 'should' be doing something — boredom is not a setup.",
-      "Loosening your entry criteria during slow sessions — it turns a tested strategy into an untested one.",
-      "Ignoring your trade cap after a win — feeling good leads to extra trades just as easily as feeling bad.",
-      "Counting a no-trade day as a failure — it hurts consistency because you will force trades to avoid that feeling.",
-      "Watching too many charts at once — more screens create more temptations, not more edge."
+      "Widening the stop when price approaches it — the most expensive habit in trading.",
+      "Closing winners early on the first pullback because of fear of giving back gains.",
+      "Removing the take-profit to 'let it run' without a written trailing rule.",
+      "Moving the stop to break-even too early, so normal noise stops out valid trades.",
+      "Holding an intraday position past the planned session end."
     ],
     quiz: [
-      { q: "What are the main drivers of overtrading?", a: "Boredom and impatience." },
-      { q: "Where does your edge exist?", a: "Only in your defined, tested setup; other trades are noise." },
-      { q: "What simple rule limits overtrading?", a: "A maximum number of trades per session (a trade cap)." }
+      { q: "Which direction may a stop-loss be moved during a trade?", a: "Only in your favour, and only when a written rule says so — never wider." },
+      { q: "Name three legitimate exit reasons.", a: "Stop hit, target hit, trailing or invalidation rule triggered (or the session end time)." },
+      { q: "What should you do with an urge to exit early?", a: "Write it in the session journal and follow the written exit rule." }
     ]
   },
 
   68: {
     what: [
-      "Confidence in trading is the ability to act on your plan without hesitation. Healthy confidence is evidence-based: it comes from your backtest sample, your simulation results and your journal, not from how the last few trades turned out.",
-      "Streaks distort feelings. After five wins in a row you may feel unstoppable; after five losses you may feel the strategy is broken. Both reactions read too much into a small sample. Even a strategy with a solid edge will produce long winning and losing streaks purely through randomness.",
-      "Trusting the sample means asking 'What does my larger data set say?' rather than 'What happened yesterday?'. If your backtest of a hypothetical 100 trades showed a positive expectancy, a run of a few losses is expected, not alarming — as long as you are still following the rules.",
-      "Over-confidence after a streak is as dangerous as fear after a loss. It shows up as larger size, relaxed rules and skipping the checklist. Staying humble after wins keeps your process stable."
+      "Trading → Paper enforces risk limits automatically. If an order's risk (size × distance to stop) exceeds your risk per trade, the simulator rejects it. If you have reached your maximum trades for the session, new entries are rejected. If losses reach the daily loss limit, the session enters a cooldown and no new trades are accepted.",
+      "A rejected order is not a bug or an obstacle; it is the system doing exactly what you asked it to do when you were calm. The right response is to read the rejection message, fix the order (smaller size, or no trade) and move on — never to raise the limit so the order goes through.",
+      "The daily loss limit and cooldown deserve special respect. After two or three losses, judgement is affected: people trade faster, bigger and with worse setups to get the money back. The cooldown removes that option. The plan is to stop, step away, write in the journal and review the session later.",
+      "Two habits complete this: never increase size after a winning streak because you feel confident, and never increase size after losses to recover faster. Size comes from the risk rule and the stop distance, nothing else."
     ],
     why: [
-      "Your behaviour changes with your mood, and your results change with your behaviour. Anchoring confidence to data instead of recent outcomes keeps your execution consistent across good and bad weeks.",
-      "This also prepares you for an honest Final Evaluation: you will rate skills based on evidence, not on how the last session felt."
+      "A strategy with a positive expectancy can still be wiped out by a few oversized trades. Risk limits protect the simulated account so that the strategy has enough trades to show what it really does.",
+      "Practising inside hard limits builds the habit you would need anywhere: respecting rules even when you are frustrated or excited. That habit is scored directly in the Evaluation's risk and discipline skills."
     ],
     how: [
-      "Open Analytics and write down your key numbers from backtesting and simulation: sample size, win rate, average R, expectancy. Put them in your Playbook under My Strategy.",
-      "Before each session, read those numbers as part of the Trading Journal mindset check. This reminds you what 'normal' looks like.",
-      "Add a streak rule to Psychology Rules: 'After 3 wins in a row, I re-read my checklist and keep size the same. After 3 losses in a row, I review whether rules were followed before changing anything.'",
-      "In the Psychology journal, rate confidence 1-10 each session and compare it with your actual process score from the Trading Practice Lab. Notice when they diverge.",
-      "Look at your longest losing streak in the backtest. Write it down so you are not surprised when a similar streak appears in simulation.",
-      "Change your strategy only after reviewing a meaningful sample (for example, 30+ simulated trades), never after one streak."
+      "Before the session, confirm in Paper settings: risk per trade, max trades, daily loss limit and cooldown are all set and switched on.",
+      "Write in your plan what you will do if an order is rejected: reduce size or skip, never change the limit.",
+      "When an order is rejected, read the message, write it in the session journal and recalculate size from the stop distance.",
+      "Track your running result in R during the session so you know how close you are to the daily limit.",
+      "If the cooldown starts, stop the replay, close the Paper tab and write three lines in the Psychology journal: what happened, how you feel, what you would do differently.",
+      "Never edit risk settings during a session. Changes are allowed only between sessions and must be written with a reason.",
+      "In the session report, count rejected orders and cooldowns — each one is a learning prompt, not a failure."
     ],
     example: {
-      title: "Hypothetical evidence card for confidence",
+      title: "Sample if-then risk rules (HYPOTHETICAL)",
       lines: [
-        "Backtest sample (hypothetical): 100 trades, 45% win rate, average winner +2.1R, average loser -1R.",
-        "Expectancy (hypothetical): 0.45 × 2.1 - 0.55 × 1 = +0.40R per trade.",
-        "Longest losing streak in backtest: 7 trades.",
-        "Current simulation: 4 losses in a row, all rules followed.",
-        "Conclusion: within normal range; no rule change. Keep size fixed and keep executing.",
-        "Reminder after wins: the same math applies — a winning streak is not proof I should size up."
+        "Limits: risk ₹500 per trade, max 3 trades, daily loss limit ₹1,000, cooldown on.",
+        "If an order is rejected for size, then I recalculate size from the stop, or I skip.",
+        "If I lose 2 trades in a row, then I pause 15 minutes before the next decision.",
+        "If the daily loss limit is hit, then the cooldown runs and I journal instead of trading.",
+        "If I just had a big winner, then my next size stays exactly the same.",
+        "Replay note: order for 2,000 units rejected (risk ₹1,000 > ₹500) → resized to 1,000 units."
       ]
     },
     mistakes: [
-      "Basing confidence on the last few trades — small samples are dominated by luck.",
-      "Sizing up after a winning streak — over-confidence increases risk exactly when you are least careful.",
-      "Abandoning a strategy after a normal losing streak — you never get to see its edge play out.",
-      "Not knowing your backtest's longest losing streak — every streak then feels like an emergency.",
-      "Confusing confidence with certainty — no single trade is ever certain, however good the setup."
+      "Raising risk limits mid-session so a rejected order can go through.",
+      "Opening a new paper session immediately after a cooldown to keep trading.",
+      "Doubling size after losses to win the money back — revenge sizing.",
+      "Increasing size after a winning streak because you 'are on form'.",
+      "Not tracking the running result, so the daily limit arrives as a surprise.",
+      "Treating cooldowns as embarrassing and leaving them out of the journal."
     ],
     quiz: [
-      { q: "Where should real trading confidence come from?", a: "Evidence — a meaningful backtest and simulation sample — not recent results." },
-      { q: "Why are streaks misleading?", a: "Random variation creates streaks even in a strategy with a real edge; small samples mislead." },
-      { q: "What is a sensible response to a winning streak?", a: "Keep size the same, re-read the checklist and stay humble." }
+      { q: "What should you do when Paper rejects an order for risk?", a: "Recalculate size from the stop distance or skip the trade — never raise the limit." },
+      { q: "What happens when the daily loss limit is reached?", a: "A cooldown starts: no new trades, step away, journal and review later." },
+      { q: "What decides position size after a big win?", a: "The same risk rule and stop distance as always — size never grows because of feelings." }
     ]
   },
 
   69: {
     what: [
-      "Discipline is doing what your plan says, especially when you do not feel like it. It is not about being rigid or emotionless; it is about letting a decision you made calmly (your Playbook) override the impulse of the moment.",
-      "The useful thing about discipline is that it can be measured. For each trade, ask: did I follow every rule — entry, stop, size, exit, and psychology rules? Your rule adherence rate is the percentage of trades where the answer was yes.",
-      "Process over outcome means judging a trade by whether it followed the plan, not by whether it made money. A rule-following loss is a good trade. A rule-breaking win is a mistake that happened to pay, and it teaches the wrong lesson.",
-      "Discipline compounds. Each time you follow a rule under pressure, it becomes slightly easier next time. Each exception makes the next exception easier too. Over 84 days, those small choices add up to a habit in one direction or the other."
+      "You already backtested your strategy in Trading → Backtest. Paper trading is a second, slower test that includes you. Comparing the two answers a key question: when a human executes these rules bar by bar, do the results look like the backtest?",
+      "Compare like with like: same ETFs, same timeframe, same rules, same cost model and similar market conditions. Useful metrics are number of trades, win rate, average win and loss in R, expectancy per trade, total costs and maximum drawdown. Both the Paper report and the Backtest report show these.",
+      "Expect differences. A handful of paper sessions is a tiny sample, so win rate can swing wildly by chance. But some gaps have clear causes: fewer paper trades than the backtest (you skipped valid setups out of fear), more paper trades (you added unplanned trades), smaller average winners (you exited early), or bigger average losers (you widened stops or had slippage).",
+      "The goal of the comparison is not to decide whether to trade for real. It is to find where your execution differs from your rules so you can practise that specific part."
     ],
     why: [
-      "No strategy can be evaluated if it is not executed consistently. Discipline is what turns your backtest into a real test: if adherence is low, your simulation results describe your impulses, not your strategy.",
-      "Discipline is one of the 8 skill areas on your Evaluation dashboard, and it is the one that makes all the others usable."
+      "If paper results differ from the backtest, the difference is information. It usually points at behaviour — skipped trades, early exits, unplanned entries — rather than at the strategy itself.",
+      "This comparison also keeps you honest about the backtest. If even disciplined paper execution cannot come close, the backtest assumptions (fills, costs, slippage) may have been too kind."
     ],
     how: [
-      "Create a rule checklist in your Trading Journal with one line per rule: setup valid, size correct, stop placed, target set, exit followed, psychology rules respected.",
-      "After every trade, tick each line honestly. A trade with all ticks counts as 'disciplined'.",
-      "Calculate your weekly adherence rate (disciplined trades / total trades) and log it in Analytics or your journal. Set a target such as 90%.",
-      "Use the process score in the Trading Practice Lab as your main success metric for each session.",
-      "When you break a rule, log it in the Mistake Lab with which rule, what you felt, and a specific if-then fix.",
-      "Keep your timetable streak going: showing up at the planned time, even for a short review, is itself a discipline rep."
+      "Open the Paper session reports for your recent sessions and note trades, win rate, average R, costs and drawdown.",
+      "Run Trading → Backtest on the same ETFs and the same dates you paper traded, with the same strategy and cost model.",
+      "Put the two sets of numbers side by side in your Trading Journal.",
+      "List trades the backtest took that you did not (missed or skipped) and trades you took that the backtest did not (unplanned).",
+      "Compare average winner and loser in R to spot early exits or widened stops.",
+      "Check whether paper fills had more slippage than the backtest assumed, especially in thinner ETFs.",
+      "Write one execution change to practise in the next paper session."
     ],
     example: {
-      title: "Hypothetical weekly discipline scorecard",
+      title: "Sample comparison — same ETF and dates (HYPOTHETICAL numbers)",
       lines: [
-        "Simulated trades this week: 12.",
-        "Trades following every rule: 10 → adherence 83% (target 90%).",
-        "Rule breaks: 1 × moved stop wider, 1 × entered without confirmation candle.",
-        "Results (hypothetical): disciplined trades net +3.5R; rule-break trades net -1.6R.",
-        "If-then fix: IF I want to move my stop → THEN I close the trade at the original stop or leave it untouched.",
-        "Next week's goal: 90%+ adherence, regardless of P&L."
+        "Backtest (NIFTYBEES, 5m, 10 sessions): 14 trades, win rate 43%, avg win +1.9R, avg loss -1.0R.",
+        "Paper (same 10 sessions): 11 trades, win rate 45%, avg win +1.3R, avg loss -1.1R.",
+        "Missing trades: 4 valid setups skipped after a loss. Extra trade: 1 unplanned chase.",
+        "Avg win lower → exited before target on 3 trades out of fear.",
+        "Avg loss slightly higher → slippage on two market orders.",
+        "Next focus: hold to target unless a written invalidation rule triggers. Small sample — no conclusions about edge."
       ]
     },
     mistakes: [
-      "Judging a session by profit alone — it hides rule breaks that happened to work.",
-      "Not measuring adherence — what is not measured tends to drift.",
-      "Making 'just this once' exceptions — every exception weakens the habit you are building.",
-      "Having vague rules — you cannot follow or check a rule like 'enter on strength'.",
-      "Being harsh with yourself after a break — shame leads to hiding mistakes instead of fixing them."
+      "Comparing paper results on different ETFs or dates with an unrelated backtest.",
+      "Drawing big conclusions from three or four paper sessions.",
+      "Blaming the strategy when the gap clearly comes from skipped or early-exited trades.",
+      "Ignoring costs and slippage differences between the two reports.",
+      "Treating good paper results as a signal to start trading real money."
     ],
     quiz: [
-      { q: "How can discipline be measured?", a: "As rule adherence — the percentage of trades that followed every rule." },
-      { q: "Is a losing trade that followed every rule a good or bad trade?", a: "A good trade — process matters more than a single outcome." },
-      { q: "What does 'discipline compounds' mean?", a: "Each rule followed makes the habit stronger; each exception makes the next one easier." }
+      { q: "What should match when comparing paper and backtest results?", a: "Same ETFs, dates, timeframe, strategy rules and cost model." },
+      { q: "Paper average winner is much smaller than backtest. Likely cause?", a: "Exiting winners early instead of holding to the planned target." },
+      { q: "Why be careful with conclusions from a few paper sessions?", a: "The sample is small, so results can vary a lot by chance." }
     ]
   },
 
   70: {
     what: [
-      "This review day consolidates the Trading Psychology week. You covered six topics: FOMO (chasing and unplanned entries), fear and greed (early exits and oversizing), revenge trading (trying to win back losses), overtrading and impatience (boredom trades and trade caps), confidence (evidence over streaks) and discipline (measuring rule adherence).",
-      "These topics share one thread: emotions are normal, but decisions should come from rules made in advance. Every lesson this week used the same toolkit — pre-session checks, if-then rules, cool-off timers, walk-away limits and honest journaling.",
-      "A review day is not about learning new material. It is about re-reading what you wrote, finding the concept you understand least and rewriting it in your own words. That is where knowledge turns into understanding.",
-      "By the end of today you should know which one or two emotional patterns show up most often in your own journal. Those will become the core of the Psychology Rules section of your Playbook next week."
+      "This week moved you from historical testing to simulated execution. Day 64 set the paper-trading rules: virtual account, risk per trade, daily loss limit, max trades and one tested strategy. Day 65 built the pre-session plan with a small watchlist, key levels, one setup and no-trade conditions.",
+      "Days 66 and 67 practised executing and managing trades: enter only the planned setup, attach stop and target, write a trade reason, size from the stop distance, and exit only by rule. Day 68 focused on risk limits: rejected orders and cooldowns are the system protecting you, and size never changes because of wins or losses.",
+      "Day 69 compared paper results with the backtest on the same ETFs and dates. Gaps usually point at execution — skipped setups, unplanned entries, early exits or slippage — rather than at the strategy.",
+      "The weekly review asks one thing above all: how well did you follow your own rules? Virtual P&L is a side note; rule-following is the skill you are building."
     ],
     why: [
-      "Psychology is the area most people skip because it feels vague. Reviewing your own journal turns it into concrete, personal data: which emotion, which trigger, which rule fixes it.",
-      "The Playbook Creation week starts tomorrow, and the Psychology Rules and No-Trade Conditions sections depend directly on what you identify today."
+      "Reviewing a whole week shows patterns that one session hides, such as always skipping trades after a loss or always overtrading on gap days. Patterns are what you can actually fix.",
+      "A weekly review also resets your focus. Picking one change for next week is more effective than trying to fix everything at once."
     ],
     how: [
-      "Re-read every Psychology journal entry from this week. Highlight the emotion that appeared most often and the situation that triggered it.",
-      "Open the Mistake Lab and filter by this week. Count how many mistakes were emotional (FOMO, revenge, early exit, oversizing, boredom) versus technical.",
-      "Identify your weakest concept from the six topics. Close your notes and write a three-sentence explanation of it from memory, then compare with the lesson.",
-      "Write your top three if-then rules from the week (for example, one for FOMO, one for losses, one for streaks).",
-      "Check Analytics: compare your adherence rate and process score with last week's.",
-      "Save your best insight and your three if-then rules to the Knowledge Vault so they are ready for the Playbook.",
-      "Update the psychology and discipline self-ratings on the Evaluation dashboard based on this evidence, not on mood."
+      "Open every Paper session report from this week and list trades, rule breaks, rejected orders and cooldowns.",
+      "Score each session for plan adherence: trades that matched the plan / all trades taken, plus skipped valid setups.",
+      "Check the Mistake Lab for the mistake tag that appeared most often this week.",
+      "Re-read your comparison from Day 69 and confirm the main execution gap.",
+      "Answer this week's quizzes without looking, then check the answers.",
+      "Write a weekly review in the Trading Journal: what went well, the most repeated mistake, one change for next week.",
+      "Update your paper-trading rules if the review showed a rule that was unclear."
     ],
     example: {
-      title: "Hypothetical self-review walkthrough",
+      title: "Sample weekly paper review (HYPOTHETICAL)",
       lines: [
-        "Most frequent emotion this week: impatience (5 journal mentions), mostly in quiet midday replays.",
-        "Mistake Lab: 6 mistakes logged — 4 emotional (2 boredom trades, 1 FOMO chase, 1 early exit), 2 technical.",
-        "Weakest concept: confidence vs. streaks. Rewritten: 'A streak is a small sample; I trust my 100-trade data, not my last 5 trades.'",
-        "If-then 1: IF price is extended from my level → THEN no entry, log as missed.",
-        "If-then 2: IF I take a loss → THEN 10-minute break and journal before the next trade.",
-        "If-then 3: IF it is a quiet period → THEN I update levels instead of looking for trades."
+        "Sessions: 4 historical replays, NIFTYBEES and BANKBEES, 5m VWAP pullback.",
+        "Trades: 9. Matched plan: 7 (78%). Unplanned: 2. Valid setups skipped: 3.",
+        "Rejected orders: 1 (size too big). Cooldowns: 1, respected fully.",
+        "Most repeated mistake: exiting before 2R target (4 times).",
+        "Virtual result: -0.4R (simulated) — not the focus.",
+        "Change for next week: let the take-profit order work; log urges instead of exiting."
       ]
     },
     mistakes: [
-      "Skimming the journal instead of re-reading it carefully — patterns only appear when you look at all entries together.",
-      "Picking your strongest topic to review — the value of a review comes from working on the weakest one.",
-      "Writing generic rules like 'be more patient' — rules must be specific if-then statements to be usable.",
-      "Rating psychology skills by how you feel today — use counts from the journal and Mistake Lab instead.",
-      "Skipping the review because no new material is taught — consolidation is what makes the week stick."
+      "Judging the week by virtual profit instead of rule-following.",
+      "Skipping the review because sessions 'went fine'.",
+      "Picking five changes at once and following none of them.",
+      "Not counting skipped valid setups as part of execution quality.",
+      "Changing strategy because of one losing week of paper trades."
     ],
     quiz: [
-      { q: "What common thread links all six psychology topics this week?", a: "Emotions are normal, but decisions should come from pre-written rules, not feelings in the moment." },
-      { q: "Name two tools that stop revenge trading and two that limit overtrading.", a: "Revenge: post-loss pause and max daily loss. Overtrading: trade cap and the 'which named setup is this?' check." },
-      { q: "Why should confidence be anchored to your sample rather than recent trades?", a: "Recent trades are a tiny, luck-dominated sample; the larger data set reflects the strategy's real behaviour." }
+      { q: "What is the main measure of a good paper-trading week?", a: "How closely you followed your plan and rules, not virtual P&L." },
+      { q: "Name two things the Paper simulator enforces automatically.", a: "Risk limits that reject oversized orders and a cooldown after the daily loss limit (also max trades and a required trade reason)." },
+      { q: "What usually explains gaps between paper and backtest results?", a: "Execution — skipped setups, unplanned trades, early exits or slippage." }
     ]
   },
 
   71: {
     what: [
-      "Your Playbook is the single document you read before every practice session. It captures what you trade, how you trade it, and the rules that keep you consistent. This week you will fill in all ten sections, starting today with My Market and My Strategy.",
-      "My Market describes where and when you practise: the type of instrument (for example, liquid large-cap stocks or a major index product), the session window you focus on, and the timeframes you use for context and for entries. It is deliberately narrow — a focused scope makes patterns easier to learn.",
-      "My Strategy is a short summary of your approach: the market condition you look for, the setup you trade, and the basic logic of why it might work. It is not the full rulebook — entry, stop, exit and risk rules come in later sections.",
-      "Keep it clear and short. A good test is that the whole Playbook should be readable in about two minutes. If a section needs a paragraph to explain, it probably needs to be simplified."
+      "FOMO — fear of missing out — is the urge to enter an ETF because it is already moving and you feel left behind. On an intraday chart it usually looks like a large green candle breaking away from VWAP or the opening range, and a voice saying 'this is the move, get in now'.",
+      "FOMO trades are usually chases: the entry is far from any level, so the stop has to be wide or is skipped, and the room left to a sensible target is small. The reward-to-risk collapses before the trade even starts, and costs take a bigger share of what little move is left.",
+      "Overtrading is the close cousin of FOMO. It means taking more trades than your plan allows, often small, low-quality ones, because sitting still feels unproductive. With ETFs, every round trip pays brokerage, STT, exchange charges, stamp duty and GST, so extra trades add cost even when they break even on price.",
+      "The fix is structural, not heroic: a max-trades rule enforced by Paper, a required trade reason that must name your setup, and a missed-trades list where you record moves you did not chase. Markets open every session; missing one move costs nothing."
     ],
     why: [
-      "Without a defined market and strategy, every session becomes a new experiment and your data cannot be compared from day to day. Writing them down turns weeks of lessons into one consistent practice plan.",
-      "These two sections also act as a filter: anything outside your market, session or strategy is automatically a no-trade, which reduces FOMO and overtrading."
+      "FOMO and overtrading are among the most common mistakes in beginner journals because they feel urgent and exciting. They break several rules at once — no setup, bad location, unclear stop, rushed size.",
+      "If your paper results are full of chases and extra trades, they measure impulses, not your strategy. Removing them is the quickest way to get honest data."
     ],
     how: [
-      "Open the Playbook and go to My Market. Write one line each for instrument type, session window, context timeframe and entry timeframe.",
-      "Add one line for what you avoid (for example, very low-volume instruments or the first minutes after the open, if your data shows they hurt you).",
-      "Go to My Strategy. Write one sentence for the market condition (trend, range), one for the setup, and one for why you think it has an edge.",
-      "Add your key evidence from Analytics: backtest sample size and simulation sample size, with win rate and average R marked as your own practice data.",
-      "Read both sections aloud and time yourself. If it takes more than about 40 seconds, cut words.",
-      "Link this to your Trading Journal mindset check: the first question each session becomes 'Am I trading my market, in my session, with my strategy?'"
+      "In your pre-session plan, write the exact setup you will take. Anything else is not a trade today.",
+      "Add a Psychology Rules line to your Playbook: 'If price is already more than 1R away from my entry level, then I do not chase — I log it as missed.'",
+      "Use Trading → Replay on a trending ETF session and mark every moment you feel the urge to chase. Lock No-Trade on those bars and check later what happened.",
+      "Keep the max-trades limit in Paper at 3 or fewer and leave it unchanged during the session.",
+      "When the urge hits, take a 60-second pause: hands off the mouse, four slow breaths, read the entry checklist. Any unticked box means no.",
+      "Log every FOMO urge in the Psychology journal with intensity 1-10 and what you saw on the chart.",
+      "Tag chases and extra trades in the Mistake Lab so Analytics can compare them with planned trades."
     ],
     example: {
-      title: "Hypothetical fill-in template — My Market & My Strategy",
+      title: "Sample replay journal — a FOMO near-miss (HYPOTHETICAL)",
       lines: [
-        "MY MARKET — Instrument type: ______ (e.g. liquid large-cap stocks in simulation)",
-        "Session window: ______ (e.g. first two hours of the regular session) · Context TF: ______ · Entry TF: ______",
-        "I avoid: ______ (e.g. low-volume names, major scheduled news minutes)",
-        "MY STRATEGY — Condition: ______ (e.g. clear intraday uptrend with higher highs and higher lows)",
-        "Setup: ______ (e.g. pullback to prior support / VWAP with a bullish confirmation candle)",
-        "Why it may work: ______ (e.g. trades with the trend at a level where buyers previously stepped in)",
-        "Evidence (hypothetical practice data): backtest ___ trades, simulation ___ trades, win rate ___%, average R ___."
+        "Historical replay: BANKBEES, 5m. Plan: long pullback to VWAP only.",
+        "10:05 — one bar jumps ₹2.10 above VWAP (about 3× my normal stop). Urge to buy: 8/10.",
+        "Checklist: 'pullback to VWAP' unticked → No-Trade locked. Logged as missed.",
+        "10:45 — price pulls back to VWAP, bullish close → valid setup, normal 1R stop.",
+        "Comparison: chase entry would have needed a stop 3× wider for the same target.",
+        "Takeaway: waiting cost nothing; chasing would have broken the risk rule."
       ]
     },
     mistakes: [
-      "Listing too many markets or setups — a broad scope makes it impossible to build real skill or clean data.",
-      "Writing the strategy as a long essay — if you cannot read it in seconds, you will not read it before every session.",
-      "Leaving out the session window — trading all day multiplies boredom trades and fatigue.",
-      "Copying someone else's strategy without your own backtest — your Playbook should rest on your data.",
-      "Mixing rules into the summary — keep detailed rules in their own sections so each part stays clear."
+      "Entering after a big candle because it 'looks strong'.",
+      "Widening the stop to make a chase trade fit the rules.",
+      "Trading ETFs that were not on the pre-session watchlist.",
+      "Treating a missed move as a loss, which fuels the next impulsive entry.",
+      "Taking small extra trades out of boredom and ignoring the cost of each round trip."
     ],
     quiz: [
-      { q: "What four items belong in My Market?", a: "Instrument type, session window, context timeframe and entry timeframe (plus what you avoid)." },
-      { q: "What should the My Strategy section contain?", a: "A short summary: market condition, setup and why it might have an edge, with your evidence." },
-      { q: "How long should the whole Playbook take to read?", a: "About two minutes." }
+      { q: "Why does a chase entry hurt reward-to-risk?", a: "The late entry forces a wider stop and leaves less room to the target." },
+      { q: "Why does overtrading hurt even break-even trades in ETFs?", a: "Every round trip pays brokerage, STT, exchange charges, stamp duty and GST." },
+      { q: "What do you do with a move you did not chase?", a: "Log it on the missed-trades list — missing a move costs nothing." }
     ]
   },
 
   72: {
     what: [
-      "Entry Rules are the exact conditions that must all be true before you enter a trade. They turn your setup from a picture in your head into a checklist anyone could verify by looking at the chart.",
-      "Checklist format matters. Each rule is one line that can be answered yes or no. If even one answer is no, there is no trade. This all-must-be-true structure is what keeps FOMO and boredom trades out of your data.",
-      "Rules must be objective. 'Strong trend' is subjective; 'price above the 20-period moving average with at least two higher highs and higher lows on the context timeframe' is objective. If two people could disagree about whether a rule is met, rewrite it.",
-      "No exceptions. The power of a checklist comes from using it every time. A rule that is skipped 'when the setup looks really good' is not a rule, and those exceptions are exactly the trades your backtest never measured."
+      "Losses are a normal, unavoidable part of any trading strategy. A strategy that wins 45% of the time loses more than half its trades by design. A loss taken at your planned stop, with planned size, on a valid setup is not a mistake — it is the cost of testing the setup.",
+      "Revenge trading is what happens when a loss feels personal. You want the money back now, so you take the next thing that moves, often with bigger size and a looser stop. One revenge trade tends to lead to another, and a normal -1R day becomes -4R or worse.",
+      "The daily loss limit and cooldown are designed for exactly this moment. When losses reach the limit, Trading → Paper stops accepting new trades for the rest of the session. That is not a punishment; it removes the option to act on a state of mind you already know is unreliable.",
+      "The most important rule is about size: never increase size to recover losses, and never increase size after wins either. Size is calculated from your risk rule and the stop distance, and it stays the same whatever the last trade did."
     ],
     why: [
-      "Clear entry rules make your backtest repeatable and your simulation results comparable. They also remove the in-the-moment debate that drains focus and invites emotional decisions.",
-      "Most rule breaks found in the Mistake Lab start at entry. A tight checklist prevents mistakes before they happen rather than fixing them afterwards."
+      "Most large drawdowns in trading journals come not from one bad trade but from a chain of revenge trades after a normal loss. Breaking the chain early protects your simulated account and the quality of your data.",
+      "Learning to accept losses calmly is also what lets you take the next valid setup without fear, which keeps execution consistent."
     ],
     how: [
-      "Open the Playbook Entry Rules section. List 4-6 conditions, each as a yes/no line.",
-      "Order them from big picture to trigger: market context, structure, level, confirmation candle, risk check.",
-      "For each rule, test objectivity: could you check it on a screenshot without explanation? If not, rewrite it with numbers or clear definitions.",
-      "Include a final line: 'Stop and target are defined and R:R meets my minimum.' This links entry to your risk rules.",
-      "Replay five past sessions in the Trading Practice Lab and apply the checklist strictly. Note any rule that was hard to judge and sharpen it.",
-      "Copy the checklist into your Trading Journal template so every trade entry shows the ticked boxes."
+      "Write your post-loss rules as if-then statements in the Psychology Rules section of the Playbook before your next session.",
+      "Set the daily loss limit in Paper (for example 2R) and confirm the cooldown is on.",
+      "After any loss, pause at least 5 minutes before the next decision and rate your emotion 1-10 in the Psychology journal.",
+      "If the emotion rating is 7 or higher, end the session even if the limit has not been reached.",
+      "When the cooldown starts, close Paper, step away from the screen and come back only to journal.",
+      "Review revenge-trade tags in the Mistake Lab weekly to see whether the chain is getting shorter.",
+      "Read your size rule aloud before each entry: 'Size comes from risk / stop distance, nothing else.'"
     ],
     example: {
-      title: "Hypothetical entry checklist (long pullback setup)",
+      title: "Sample post-loss if-then rules (HYPOTHETICAL)",
       lines: [
-        "[ ] Context timeframe shows higher highs and higher lows (uptrend).",
-        "[ ] Price has pulled back to a marked support level or the session VWAP.",
-        "[ ] A bullish confirmation candle has closed at the level (e.g. hammer or bullish engulfing).",
-        "[ ] Entry is no further than a pre-set distance from the level (no chasing).",
-        "[ ] Stop and target are defined; planned R:R is at least 2:1.",
-        "[ ] Mindset check passed; within my trade cap and daily loss limit.",
-        "ALL boxes ticked → enter at planned size. ANY box empty → no trade."
+        "If I take a full -1R loss, then I wait 5 minutes and rate my emotion 1-10.",
+        "If my emotion rating is 7+, then I end the session and journal.",
+        "If I lose two trades in a row, then my next trade needs an A-quality setup from my Best Setups list.",
+        "If the daily loss limit (-2R) is hit, then the cooldown runs — no new session today.",
+        "If I feel the urge to 'make it back', then I write that sentence in the journal instead of trading.",
+        "Size rule: same ₹500 risk per trade after wins and after losses."
       ]
     },
     mistakes: [
-      "Using vague words like 'strong' or 'clean' — subjective rules allow emotions to decide.",
-      "Writing too many conditions — an overly long checklist rarely triggers and invites shortcuts.",
-      "Allowing 'almost' setups — a nearly-met rule is an unmet rule, and the backtest did not include it.",
-      "Leaving risk out of the entry checklist — a valid pattern with poor R:R is still a bad trade.",
-      "Not testing the checklist on replays — untested rules often turn out to be ambiguous in real time."
+      "Treating every loss as a mistake, even when the trade followed the plan.",
+      "Doubling size after a loss to recover faster.",
+      "Starting a fresh paper session right after a cooldown.",
+      "Lowering setup standards after a loss — 'anything will do'.",
+      "Not journaling emotions after losses, so the pattern stays hidden.",
+      "Increasing size after a winning streak and giving it all back."
     ],
     quiz: [
-      { q: "What format should entry rules use?", a: "A checklist of yes/no conditions." },
-      { q: "How many conditions must be true to enter?", a: "All of them — any unmet condition means no trade." },
-      { q: "How do you know a rule is objective?", a: "Two people could check it on a chart and agree without discussion." }
+      { q: "Is a loss at your planned stop on a valid setup a mistake?", a: "No — it is a normal cost of running the strategy." },
+      { q: "What is the purpose of the cooldown after the daily loss limit?", a: "To stop trading while judgement is affected and prevent a chain of revenge trades." },
+      { q: "When may you increase position size to recover losses?", a: "Never — size always comes from the risk rule and stop distance." }
     ]
   },
 
   73: {
     what: [
-      "The Stop-Loss Rules and Exit Rules sections describe where your stop goes and every way a trade can end. Every trade has to end somehow; writing all the possible endings before you enter removes in-trade guesswork.",
-      "Stop placement is the price level where your trade idea is proven wrong — usually just beyond the level or structure point that justified the entry, such as below the swing low of a pullback. The stop is set at entry and is never moved further away.",
-      "Target rules define where you take profit: a fixed R multiple (for example 2R), the next key level, or a partial exit at one point and the remainder at another. Time exits close a trade that has not worked within a set period, or before the end of your session window.",
-      "Early invalidation covers situations where the setup breaks before the stop is hit — for example, a strong candle closing back through the level against you. Writing these in advance lets you exit early for a planned reason, not out of fear."
+      "Discipline in trading means doing what the plan says even when it feels wrong at that moment: skipping a tempting non-setup, taking a valid setup after two losses, holding to target when you want to exit, or stopping when the limit is hit.",
+      "Discipline is not a personality trait you either have or lack. It is mostly the result of habits and structure. A pre-session checklist makes sure you start prepared. If-then rules decide difficult moments in advance. A rule-following score after each session makes progress visible.",
+      "If-then rules are especially useful. Instead of a vague intention like 'I will be patient', you write 'If price is more than 1R from my level, then I do not enter.' The trigger is specific and observable, and the action is already decided, so there is nothing to negotiate in the moment.",
+      "A simple rule-following score is: trades that followed every rule / total trades, plus a note on valid setups you skipped. Track it per session in the Trading Journal. A rising score matters more than any virtual profit figure."
     ],
     why: [
-      "Undefined exits are where fear and greed do the most damage: holding losers, cutting winners and moving stops. Exit rules turn those decisions into routine actions.",
-      "Consistent exits also make your average R stable, which is essential for an honest comparison of backtest and simulation results later in the course."
+      "Your backtest results only apply if you follow the rules that produced them. Every rule break means you are trading an untested strategy.",
+      "Discipline is one of the eight skills in the Evaluation dashboard, and it improves the other seven — risk compliance, psychology and paper-trading scores all depend on it."
     ],
     how: [
-      "In the Playbook Stop-Loss Rules section, write where the stop goes for your setup and the small buffer you use beyond the level.",
-      "Add the non-negotiable: 'The stop can be moved closer to reduce risk (by rule) but never further away.'",
-      "In Exit Rules, write your target rule, any partial-exit rule, and when (if ever) you move the stop to breakeven.",
-      "Add a time exit: for example, 'If the trade has not reached 1R within a set number of candles, exit' and 'Close all positions before the end of my session window.'",
-      "List 1-3 early invalidation signals specific to your setup.",
-      "Test these exits on ten historical replays in the Trading Practice Lab and compare the average R with your backtest.",
-      "Log any exit that did not follow these rules in the Mistake Lab with the emotion behind it."
+      "Write a pre-session checklist of 5-7 items: plan saved, watchlist checked, levels marked, limits set in Paper, emotion rating noted, no-trade conditions read.",
+      "Turn your three most common rule breaks into if-then rules and add them to the Psychology Rules section of the Playbook.",
+      "Run the checklist before every paper session. If an item is not done, the session does not start.",
+      "After each session, calculate the rule-following score in the Trading Journal.",
+      "Mark every rule break in the Mistake Lab with the rule that was broken.",
+      "Review the score trend weekly in Analytics and celebrate process wins, not virtual profits."
     ],
     example: {
-      title: "Hypothetical stop-loss & exit rules template",
+      title: "Sample pre-session checklist and if-then rules (HYPOTHETICAL)",
       lines: [
-        "STOP: just below the pullback swing low, plus a small fixed buffer. Set at entry. Never moved further away.",
-        "TARGET: exit at 2R or at the next marked resistance level, whichever comes first.",
-        "PARTIAL (optional): take half at 1R, move stop on the remainder to breakeven.",
-        "TIME EXIT: if 1R is not reached within ___ candles, exit at market. Flat before the session window ends.",
-        "EARLY INVALIDATION: a full-bodied candle closes back below the support level → exit, logged as planned.",
-        "Hypothetical check: entry 50.00, stop 49.50 (risk 0.50 = 1R), target 51.00 (2R)."
+        "Checklist: plan saved · watchlist liquid · levels marked · Paper limits on · emotion < 6/10 · no-trade list read.",
+        "If I have not completed the checklist, then I do not start the replay.",
+        "If my setup is not fully present, then I lock No-Trade and wait.",
+        "If I want to exit before target without an invalidation signal, then I write the urge down instead.",
+        "Session score: 4 of 5 trades followed every rule = 80%; 1 valid setup skipped.",
+        "Next session goal: 100% rules followed on fewer, cleaner trades."
       ]
     },
     mistakes: [
-      "Placing stops at round numbers or random distances instead of where the idea is invalidated — they get hit for no structural reason.",
-      "Moving a stop further away to avoid a loss — it turns a planned small loss into an unplanned large one.",
-      "Having no time exit — trades that go nowhere tie up attention and often drift into losses.",
-      "Exiting early without a written reason — that is fear, and it shrinks your average winner.",
-      "Changing exit rules after every trade — you need a consistent sample to know whether they work."
+      "Relying on willpower in the moment instead of rules decided in advance.",
+      "Writing vague rules ('be patient') that cannot be checked.",
+      "Skipping the checklist on days you feel confident.",
+      "Measuring progress by virtual profit instead of rule-following.",
+      "Excusing rule breaks when the trade happened to win."
     ],
     quiz: [
-      { q: "Where should a stop-loss be placed?", a: "At the point where the trade idea is invalidated, usually just beyond the structure or level that justified entry." },
-      { q: "Name three ways a trade can be exited by rule other than the stop.", a: "Target (R multiple or level), time exit, and early invalidation signal." },
-      { q: "In which direction can a stop be moved?", a: "Only closer to reduce risk by rule — never further away." }
+      { q: "What makes an if-then rule better than a general intention?", a: "It has a specific, observable trigger and a pre-decided action." },
+      { q: "How do you calculate a simple rule-following score?", a: "Trades that followed every rule divided by total trades, noting skipped valid setups." },
+      { q: "Is a rule-breaking trade that won a good trade?", a: "No — it still broke the plan and makes your data less reliable." }
     ]
   },
 
   74: {
     what: [
-      "Risk Rules are the numbers that keep any single trade, day or week from doing serious damage. There are four core rules: risk per trade, maximum daily loss, maximum trades per session, and minimum reward-to-risk (R:R).",
-      "Risk per trade is usually expressed as a percentage of the (simulated) account — for example a hypothetical 0.5% or 1%. Position size is then calculated from that amount divided by the distance from entry to stop, so every trade risks the same amount regardless of where the stop sits.",
-      "Max daily loss is the point at which you stop practising for the day, often expressed in R (for example 3R). Max trades caps how many trades you take per session. Together they stop revenge trading and overtrading from turning a normal day into a disaster.",
-      "Minimum R:R is the smallest planned reward relative to risk that you will accept, such as 2:1. It filters out trades where the target is too close to justify the risk, and links directly back to the last line of your entry checklist."
+      "The Playbook is your personal rulebook for how you practise trading ETFs in this app. It has ten sections: My Market, My Strategy, Entry Rules, Stop-Loss Rules, Exit Rules, Risk Rules, No-Trade Conditions, Psychology Rules, Best Setups and Common Mistakes. Over the next three days you fill them in from your own evidence.",
+      "My Market describes where you practise: which ETFs (for example NIFTYBEES and BANKBEES), why they suit you (liquidity, tight spread, price close to iNAV), which session times you trade (for example 09:30-14:45 IST) and which ETFs you avoid (thinly traded or wide-spread ones).",
+      "My Strategy describes the one strategy you have tested most honestly — trend, breakout, pullback or range — in plain words: what market condition it needs, what the setup looks like, which timeframe and indicators it uses, and what your backtest and paper results showed.",
+      "Entry Rules, Stop-Loss Rules and Exit Rules belong with the strategy. Write them so precisely that a stranger could follow them and get the same trades. Vague rules ('enter when it looks strong') are the first thing to fix."
     ],
     why: [
-      "Risk rules are what allow a strategy with a modest edge to survive normal losing streaks. Without them, one emotional session can outweigh weeks of careful work.",
-      "Fixed risk is also the main psychological stabiliser: when each loss is small and expected, fear and greed have far less to grab onto."
+      "A written Playbook turns everything you learned into one reference you can check before and during every session. Without it, rules drift from week to week and your results stop meaning anything.",
+      "Writing it also exposes gaps. If you cannot describe your exit rule clearly, you probably have not been following one."
     ],
     how: [
-      "In the Playbook Risk Rules section, write your risk per trade as a percentage of the practice account.",
-      "Write the position-size formula next to it: size = (account × risk %) / (entry - stop distance). Use the app's calculator if available, or work it out before each simulated trade.",
-      "Set a max daily loss in R and a max weekly loss in R.",
-      "Set a max number of trades per session, based on how many valid setups your backtest typically produced.",
-      "Set a minimum R:R and add it as a line in your entry checklist.",
-      "Check Analytics for your largest daily loss in simulation so far. If it exceeds your new limit, note what happened and which rule would have stopped it."
+      "Open the Playbook and read the ten section headings before writing anything.",
+      "In My Market, list your ETFs with their liquidity check results from Trading → Practice and the session times you trade.",
+      "List ETFs you will not trade and why (low volume, wide spread, large premium/discount to iNAV).",
+      "In My Strategy, describe one strategy and summarise its Backtest and Paper results, including out-of-sample numbers.",
+      "Fill Entry Rules, Stop-Loss Rules and Exit Rules with specific, checkable conditions.",
+      "Read each rule and ask: 'Could a stranger follow this and take the same trade?' Rewrite any that fail.",
+      "Note the evidence behind each rule in the Trading Journal (which backtest, which paper sessions)."
     ],
     example: {
-      title: "Hypothetical risk rules with a sizing calculation",
+      title: "Sample Playbook sections — My Market & My Strategy (HYPOTHETICAL)",
       lines: [
-        "Practice account (hypothetical): 10,000 simulated units.",
-        "Risk per trade: 1% → 100 units per trade.",
-        "Example trade: entry 40.00, stop 39.60 → stop distance 0.40 → size = 100 / 0.40 = 250 shares (simulated).",
-        "Max daily loss: 3R (300 units). Max weekly loss: 6R.",
-        "Max trades per session: 3. Minimum planned R:R: 2:1.",
-        "If any limit is hit → stop, journal, and switch to review tasks for the rest of the session."
+        "My Market: NIFTYBEES and BANKBEES on NSE. Both pass volume, traded value and spread checks.",
+        "Avoid: thin sector ETFs with wide spreads; any ETF trading far from iNAV.",
+        "Session: entries 09:30-14:45 IST, flat by 15:15. No entries in the first 15 minutes.",
+        "My Strategy: VWAP pullback in an intraday uptrend, 5m chart.",
+        "Entry: price above VWAP and rising 20 EMA; pullback touches VWAP; bullish close → limit buy.",
+        "Stop: below pullback low. Exit: 2R target, or close below VWAP, or 15:10 IST.",
+        "Evidence: 10-session backtest plus 8 paper sessions (small sample, still learning)."
       ]
     },
     mistakes: [
-      "Using a fixed share size instead of a fixed risk amount — risk then varies wildly with stop distance.",
-      "Setting a max daily loss but continuing 'just one more' — a limit you ignore is not a limit.",
-      "Choosing a risk percentage that feels exciting — larger risk magnifies emotions and drawdowns.",
-      "Accepting trades below your minimum R:R because the setup looks good — it erodes expectancy over many trades.",
-      "Not recalculating size each trade — different stop distances need different sizes for the same risk."
+      "Listing many ETFs and strategies instead of the few you actually tested.",
+      "Copying rules from somewhere else instead of from your own evidence.",
+      "Writing vague entry rules that cannot be checked bar by bar.",
+      "Leaving out the exit rule, or writing 'exit when it feels right'.",
+      "Overstating results — a small sample is a learning stage, not proof."
     ],
     quiz: [
-      { q: "What are the four core risk rules?", a: "Risk per trade, max daily loss, max trades per session, and minimum R:R." },
-      { q: "How is position size calculated from fixed risk?", a: "Risk amount (account × risk %) divided by the entry-to-stop distance." },
-      { q: "Why have a max daily loss?", a: "It stops a normal losing day from spiralling, especially through revenge trading." }
+      { q: "What belongs in the My Market section?", a: "Which ETFs and session times you practise, why, and which ETFs you avoid." },
+      { q: "What test should every entry rule pass?", a: "A stranger could follow it and take the same trade." },
+      { q: "Why describe only one strategy?", a: "It is the one you have tested; focus keeps the data clean and execution consistent." }
     ]
   },
 
   75: {
     what: [
-      "The No-Trade Conditions and Psychology Rules sections describe when you will not trade and the mental rules you commit to. They are just as important as entry rules, because some of the best decisions in a session are the trades you do not take.",
-      "A no-trade list covers market conditions (choppy price with no structure, major scheduled news, very low volume, outside your session window) and personal conditions (tired, unwell, rushed, upset). If any item applies, you do not trade — you can still review or replay.",
-      "A pre-session state check is a short honest look at yourself before starting: sleep, stress, focus and mood, each rated quickly. It turns 'I feel fine' into a number you can compare with your results over time.",
-      "The post-loss routine and walk-away rules are your pre-commitments for difficult moments: what you do after a loss, after hitting your limits, or when a specific emotion passes a threshold. These are the if-then rules you developed during the psychology week, now made official."
+      "Risk Rules are the numbers that keep your simulated account safe: risk per trade (for example 0.5% of the virtual account), daily loss limit (for example 2R), maximum trades per session, the cooldown after the limit, and the rule that size never increases after wins or to recover losses.",
+      "These rules should match your Trading → Paper settings exactly. The Playbook says what the rules are and why; the simulator enforces them. If the two ever differ, update one or the other between sessions — never during one.",
+      "No-Trade Conditions cover both the market and you. Market conditions: low volume or traded value, a spread wider than usual, a large premium or discount to iNAV, a choppy session crossing VWAP many times, the expected move too small to cover costs. Personal conditions: tired, ill, rushed, upset, or still thinking about the last loss.",
+      "No-trade conditions are powerful because they remove whole groups of bad trades at once. One line such as 'no trades when the spread is wider than 0.05%' can prevent many losing entries in thin ETFs."
     ],
     why: [
-      "Most large losses — in simulation too — come from trading in the wrong conditions or the wrong state, not from the strategy itself. Written no-trade rules remove those situations before they begin.",
-      "Linking psychology to specific, observable rules makes the psychology skill on your Evaluation dashboard measurable instead of vague."
+      "Risk Rules and No-Trade Conditions are the parts of the Playbook that should change least. Strategies evolve, but protecting the account and knowing when to sit out stay constant.",
+      "Writing why each rule exists makes it easier to keep when you are tempted to break it, because you remember what the rule protects you from."
     ],
     how: [
-      "In the Playbook No-Trade Conditions section, list 4-6 market conditions and 3-4 personal conditions that mean no trading today.",
-      "In Psychology Rules, write your pre-session state check: sleep, stress, focus and mood rated 1-5, with a minimum total to trade.",
-      "Write your post-loss routine as numbered steps (pause timer, breathing, journal, re-check).",
-      "Write 2-3 walk-away rules: for example, hitting max daily loss, two rule breaks in one session, or an emotion rated above 7/10.",
-      "Add your top three if-then rules from the Day 70 review (from the Knowledge Vault).",
-      "Connect the state check to the Trading Journal mindset check so you complete it before every session.",
-      "After a week, compare state-check scores with process scores in Analytics to see whether your thresholds are set correctly."
+      "Open the Playbook's Risk Rules section and write each limit as a number, not a feeling.",
+      "Open Trading → Paper settings and confirm every number matches.",
+      "Add the size rule: 'Size = risk per trade / stop distance. It never grows after wins or losses.'",
+      "Add the cooldown rule: what you do when the daily loss limit is hit, step by step.",
+      "In No-Trade Conditions, write at least four market conditions and two personal conditions.",
+      "Use Trading → Backtest cost settings to set a minimum expected move that covers round-trip costs; add it as a no-trade condition.",
+      "Under each rule, write one sentence on why it exists."
     ],
     example: {
-      title: "Hypothetical no-trade & psychology rules template",
+      title: "Sample Risk Rules and No-Trade Conditions (HYPOTHETICAL)",
       lines: [
-        "NO-TRADE (market): no clear structure on context TF · within ___ minutes of major scheduled news · outside session window.",
-        "NO-TRADE (personal): under ___ hours of sleep · unwell · rushed or distracted · already upset before starting.",
-        "STATE CHECK: sleep __/5 · stress __/5 (5 = calm) · focus __/5 · mood __/5 → trade only if total >= 14.",
-        "POST-LOSS: 1) 10-minute timer 2) four slow breaths 3) journal entry 4) re-read checklist before any new trade.",
-        "WALK AWAY IF: max daily loss hit · two rule breaks in one session · any emotion above 7/10.",
-        "IF-THEN: IF I feel the urge to chase → THEN I log it as a missed trade and wait for the next setup."
+        "Risk per trade: 0.5% of virtual account (₹500 on ₹1,00,000). Max 3 trades per session.",
+        "Daily loss limit: -2R → cooldown, journal, no new session today.",
+        "Size never increases after wins or to recover losses.",
+        "No trade if: spread > 0.05%; price far from iNAV; VWAP crossed 4+ times by 11:00.",
+        "No trade if: target move < 3× round-trip costs (costs from the app's cost model).",
+        "No trade if: I slept badly, I feel rushed, or emotion rating is 7+/10."
       ]
     },
     mistakes: [
-      "Only listing market conditions — your own state is often the bigger risk factor.",
-      "Making walk-away rules optional — they must be automatic or they will be negotiated away.",
-      "Skipping the state check on 'good' days — over-confidence is also a state worth noticing.",
-      "Writing psychology rules as wishes ('stay calm') instead of actions — only actions can be followed and measured.",
-      "Never reviewing thresholds — rules should be adjusted with data from your journal."
+      "Writing risk rules as feelings ('small size') instead of numbers.",
+      "Playbook limits that differ from Paper settings.",
+      "Only listing market no-trade conditions and ignoring your own state.",
+      "Forgetting costs — trading moves too small to cover round-trip charges.",
+      "Treating the cooldown as optional on 'special' days."
     ],
     quiz: [
-      { q: "What two kinds of conditions belong on a no-trade list?", a: "Market conditions (choppy, news, low volume, outside session) and personal conditions (tired, unwell, upset)." },
-      { q: "What is the purpose of a pre-session state check?", a: "To rate your readiness honestly before trading and stop if it is below your threshold." },
-      { q: "Give an example of a walk-away rule.", a: "Stop for the day after hitting max daily loss, or after two rule breaks in one session." }
+      { q: "Where are risk rules written and where are they enforced?", a: "Written in the Playbook's Risk Rules; enforced by Trading → Paper's risk limits." },
+      { q: "Give two personal no-trade conditions.", a: "Feeling tired, rushed or upset; high emotion rating after a loss." },
+      { q: "Why add a minimum expected move to no-trade conditions?", a: "So you skip trades whose likely move would not cover round-trip costs." }
     ]
   },
 
   76: {
     what: [
-      "The Best Setups and Common Mistakes sections are built from your data, not from opinion. Best Setups documents the variations of your strategy that performed best in backtesting and simulation. Common Mistakes documents the errors you make most often, from the Mistake Lab.",
-      "Best setups from data means sorting your trades by setup variant, time of day, or market condition and finding where your results were strongest — with enough trades in each group to mean something. A variant with a hypothetical 5 trades is a hint; one with 40 is evidence.",
-      "Screenshot examples make each setup concrete. A marked-up chart of a textbook example, with entry, stop and target drawn, is faster to recognise in real time than any written description.",
-      "The prevention plan pairs each common mistake with a specific fix — usually an if-then rule or a change to your checklist. The goal is not to list your faults but to build guardrails around them."
+      "Best Setups is the section where you describe the specific versions of your strategy that you execute best. Your evidence comes from the Trading Journal, Paper session reports and Analytics: which setups did you follow cleanly, with good location and planned exits?",
+      "Each best setup should have a name, the market context it needs, a precise checklist of what must be present, and a reference to a chart example from a replay or paper session. For example: 'A-setup: first VWAP pullback after an opening-range breakout up, on NIFTYBEES, before 11:30 IST.'",
+      "Common Mistakes is the opposite list. The Mistake Lab and Psychology journal show which errors repeat: chasing, early exits, widening stops, trading thin ETFs, revenge trades after losses. Pick your top three by frequency or by damage in R.",
+      "Each mistake needs a prevention rule, ideally written as an if-then rule and linked to Psychology Rules. A mistake with no prevention rule is just a confession; with one, it becomes a plan."
     ],
     why: [
-      "Focusing on what works and guarding against what repeatedly goes wrong is the most efficient way to improve. These two sections make your Playbook personal and grounded in evidence.",
-      "Reading them before each session primes you to spot your best setups and to catch your typical mistakes before they happen."
+      "Narrowing down to the setups you execute best focuses your attention on the moments where your process is strongest, and helps you skip the marginal ones.",
+      "Naming your repeated mistakes, with rules to prevent them, turns past losses in simulation into protection for future sessions."
     ],
     how: [
-      "Open Analytics and group your backtest and simulation trades by setup variant. Note sample size, win rate and average R for each.",
-      "Choose your top 1-3 variants with a reasonable sample and list them in Best Setups with one-line descriptions.",
-      "Attach or describe one marked-up screenshot per setup from your Trading Practice Lab replays: entry, stop, target, and why it qualified.",
-      "Open the Mistake Lab, sort by frequency, and pick your top 3-5 mistakes.",
-      "For each mistake, write: what it looks like, the trigger, its typical cost in R, and a prevention if-then rule.",
-      "Add the prevention rules to the relevant Playbook sections (Entry, Exit, Risk or Psychology) so they are enforced, not just listed."
+      "Open Analytics and filter paper trades by setup tag. Note which tags you executed with the fewest rule breaks.",
+      "Write one to three Best Setups, each with context, checklist and a reference chart from Replay or Paper.",
+      "Open the Mistake Lab and sort mistakes by frequency and by total R lost.",
+      "Write your top three in Common Mistakes, each with a short description of what it looks like on the chart.",
+      "Add a prevention if-then rule for each mistake and copy the rules into Psychology Rules.",
+      "Add the emotions that usually come before each mistake from your Psychology journal.",
+      "Ask Trading → Ask AI to review a section for vague wording, then rewrite it in your own words."
     ],
     example: {
-      title: "Hypothetical Best Setups & Common Mistakes section",
+      title: "Sample Best Setups and Common Mistakes (HYPOTHETICAL)",
       lines: [
-        "BEST SETUP A (hypothetical data): trend pullback to VWAP in first 90 min — 42 trades, 48% win rate, average +0.5R per trade.",
-        "BEST SETUP B: pullback to prior-day high retest — 25 trades, 44% win rate, average +0.3R (smaller sample; keep testing).",
-        "AVOID: same setup after midday — 30 trades, average -0.2R → added to No-Trade Conditions.",
-        "MISTAKE 1: early exit before target (9 times, about -0.6R lost vs. plan) → IF trade is between entry and target THEN no action until rule triggers.",
-        "MISTAKE 2: chasing extended moves (6 times) → IF entry is beyond max distance from level THEN no trade.",
-        "MISTAKE 3: trading after a loss without pause (4 times) → mandatory 10-minute timer."
+        "A-setup: first VWAP pullback after opening-range breakout up — NIFTYBEES, 5m, before 11:30 IST.",
+        "Checklist: OR high broken on above-average volume · pullback holds VWAP · bullish close · spread normal.",
+        "Mistake 1: chasing breakouts (5 times, -4.5R simulated). Rule: if > 1R from level, no entry.",
+        "Mistake 2: exiting before target (6 times). Rule: if no invalidation signal, the take-profit order stays.",
+        "Mistake 3: trading after two losses with lower standards. Rule: after 2 losses, A-setup only.",
+        "Emotion before Mistake 1: excitement 8/10. Before Mistake 3: frustration 7/10."
       ]
     },
     mistakes: [
-      "Picking best setups from memory — memorable trades are not the same as profitable ones.",
-      "Trusting tiny samples — a few lucky trades can make a variant look great.",
-      "Listing mistakes without a prevention rule — awareness alone rarely changes behaviour.",
-      "Skipping screenshots — visual examples are much faster to recognise during a live replay.",
-      "Hiding embarrassing mistakes from the list — the most uncomfortable ones are usually the most costly."
+      "Choosing best setups from memory instead of from your own data.",
+      "Describing setups too loosely to check bar by bar.",
+      "Listing ten mistakes and fixing none — focus on the top three.",
+      "Writing mistakes without prevention rules.",
+      "Calling a setup 'best' because of one big simulated winner."
     ],
     quiz: [
-      { q: "Where should your Best Setups list come from?", a: "Your backtest and simulation data, grouped by setup variant with adequate sample sizes." },
-      { q: "What should each Common Mistake entry include?", a: "What it looks like, its trigger, its typical cost, and a specific prevention rule." },
-      { q: "Why add screenshot examples?", a: "Marked-up charts make setups faster and more reliable to recognise in real time." }
+      { q: "Where does evidence for Best Setups come from?", a: "Your Trading Journal, Paper session reports and Analytics." },
+      { q: "What should each Common Mistake be paired with?", a: "A prevention rule, ideally an if-then rule in Psychology Rules." },
+      { q: "How do you choose the top three mistakes?", a: "By how often they occur and how much R they cost in the Mistake Lab." }
     ]
   },
 
   77: {
     what: [
-      "This review day consolidates the Playbook Creation week. You have written all ten Playbook sections: My Market, My Strategy, Entry Rules, Stop-Loss Rules, Exit Rules, Risk Rules, No-Trade Conditions, Psychology Rules, Best Setups and Common Mistakes.",
-      "Together they form one document that answers every question a session can raise: what to trade, when, how to enter, where to exit, how much to risk, when to stand aside, how to manage yourself, what works best and what to watch out for.",
-      "Today's job is quality control. Re-read your journal entries and the Playbook itself, find the section you are least sure about, and rewrite it more clearly. A Playbook is only useful if it is specific, short and actually read.",
-      "Then test it: run a full practice session using only the Playbook as your guide and see where it leaves you uncertain. Any moment of uncertainty marks a rule that needs sharpening."
+      "This week turned from charts to the trader. Day 71 covered FOMO and overtrading: chasing ruins reward-to-risk, extra trades add costs, and a missed-trades list and max-trades limit keep them in check. Day 72 covered losses, revenge trading and the cooldown: losses are normal, and size never grows to recover them.",
+      "Day 73 built discipline from habits: a pre-session checklist, if-then rules and a rule-following score. Days 74-76 wrote the Playbook: My Market and My Strategy, Entry, Stop-Loss and Exit Rules, Risk Rules and No-Trade Conditions, then Best Setups, Common Mistakes and Psychology Rules — all from your own evidence.",
+      "Today you read the whole Playbook end to end in one sitting, check each rule against your journals, and test it in one paper session. Any rule you cannot follow or check in the moment gets rewritten.",
+      "A Playbook is a living document. It should be updated between sessions as evidence grows, but never edited mid-session to justify a trade."
     ],
     why: [
-      "A Playbook that is vague, too long or contradictory will be ignored under pressure. Reviewing it now, before the Final Evaluation week, ensures the evaluation measures a clear process.",
-      "The act of re-reading and rewriting also moves the rules from paper into memory, so you can apply them quickly during replays."
+      "Writing a Playbook in parts can leave gaps and contradictions between sections. Reading it whole and testing it reveals them before they matter.",
+      "Linking psychology habits to written rules is what makes them last; the weekly review checks that the link is real."
     ],
     how: [
-      "Read the entire Playbook aloud and time it. Aim for about two minutes; cut or simplify anything that slows you down.",
-      "For each of the ten sections, mark it green (clear and tested), amber (written but untested) or red (vague or missing).",
-      "Pick your weakest section and rewrite it from memory, then compare with the original and keep the clearer version.",
-      "Check for contradictions — for example, a minimum R:R in Risk Rules that your Exit Rules targets cannot achieve.",
-      "Run one Trading Practice Lab replay using only the Playbook. Note every moment you were unsure what to do.",
-      "Re-read this week's journal entries and save your best insight to the Knowledge Vault.",
-      "Update the strategy and discipline ratings on the Evaluation dashboard based on how well the replay followed the Playbook."
+      "Read all ten Playbook sections in order without editing, and mark anything unclear.",
+      "Check that Risk Rules match Trading → Paper settings exactly.",
+      "Compare Psychology Rules with your Psychology journal: does each rule address a trigger you actually logged?",
+      "Run one paper session using only the Playbook, with the pre-session checklist first.",
+      "After the session, score rule-following and note any rule that was hard to apply.",
+      "Rewrite vague or contradictory rules and date the change.",
+      "Answer this week's quizzes from memory, then check."
     ],
     example: {
-      title: "Hypothetical Playbook self-review",
+      title: "Sample weekly psychology & Playbook review (HYPOTHETICAL)",
       lines: [
-        "Read-through time: 3 min 10 s → trimmed My Strategy and Best Setups → 2 min 5 s.",
-        "Green: My Market, Entry Rules, Risk Rules, No-Trade Conditions.",
-        "Amber: Exit Rules (time exit never tested), Best Setups (setup B sample still small).",
-        "Red: Psychology Rules — 'stay calm after losses' rewritten as 'IF loss THEN 10-min timer + journal'.",
-        "Contradiction found: minimum R:R 2:1, but partial exit at 1R lowers average R → noted to compare both in next replays.",
-        "Replay test: one moment of uncertainty (news candle) → added a no-trade rule for scheduled news."
+        "Playbook read-through: 2 vague rules found (exit 'if weak', avoid 'thin' ETFs).",
+        "Rewritten: exit if a 5m bar closes below VWAP; avoid ETFs with spread > 0.05%.",
+        "Psychology journal: FOMO urges 7 this week (down from 11), 1 revenge trade, 1 cooldown respected.",
+        "Test session (historical replay): 3 trades, 3 rule-compliant, 1 urge logged not acted on.",
+        "Virtual result: +0.8R (simulated, small sample).",
+        "Next week focus: keep the checklist streak going into the Final Evaluation phase."
       ]
     },
     mistakes: [
-      "Treating the Playbook as finished — it is a living document that should improve with data.",
-      "Letting it grow too long — a Playbook that takes ten minutes to read will not be read before each session.",
-      "Ignoring contradictions between sections — they create in-the-moment confusion and inconsistent execution.",
-      "Reviewing only the sections you like — the weak section is where the review pays off.",
-      "Not testing the Playbook in a replay — uncertainty only shows up when you try to use it."
+      "Writing the Playbook and never reading it again.",
+      "Editing rules mid-session to justify a trade.",
+      "Keeping psychology rules that do not match any trigger you actually experience.",
+      "Leaving contradictions between sections, such as different risk numbers.",
+      "Judging the Playbook by one session's virtual P&L."
     ],
     quiz: [
-      { q: "Name the ten Playbook sections.", a: "My Market, My Strategy, Entry Rules, Stop-Loss Rules, Exit Rules, Risk Rules, No-Trade Conditions, Psychology Rules, Best Setups, Common Mistakes." },
-      { q: "What three qualities should a good Playbook have?", a: "Specific, short (readable in about two minutes) and actually read before every session." },
-      { q: "How do you find rules that need sharpening?", a: "Run a replay using only the Playbook and note every moment of uncertainty." }
+      { q: "When is it acceptable to change a Playbook rule?", a: "Between sessions, based on evidence, with the change dated — never mid-session." },
+      { q: "What is the size rule after wins or losses?", a: "Size never increases after wins or to recover losses; it comes from risk / stop distance." },
+      { q: "Why test the Playbook in a paper session?", a: "To find rules that are vague or hard to follow in the moment." }
     ]
   },
 
   78: {
     what: [
-      "The Final Evaluation week begins with a knowledge review of Phases 1-5: foundations, candlesticks, support and resistance levels, and market structure and indicators. The goal is to explain each concept without notes, then mark the areas where you hesitate.",
-      "Foundations include how markets and orders work, bid and ask, spread, liquidity, volume, timeframes and the difference between investing, swing trading and day trading. Candles cover anatomy (open, high, low, close, body, wicks) and common patterns such as hammers, engulfing candles and dojis.",
-      "Levels include support, resistance, role reversal, prior-day highs and lows and why price reacts at certain areas. Structure and indicators cover trends (higher highs and higher lows), ranges, breakouts and pullbacks, moving averages, VWAP, volume and momentum indicators — and their limitations.",
-      "Explaining without notes is a well-known learning technique: if you can teach it simply, you understand it. Where you cannot, you have found a gap — which is useful information, not a failure."
+      "The final phase begins with a knowledge review. Before judging your strategy, execution or psychology, you check that the foundations are solid: what an ETF is, how it trades on the NSE, and what affects the price you actually get.",
+      "Core ideas to revisit: ETF units trade on the exchange like shares while tracking an index or asset; market makers provide liquidity; iNAV is the indicative value of the underlying basket, and the ETF can trade at a premium or discount to it. Many ETFs are thinly traded, so volume, traded value and spread must be checked before any trade.",
+      "Costs: an intraday ETF round trip pays brokerage (often the lower of ₹20 or 0.03% per order at discount brokers), STT of 0.025% on the sell side for equity ETFs (none for gold or liquid ETFs), an NSE transaction charge around 0.00297%, SEBI fee of ₹10 per crore, stamp duty of 0.003% on buys and 18% GST on brokerage plus exchange and SEBI charges. Rates change, and the app lets you configure them.",
+      "Charts and context: candlesticks, 1m/5m/15m timeframes, volume, VWAP, opening range and session phases (09:15-15:30 IST, pre-open 09:00-09:15), gaps, support and resistance, market structure, trending vs ranging vs choppy conditions, sector rotation and why gold ETFs behave differently from equity ETFs."
     ],
     why: [
-      "Every later skill — chart reading, strategy, risk — rests on these foundations. Gaps here quietly cause errors later, like misreading a candle or mislabelling a trend.",
-      "This review provides the evidence for the knowledge score on your Evaluation dashboard, so the final rating reflects what you actually know."
+      "Every later skill sits on these foundations. A strategy that ignores spread or costs, or a chart read that ignores iNAV and liquidity, can look fine in theory and fail in simulation.",
+      "The Evaluation dashboard scores knowledge as one of its eight skills; reviewing now shows you which topics need another pass."
     ],
     how: [
-      "Make a list of 20-30 key terms from Phases 1-5 (use your lesson history and Knowledge Vault).",
-      "For each term, explain it out loud or in writing in two sentences without looking anything up.",
-      "Mark each one: confident, shaky or unknown.",
-      "Re-read the lessons for every shaky or unknown term and rewrite the explanation in your own words.",
-      "Retake the quizzes from the weekly review days in Phases 1-5 and note your scores.",
-      "Record your knowledge rating on the Evaluation dashboard, backed by the count of confident terms.",
-      "Add your weakest two topics to next week's timetable for focused revision."
+      "Re-read the key points for Days 1-21 on the Journey page and mark any you cannot explain in one sentence.",
+      "Retake the quizzes for Phases 1-3 without looking at answers, then check and note wrong answers.",
+      "Recalculate the cost of one hypothetical NIFTYBEES round trip using the cost model in Trading → Backtest settings.",
+      "Open Trading → Markets and explain to yourself VWAP, the opening range and today's structure on an ETF chart.",
+      "Run the ETF eligibility check in Trading → Practice on three ETFs and explain each result.",
+      "Ask Trading → Ask AI to quiz you on your weakest topic.",
+      "List your three weakest topics in the Trading Journal with a date to revisit each."
     ],
     example: {
-      title: "Hypothetical knowledge self-check grid",
+      title: "Sample cost recalculation (HYPOTHETICAL — rates change, check app settings)",
       lines: [
-        "Foundations — spread, liquidity, order types: confident · timeframes: confident · market vs. limit orders: shaky.",
-        "Candles — anatomy, hammer, engulfing: confident · doji in context: shaky.",
-        "Levels — support/resistance, role reversal: confident · prior-day levels: confident.",
-        "Structure & indicators — trend definition: confident · VWAP use: shaky · momentum indicator limits: unknown.",
-        "Score: 22 of 28 confident (hypothetical self-assessment) → 79%.",
-        "Focus list: order types, doji context, VWAP, indicator limitations."
+        "Trade: buy and sell 1,000 NIFTYBEES at about ₹260 → turnover ~ ₹5,20,000.",
+        "Brokerage: lower of ₹20 or 0.03% per order → ₹20 × 2 = ₹40.",
+        "STT: 0.025% of sell value ₹2,60,000 = ₹65. Stamp duty: 0.003% of buy ₹2,60,000 = ₹7.80.",
+        "Exchange charge ~ 0.00297% × ₹5,20,000 ~ ₹15.44. SEBI fee ~ ₹0.52.",
+        "GST 18% on (₹40 + ₹15.44 + ₹0.52) ~ ₹10.07.",
+        "Total ~ ₹139 per round trip → the price must move about ₹0.14 per unit just to break even."
       ]
     },
     mistakes: [
-      "Reviewing with notes open — recognition feels like understanding but is not the same as recall.",
-      "Skipping topics that feel basic — foundation gaps cause errors in advanced work.",
-      "Rating knowledge by gut feeling — count confident terms so the score reflects evidence.",
-      "Only re-reading shaky topics — rewriting them in your own words is what fixes the gap.",
-      "Trying to review everything in one sitting — split it into blocks to keep recall honest."
+      "Skipping the knowledge review because the early lessons 'feel easy'.",
+      "Forgetting that STT and stamp duty apply on different sides of the trade.",
+      "Ignoring premium/discount to iNAV when judging an ETF's price.",
+      "Assuming cost rates never change instead of checking the app settings.",
+      "Reviewing passively by re-reading rather than testing yourself with quizzes."
     ],
     quiz: [
-      { q: "What four areas does today's knowledge review cover?", a: "Foundations, candles, levels, and structure & indicators." },
-      { q: "Why explain concepts without notes?", a: "Recall without notes shows real understanding; it exposes gaps that re-reading hides." },
-      { q: "What should you do with shaky topics?", a: "Re-read the lesson, rewrite the idea in your own words and schedule focused revision." }
+      { q: "What is iNAV and why does it matter?", a: "The indicative value of the ETF's basket; the ETF can trade at a premium or discount to it." },
+      { q: "On which side is STT charged for intraday equity ETF trades?", a: "The sell side, at 0.025% (gold and liquid ETFs have none) — rates can change." },
+      { q: "What should you check before trading any ETF intraday?", a: "Volume, traded value, spread and premium/discount to iNAV." }
     ]
   },
 
   79: {
     what: [
-      "The Technical Analysis Review tests your chart-reading skill: you mark up five fresh charts completely, using only historical data in the Trading Practice Lab, and decide whether your setup is present or not.",
-      "Full chart markup follows a fixed order. Structure first: is the context timeframe trending up, down or ranging? Where are the swing highs and lows? Levels second: mark support, resistance, prior-day highs and lows and any other key areas.",
-      "Then candles: what are the candles doing at or near those levels — rejection, indecision, strong continuation? Finally the setup decision: does the chart meet every line of your entry checklist, yes or no?",
-      "'No setup' is a perfectly valid answer and often the most common one. The skill being tested is not finding trades — it is reading the chart accurately and applying your rules consistently."
+      "Today you review the four strategies you studied — trend-following, breakout, pullback and range-bound — and the backtests you ran on them. The aim is not to pick the one that made the most simulated money but to find the one you understand best and tested most honestly.",
+      "For each strategy, check that you can state the exact rules: the market condition it needs, entry trigger, stop placement, exit rule and when not to use it. If you cannot write the rules in a few lines, the backtest results are hard to trust because you do not know exactly what was tested.",
+      "Then review backtest quality. Did it use next-bar fills and no look-ahead? Did it include the Indian cost model and realistic slippage? Did you separate training and out-of-sample periods, and did out-of-sample results hold up? How many trades were in the sample?",
+      "Warning signs include a great training result that collapses out-of-sample, very few trades, many tweaked parameters, or results that only work on one ETF in one period. These suggest overfitting or luck rather than a robust edge."
     ],
     why: [
-      "Chart reading underpins every simulated trade. A consistent markup routine reduces errors such as trading against the trend or ignoring a nearby level.",
-      "This exercise produces the evidence for the chart-reading score on your Evaluation dashboard."
+      "Your Playbook strategy should rest on the most honest evidence you have. Reviewing strategies and backtests together shows whether that evidence is solid or fragile.",
+      "Strategy and backtesting are both scored skills in the Evaluation; this review prepares you for them."
     ],
     how: [
-      "In the Trading Practice Lab, choose five historical charts you have not seen before (use random or unfamiliar replay dates).",
-      "For each chart, mark structure on the context timeframe first: label trend or range and the last two swing points.",
-      "Mark key levels second: at least support, resistance and prior-day high/low.",
-      "Read the candles at those levels and write one sentence on what they suggest.",
-      "Run your entry checklist and record: setup present (with entry, stop, target) or no setup (with the reason).",
-      "Play the replay forward and compare what happened. Note any markup errors, not just whether a trade would have won.",
-      "Score yourself out of 5 for markup accuracy and record it on the Evaluation dashboard."
+      "Open Strategy Lab and write the rules of each strategy in five lines or fewer.",
+      "Open your saved Trading → Backtest reports and note trades, win rate, profit factor, max drawdown and expectancy for each.",
+      "For each report, confirm costs and slippage were on and that training and out-of-sample results were both recorded.",
+      "Re-run your Playbook strategy on a new out-of-sample date range you have not used before.",
+      "Compare results across at least two ETFs, such as NIFTYBEES and BANKBEES.",
+      "Flag any strategy with fewer than about 30 trades as 'insufficient sample'.",
+      "Summarise what your backtests do and do not show in the Trading Journal."
     ],
     example: {
-      title: "Hypothetical markup log for one replay chart",
+      title: "Sample strategy & backtest review table (HYPOTHETICAL)",
       lines: [
-        "Chart 3 (historical replay, unnamed instrument, hypothetical prices).",
-        "Structure: context TF uptrend — higher lows at 21.40 and 21.85.",
-        "Levels: support 22.00 (prior-day high), resistance 22.90.",
-        "Candles: pullback to 22.00 printed a hammer with a long lower wick.",
-        "Checklist: all boxes ticked → setup present. Entry 22.10, stop 21.95, target 22.40 (2:1).",
-        "Replay outcome noted; markup accurate. Session total: 4 of 5 markups judged correct."
+        "Pullback, NIFTYBEES 5m: training 42 trades, PF 1.25; out-of-sample 18 trades, PF 1.08.",
+        "Breakout, BANKBEES 5m: training 35 trades, PF 1.60; out-of-sample 15 trades, PF 0.82 → possible overfit.",
+        "Range, GOLDBEES 15m: 12 trades total → insufficient sample.",
+        "All runs: next-bar fills, Indian cost model on, 0.02% slippage assumed.",
+        "Conclusion: pullback is the most consistent and best understood — still a small sample.",
+        "No result here is a prediction of future performance."
       ]
     },
     mistakes: [
-      "Marking levels before structure — without context, levels can be read in the wrong direction.",
-      "Using charts you have already seen — hindsight makes markup look better than it is.",
-      "Judging accuracy by whether the trade won — a correct read can still lose; grade the process.",
-      "Forcing a setup on every chart — 'no setup' is often the correct answer.",
-      "Drawing too many lines — clutter hides the levels that matter."
+      "Choosing the strategy with the best training result and ignoring out-of-sample.",
+      "Trusting backtests that had costs or slippage switched off.",
+      "Treating 10-15 trades as proof of an edge.",
+      "Not being able to state a strategy's rules precisely.",
+      "Tweaking parameters again until the new out-of-sample period looks good."
     ],
     quiz: [
-      { q: "What is the correct markup order?", a: "Structure first, then levels, then candles, then the setup decision." },
-      { q: "Is 'no setup' an acceptable result?", a: "Yes — it is often the correct and most common answer." },
-      { q: "How should you grade the exercise?", a: "By accuracy of the markup and rule application, not by whether the trade would have won." }
+      { q: "What is a warning sign of overfitting?", a: "Strong training results that collapse out-of-sample, especially after many parameter tweaks." },
+      { q: "Name two things a trustworthy backtest must include.", a: "No look-ahead with next-bar fills, and realistic costs and slippage." },
+      { q: "Why might a strategy with few trades be unreliable?", a: "A small sample can look good or bad purely by chance." }
     ]
   },
 
   80: {
     what: [
-      "The Risk & Strategy Review checks whether your rules meet three standards: specific, written and followed. A rule that fails any one of these does not really function as a rule.",
-      "Specific means a rule can be checked objectively — it has a number, a level or a clear yes/no condition. Written means it lives in your Playbook, not in your head. Followed means your journal and Analytics show you actually applied it.",
-      "The fourth principle is to adjust only with data. It is tempting to change rules after a few bad trades, but changes should come from a meaningful sample — and ideally be tested in backtesting or replay before they enter the Playbook.",
-      "This review covers the Strategy, Entry, Stop-Loss, Exit and Risk Rules sections and compares what is written with what your trade records show."
+      "The paper-trading review looks at every Trading → Paper session from Phase 10 onward. The question is how well you executed your plans in simulation, session by session, and whether that improved over time.",
+      "Useful measures: plan adherence (trades that matched the written plan / all trades), valid setups skipped, unplanned trades, exits by rule vs by emotion, rejected orders, cooldowns, average R per trade and costs paid. The session journals add context about why things happened.",
+      "Compare the combined paper statistics with the backtest on the same ETFs and dates, as you did on Day 69, but now with a larger sample. Look for gaps that shrank because of practice and gaps that are still there.",
+      "Remember that paper fills on historical data can be kinder than reality, particularly in thinly traded ETFs where real slippage and partial fills may be worse. Paper results show execution skill in simulation; they do not predict real-money results."
     ],
     why: [
-      "Rules that are vague, unwritten or ignored give a false sense of control. Checking all three standards shows whether your process actually exists in practice.",
-      "This provides the evidence for the risk and strategy scores on your Evaluation dashboard."
+      "Paper trading is the closest the app gets to rehearsing real decisions. An honest review shows which execution skills are now reliable and which still need deliberate practice.",
+      "Paper trading is one of the eight Evaluation skills, and its score is built from exactly these measures."
     ],
     how: [
-      "List every rule from the Strategy, Entry, Stop-Loss, Exit and Risk sections of your Playbook.",
-      "For each rule, mark: Specific (Y/N), Written (Y/N), Followed (% of trades from your journal).",
-      "Rewrite any rule marked not specific with a number or clear condition.",
-      "In Analytics, check actual risk per trade, largest daily loss and average R:R against your written limits.",
-      "For any rule followed less than about 90% of the time, find the reason in the Mistake Lab and add a prevention step.",
-      "List any changes you want to make, the data that supports them, and how you will test them in replay before adopting them.",
-      "Record your risk and strategy ratings on the Evaluation dashboard."
+      "Open all Paper session reports and copy key numbers into one table in the Trading Journal.",
+      "Calculate plan adherence and rule-based exits per session and plot the trend in Analytics.",
+      "Count unplanned trades and skipped valid setups across all sessions.",
+      "Compare total paper statistics with a backtest on the same ETFs and dates.",
+      "Read three session journals — your best, your worst and your most recent — and note what changed.",
+      "Write your two strongest execution habits and your two biggest remaining gaps."
     ],
     example: {
-      title: "Hypothetical rule audit table",
+      title: "Sample paper-trading summary (HYPOTHETICAL, simulated)",
       lines: [
-        "Risk 1% per trade — Specific: Y · Written: Y · Followed: 96% (one oversized trade).",
-        "Max daily loss 3R — Specific: Y · Written: Y · Followed: 100%.",
-        "'Enter on strong momentum' — Specific: N → rewritten as 'confirmation candle closes above prior candle high'.",
-        "Time exit — Specific: Y · Written: Y · Followed: 70% → often forgotten; added a timer reminder.",
-        "Proposed change: tighter stop buffer. Data: 12 trades only → test on 30+ replays first.",
-        "Actual average R:R (hypothetical simulation data): 1.8 vs. planned 2.0 → investigate early exits."
+        "Sessions: 14 historical replays. Trades: 31.",
+        "Plan adherence: 68% in week 1 → 90% in latest week.",
+        "Exits by rule: 74% overall; early exits fell from 6 to 1 per week.",
+        "Unplanned trades: 5 (4 in the first week). Cooldowns: 2, both respected.",
+        "Paper vs backtest avg win: 1.5R vs 1.8R — still some early exits.",
+        "Note: fills may be optimistic vs reality; this measures process, not real-money readiness."
       ]
     },
     mistakes: [
-      "Assuming a rule is followed without checking the records — memory is biased toward good behaviour.",
-      "Changing rules based on a few recent trades — small samples cannot tell you if a rule works.",
-      "Keeping vague rules because they 'feel right' — they cannot be measured or improved.",
-      "Changing several rules at once — you will not know which change made the difference.",
-      "Ignoring rules with low adherence — they point straight to the biggest improvement opportunity."
+      "Reviewing only your best sessions.",
+      "Focusing on virtual P&L instead of adherence and rule-based exits.",
+      "Ignoring the trend over time — improvement matters more than totals.",
+      "Assuming paper fills equal real fills in thin ETFs.",
+      "Treating a good paper record as permission to trade real money."
     ],
     quiz: [
-      { q: "What three standards should every rule meet?", a: "Specific, written and followed." },
-      { q: "When should you adjust a rule?", a: "Only when a meaningful data sample supports it, ideally after testing the change in replay." },
-      { q: "Why change only one rule at a time?", a: "So you can tell which change caused any difference in results." }
+      { q: "What is plan adherence?", a: "Trades that matched the written plan divided by all trades taken." },
+      { q: "Why might paper fills look better than reality?", a: "Simulated fills on historical data can understate slippage and partial fills, especially in thin ETFs." },
+      { q: "Which three sessions are useful to re-read?", a: "Your best, your worst and your most recent." }
     ]
   },
 
   81: {
     what: [
-      "The Backtest & Simulation Review puts your two main data sets side by side. Backtesting measured how your rules would have performed on historical charts; simulation (paper trading and replay) measured how you actually executed them in a more realistic setting.",
-      "The win rate comparison asks whether you won roughly as often in simulation as the backtest suggested. The R:R comparison asks whether your average winner and average loser matched the planned values.",
-      "Differences reveal execution gaps — places where your behaviour differs from the plan. Common gaps include early exits (lower average winner), late entries (worse R:R), skipped setups (fewer trades) and extra unplanned trades (lower win rate).",
-      "Each gap becomes a candidate for a next experiment: a small, specific change you will test over a set number of simulated trades. Some difference between backtest and simulation is normal; the question is whether the gap has a clear, fixable cause."
+      "Risk compliance means you did what your risk rules said on every trade, not just most of them. Today you audit your Trading Journal and Trading → Paper history trade by trade against the Risk Rules section of your Playbook.",
+      "Check four things for every trade: it had a stop-loss placed at entry; its size fit the risk per trade (risk / stop distance); it had a written trade reason; and it was inside the session window and max-trades limit. Then check each session: was the daily loss limit respected and did the cooldown run when triggered?",
+      "Also look for the two quiet size errors: increasing size after a winning streak because you felt confident, and increasing size after losses to recover faster. Both may pass the simulator's limit if the limit was loose, but both break the principle that size comes only from the rule.",
+      "Record a compliance percentage — compliant trades / all trades — and list every non-compliant trade with the rule it broke. Rejected orders that you corrected count as compliant: the system and you did their jobs."
     ],
     why: [
-      "If simulation results fall short of the backtest, it is tempting to blame the strategy. Often the strategy is fine and execution is the issue — and execution is something you can train.",
-      "This review provides the evidence for the backtesting and simulation scores on your Evaluation dashboard."
+      "Risk management is what keeps any strategy alive long enough for its statistics to matter. One non-compliant trade can erase many compliant ones.",
+      "Risk compliance is one of the eight Evaluation skills and is usually the clearest to measure: each trade either followed the rule or did not."
     ],
     how: [
-      "In Analytics, export or note these metrics for both data sets: number of trades, win rate, average winner (R), average loser (R) and expectancy.",
-      "Put them in a two-column comparison and calculate the difference for each.",
-      "For each meaningful difference, look at the Mistake Lab and journal to find the most likely execution cause.",
-      "Check trades per session too: more trades in simulation than in the backtest often signals overtrading.",
-      "Choose one or two next experiments, each with a clear rule, a sample size (for example 20 trades) and a success measure.",
-      "Schedule the experiments in your timetable and note them in the Common Mistakes section of your Playbook.",
-      "Record backtesting and simulation ratings on the Evaluation dashboard."
+      "Export or list all paper trades with entry, stop, size, reason and result.",
+      "For each trade, recalculate the planned risk and compare it with your risk per trade.",
+      "Mark trades with no stop, a widened stop, missing reason or oversize as non-compliant.",
+      "For each session, check whether the daily loss limit was hit and whether the cooldown was respected.",
+      "Look at size after wins and after losses to spot drift.",
+      "Calculate your compliance percentage and record it in the Trading Journal.",
+      "Turn each type of non-compliance into a new or sharper rule in the Playbook."
     ],
     example: {
-      title: "Hypothetical side-by-side comparison",
+      title: "Sample risk-compliance audit (HYPOTHETICAL)",
       lines: [
-        "Backtest (hypothetical): 100 trades · win rate 46% · avg winner +2.0R · avg loser -1.0R · expectancy +0.38R.",
-        "Simulation (hypothetical): 40 trades · win rate 44% · avg winner +1.5R · avg loser -1.1R · expectancy +0.04R.",
-        "Gap 1: average winner 0.5R lower → journal shows frequent early exits.",
-        "Gap 2: average loser slightly larger → two trades with late stop placement.",
-        "Experiment 1: no manual exits between entry and target for the next 20 simulated trades.",
-        "Experiment 2: stop order placed in the same action as entry for the next 20 trades."
+        "Trades audited: 31. Risk per trade rule: ₹500.",
+        "No stop at entry: 1. Stop widened: 2. Oversized (risk ₹700+): 1. Missing reason: 0.",
+        "Compliant: 27 of 31 = 87%.",
+        "Daily loss limit hit: 2 sessions, cooldown respected both times.",
+        "Size drift: after 3 wins in a row, size rose 20% once → flagged.",
+        "New rule: size is recalculated from scratch before every order, never carried over."
       ]
     },
     mistakes: [
-      "Comparing tiny simulation samples with large backtests — wait until you have enough trades for a fair comparison.",
-      "Blaming the strategy before checking execution — most gaps come from behaviour, not rules.",
-      "Looking only at win rate — average R and expectancy often reveal the bigger story.",
-      "Running several experiments at once — overlapping changes make results impossible to interpret.",
-      "Ignoring that backtests can be optimistic — hindsight and perfect fills make some gap expected."
+      "Auditing only losing trades — winners can break rules too.",
+      "Calling a widened stop 'adjusting' instead of a rule break.",
+      "Ignoring size creep after winning streaks.",
+      "Treating corrected rejected orders as failures.",
+      "Rounding compliance up to make the number look better."
     ],
     quiz: [
-      { q: "What two key comparisons does this review make?", a: "Win rate and R:R (average winner and loser) between backtest and simulation." },
-      { q: "What is an execution gap?", a: "A difference between planned and actual results caused by how you executed, such as early exits or late entries." },
-      { q: "What makes a good next experiment?", a: "One specific change, a set sample size and a clear success measure." }
+      { q: "Name four checks for each trade in a compliance audit.", a: "Stop at entry, size within risk rule, written trade reason, inside window and max-trades limit." },
+      { q: "How is the compliance percentage calculated?", a: "Compliant trades divided by all trades." },
+      { q: "Is a winning trade with a widened stop compliant?", a: "No — it broke the stop-loss rule regardless of the result." }
     ]
   },
 
   82: {
     what: [
-      "The Psychology & Discipline Review looks back over your Psychology journal and timetable to answer two questions: which emotions repeated, and how consistent were you?",
-      "Recurring emotions are the patterns that showed up again and again — for example impatience in quiet periods, frustration after losses, or over-confidence after wins. Counting them turns vague impressions into data.",
-      "Your discipline score is your rule adherence rate across the course: the percentage of simulated trades that followed every rule. Consistency streaks come from your timetable — how often you showed up for your planned session, review or lesson.",
-      "Finally, identify the rules that helped. Some if-then rules, cool-off timers or walk-away limits will have made a clear difference; others may have been ignored or unnecessary. Keep what works and simplify the rest."
+      "Today you review your Psychology journal and Mistake Lab from start to finish to see how your emotional habits changed over the journey. The question is practical: which triggers still lead to rule breaks, and which habits actually worked?",
+      "Look at counts over time: FOMO urges and chases, revenge trades after losses, early exits from fear, size changes after wins or losses, sessions ended by cooldown. Look at emotion ratings before and after sessions and before your worst trades.",
+      "Then test your habits against the data. Did the pre-session checklist correlate with fewer rule breaks? Did the post-loss pause shorten revenge chains? Did logging urges reduce early exits? Keep habits that clearly helped; rewrite or replace those that did not.",
+      "Progress in psychology is rarely a straight line. A few bad sessions after a good streak are normal. What matters is whether the overall trend shows fewer rule breaks and faster recovery."
     ],
     why: [
-      "Psychology and discipline are the skills that turn a good plan into consistent behaviour. Reviewing them with data shows whether your habits are actually changing.",
-      "This review provides the evidence for the psychology and discipline scores on your Evaluation dashboard."
+      "Strategy and risk rules only work if you follow them, and following them depends on managing emotions. This review connects your emotional patterns to your actual results.",
+      "Psychology and discipline are both Evaluation skills; this review gives you the evidence to understand those scores."
     ],
     how: [
-      "Read through your Psychology journal and tally each emotion mentioned, with its typical trigger.",
-      "Rank your top three recurring emotions and note the average intensity (1-10) for each.",
-      "From your Trading Journal or Analytics, calculate overall rule adherence and the trend from early weeks to recent weeks.",
-      "Check your timetable and streaks: total planned sessions, sessions completed, and longest streak.",
-      "List each Psychology Rule from your Playbook and mark whether it helped, was ignored or was not needed — use journal evidence.",
-      "Update the Psychology Rules section: keep effective rules, rewrite ignored ones, remove unnecessary ones.",
-      "Record psychology and discipline ratings on the Evaluation dashboard."
+      "Open the Psychology journal and count entries by emotion: FOMO, fear, frustration, overconfidence.",
+      "Open the Mistake Lab and chart mistake tags by week in Analytics.",
+      "Compare sessions where you completed the checklist with sessions where you did not.",
+      "Check each if-then rule in Psychology Rules: was it triggered, and did you follow it?",
+      "Keep rules that worked, rewrite rules that did not, and remove rules for triggers that never appeared.",
+      "Write your number-one remaining trigger and the rule that will handle it."
     ],
     example: {
-      title: "Hypothetical psychology & discipline summary",
+      title: "Sample psychology trend review (HYPOTHETICAL)",
       lines: [
-        "Top emotions (journal tally): impatience 18 · frustration after loss 11 · over-confidence after wins 6.",
-        "Rule adherence: weeks 7-8 about 72% → weeks 11-12 about 91% (hypothetical simulation data).",
-        "Timetable: 60 of 70 planned sessions completed (86%); longest streak 19 days.",
-        "Helped most: 10-minute post-loss timer — no revenge trades logged since it was introduced.",
-        "Ignored: 'breathing pause before every entry' → simplified to 'before entries after a loss or a missed move'.",
-        "Next focus: impatience in midday replays → shorter session window."
+        "FOMO chases: 6 in weeks 10-11 → 1 in the latest week.",
+        "Revenge trades: 3 early on → 0 since adding the 5-minute post-loss pause.",
+        "Early exits: still 2-3 per week — fear after a red bar remains my main trigger.",
+        "Checklist completed: 12 of 14 sessions; both skipped sessions had rule breaks.",
+        "Keep: post-loss pause, missed-trades list. Rewrite: 'stay calm' → 'if red bar, log urge, keep take-profit'.",
+        "Top trigger now: fear of giving back gains → handled by the take-profit rule."
       ]
     },
     mistakes: [
-      "Reviewing from memory instead of the journal — memory softens patterns that the written record shows clearly.",
-      "Focusing only on negative emotions — noticing over-confidence after wins is just as important.",
-      "Treating missed timetable days as failures to hide — they are data about your schedule and energy.",
-      "Keeping every rule out of habit — unused rules clutter the Playbook and reduce attention to the useful ones.",
-      "Rating discipline without calculating adherence — a percentage is more honest than a feeling."
+      "Reviewing emotions from memory instead of from journal entries.",
+      "Expecting zero emotions — the goal is managing them, not removing them.",
+      "Keeping if-then rules that never trigger or never get followed.",
+      "Ignoring the link between a skipped checklist and later rule breaks.",
+      "Being harsh on yourself instead of curious about the pattern."
     ],
     quiz: [
-      { q: "What two questions does this review answer?", a: "Which emotions repeated, and how consistent you were." },
-      { q: "How is a discipline score calculated?", a: "As the percentage of trades that followed every rule (rule adherence)." },
-      { q: "What should you do with a psychology rule you kept ignoring?", a: "Rewrite or simplify it so it is practical, or remove it if it is not needed." }
+      { q: "What should you do with an if-then rule that was never followed?", a: "Rewrite it to be more specific or replace it with a habit that works." },
+      { q: "Is the goal to stop feeling emotions while trading?", a: "No — it is to notice them and let written rules decide." },
+      { q: "Name one habit you can test against your data.", a: "The pre-session checklist, the post-loss pause, or logging urges instead of acting." }
     ]
   },
 
   83: {
     what: [
-      "The Final Evaluation brings together everything from this week. You complete the full evaluation across all 8 skill areas on the Evaluation dashboard — knowledge, chart reading, risk, strategy, backtesting, simulation, psychology and discipline — and record your overall score.",
-      "Be honest. This is a self-assessment for your learning, not a test you can fail. An inflated score hides the areas that need work; an honest one shows you exactly where the next cycle of practice should go.",
-      "Compare with the data. Each rating should be backed by evidence from this week's reviews: knowledge recall counts, markup accuracy, rule audit results, backtest-versus-simulation gaps, emotion tallies and adherence percentages.",
-      "Finally, pick three focus areas — usually your lowest scores, or the area where improvement would help the others most. These become the theme of your next learning cycle."
+      "The Evaluation dashboard brings everything together. It scores you across eight skills using your own data from the journey: quizzes and lessons, Replay decisions, Backtest reports, Paper sessions, Trading Journal, Mistake Lab, Psychology journal and Playbook.",
+      "The eight skills reflect the curriculum: knowledge, chart reading, risk management, strategy, backtesting, paper-trading simulation, psychology and discipline. Each score shows how consistently you applied that skill in practice, not how much virtual money you made.",
+      "Read the results as a map, not a verdict. A high score means a skill is reliable in simulation; a low score points to exactly where your next practice should go. A mixed profile is normal after 84 days.",
+      "The Final Evaluation is a learning checkpoint. It is not a certificate of trading ability and not a signal to trade real money. Simulated success, even strong and consistent, does not include the real costs, slippage, pressure and risks of live markets."
     ],
     why: [
-      "A structured evaluation turns 84 days of learning into a clear picture of your strengths and gaps. Without it, it is easy to over- or under-estimate your progress.",
-      "Choosing three focus areas keeps the next cycle targeted instead of trying to improve everything at once."
+      "Seeing all eight skills side by side shows how they depend on each other — for example, how weak discipline can drag down risk compliance and paper results at the same time.",
+      "A clear picture of strengths and gaps lets you plan the next stage of learning with purpose instead of repeating what you already do well."
     ],
     how: [
-      "Gather your notes from Days 78-82: knowledge grid, markup scores, rule audit, comparison table and psychology summary.",
-      "Open the Evaluation dashboard and rate each of the 8 skills, writing one sentence of evidence next to each score.",
-      "Where your gut rating and the data disagree, use the data.",
-      "Record your overall score and compare it with any earlier evaluation snapshots to see the trend.",
-      "Choose three focus areas and write one measurable goal for each (for example, 'adherence above 90% over the next 40 simulated trades').",
-      "Add those goals to your timetable and the top of your Playbook so they are visible every session."
+      "Make sure your journals, Paper reports, backtests and Playbook are up to date before opening Evaluation.",
+      "Open Evaluation and complete any remaining assessment items it asks for.",
+      "Read each of the eight skill scores and the evidence listed under it.",
+      "Mark your two strongest and two weakest skills.",
+      "For each weak skill, open the related lessons and tools and note one specific practice activity.",
+      "Write your result and your next focus in the Trading Journal.",
+      "Remind yourself in writing: this is a learning score, not permission to trade real money."
     ],
     example: {
-      title: "Hypothetical 8-skill evaluation",
+      title: "Sample Evaluation reflection (HYPOTHETICAL scores)",
       lines: [
-        "Knowledge 8/10 (79% confident recall) · Chart reading 7/10 (4 of 5 markups correct).",
-        "Risk 9/10 (100% max daily loss adherence) · Strategy 7/10 (two vague rules rewritten).",
-        "Backtesting 8/10 (100-trade sample) · Simulation 6/10 (expectancy gap from early exits).",
-        "Psychology 6/10 (impatience recurring) · Discipline 8/10 (adherence 91% recently).",
-        "Overall (hypothetical self-assessment): 59/80 = 74%.",
-        "Focus areas: 1) simulation exits 2) impatience 3) chart-reading speed — each with a measurable goal."
+        "Knowledge 85 · Charts 72 · Risk 88 · Strategy 70 · Backtesting 65 · Paper 74 · Psychology 62 · Discipline 78.",
+        "Strongest: risk management and knowledge.",
+        "Weakest: psychology (early exits from fear) and backtesting (small samples).",
+        "Next practice: 10 Replay sessions focused on holding to target; extend backtests to 60+ trades.",
+        "Note to self: these scores describe my simulated practice only.",
+        "Real money is not the next step; more learning and simulation is."
       ]
     },
     mistakes: [
-      "Scoring generously to feel good — it hides the exact areas the next cycle should target.",
-      "Scoring harshly out of self-criticism — an unfairly low score is as inaccurate as a high one.",
-      "Rating without evidence — every score should point to a number or record from the reviews.",
-      "Choosing too many focus areas — spreading effort thin slows improvement everywhere.",
-      "Treating the score as a verdict on readiness for real money — it measures learning progress in a simulated environment only."
+      "Reading a high score as proof you are ready for real money.",
+      "Feeling discouraged by low scores instead of using them to plan practice.",
+      "Opening Evaluation with incomplete journals, so scores miss evidence.",
+      "Focusing only on the overall number and ignoring individual skills.",
+      "Trying to raise scores by gaming inputs rather than practising."
     ],
     quiz: [
-      { q: "What are the 8 skill areas on the Evaluation dashboard?", a: "Knowledge, chart reading, risk, strategy, backtesting, simulation, psychology and discipline." },
-      { q: "If your feeling and your data disagree, which should decide the score?", a: "The data." },
-      { q: "How many focus areas should you choose, and what should each have?", a: "Three, each with a specific, measurable goal." }
+      { q: "What does the Evaluation dashboard score?", a: "Eight skills measured from your own practice data — process, not virtual P&L." },
+      { q: "What should you do with your two weakest skills?", a: "Plan specific practice activities for them in the app." },
+      { q: "Does a strong Final Evaluation mean you should trade real money?", a: "No — it is a learning checkpoint for simulated practice only." }
     ]
   },
 
   84: {
     what: [
-      "Congratulations — you have reached the end of the 84-day journey. Over twelve weeks you learned market foundations, read charts, built and backtested a strategy, practised in simulation, studied your own psychology, wrote a complete Playbook and evaluated yourself honestly.",
-      "The most valuable thing you built is not any single rule — it is a process and the habit of improving about 1% every day: plan, practise, journal, review, adjust. That loop works for any skill and keeps working long after the course ends.",
-      "Graduation is not a signal to start trading real money. This app is an educational simulator, and nothing here is financial advice or evidence that real-money trading would be profitable. The natural next step is another cycle of learning and simulated practice, guided by the three focus areas you chose yesterday.",
-      "Keep simulating, keep journaling and keep improving. Many skilled practitioners in any field spend far longer than 84 days practising before considering themselves competent, and that patience is part of the skill."
+      "Congratulations — you have completed the 84-day ETF learning journey. You started with what an ETF is and how it trades on the NSE, learned to read intraday charts and market context, studied risk, four strategies and proper backtesting, practised in Paper, worked on psychology and wrote your own Playbook.",
+      "Graduation does not mean you are ready to trade real money. It means you have a structured foundation for continued study and simulated practice. Many skills — especially psychology and discipline — take far longer than 84 days to become reliable, and simulations never capture every real-world cost and pressure.",
+      "The next 84 days are about deepening, not escalating. Use your Evaluation results to choose two or three skills to strengthen. Keep using Replay, Backtest and Paper on historical sessions, keep journaling, and keep updating the Playbook as evidence grows.",
+      "A good learning plan has a weekly rhythm: lessons or reading, replay practice, a backtest or two, paper sessions with full journals, and a weekly review. The 1% daily habit you built during the journey is the most valuable thing you take forward."
     ],
     why: [
-      "Skills fade without practice, and the habits you built — pre-session checks, rule adherence, honest journaling — need repetition to stay strong. Planning the next cycle now keeps the momentum.",
-      "Celebrating the process (not profits) reinforces the right lesson: consistent, disciplined practice is what you control and what you are proud of."
+      "Learning stops when people treat a course as a finish line. Planning the next stage keeps the habits of study, practice and honest review going.",
+      "Staying in simulation lets you keep improving without risking real money, while your evidence and understanding continue to grow."
     ],
     how: [
-      "Celebrate the process: look back at your timetable streaks, the number of lessons completed, journal entries written and Playbook sections finished.",
-      "Write a short reflection in your journal: the three biggest lessons from the 84 days and the habit you are proudest of.",
-      "Plan your next learning cycle around the three focus areas from Day 83, each with a measurable goal and a set number of simulated trades or replays.",
-      "Schedule regular sessions in the timetable — consistency matters more than length.",
-      "Keep using the Trading Practice Lab, Psychology journal and Mistake Lab, and review Analytics weekly.",
-      "Set a date to repeat the Evaluation dashboard (for example, in 4-6 weeks) to measure progress.",
-      "Keep the Playbook alive: re-read it before every session and update it only with data."
+      "Re-read your Day 1 journal entry and your Final Evaluation reflection side by side.",
+      "Pick two or three weakest skills from Evaluation as the focus for the next 84 days.",
+      "Write a weekly practice rhythm: for example two Replay sessions, one backtest, two Paper sessions and one weekly review.",
+      "Schedule a Playbook review every two weeks, changing rules only with evidence.",
+      "Plan to repeat Evaluation at the end of the next cycle to measure progress.",
+      "Explore an ETF you have not studied yet (for example GOLDBEES or JUNIORBEES) in Replay and Backtest only.",
+      "Write a short letter to day-1 you about what you learned and how you will keep learning."
     ],
     example: {
-      title: "Hypothetical plan for the next learning cycle",
+      title: "Sample next-84-days learning plan (HYPOTHETICAL)",
       lines: [
-        "Reflection: biggest lessons — process over outcome, fixed risk calms emotions, waiting is a skill.",
-        "Proudest habit: completing the pre-session mindset check before every practice session.",
-        "Focus 1 — simulation exits: 40 replay trades with no manual exits between entry and target.",
-        "Focus 2 — impatience: trade only the first 90 minutes of replay sessions for 4 weeks.",
-        "Focus 3 — chart reading: mark up 3 unseen historical charts per week and score accuracy.",
-        "Schedule: 4 simulated sessions + 1 weekly review; re-evaluate all 8 skills in 6 weeks.",
-        "Reminder: this remains educational, simulated practice — no real-money trading is part of this plan."
+        "Focus skills: psychology (early exits) and backtesting (larger samples).",
+        "Weekly rhythm: Mon lesson review · Tue Replay · Wed Backtest · Thu Paper · Fri Paper · Sat weekly review.",
+        "Targets: 60+ out-of-sample backtest trades; plan adherence 90%+ for 6 weeks running.",
+        "Playbook review every second Saturday; changes dated with evidence.",
+        "New study ETF: GOLDBEES — simulation and replay only.",
+        "Day 168: repeat Evaluation and compare. Everything stays educational and simulated."
       ]
     },
     mistakes: [
-      "Treating graduation as a green light for real-money trading — the course builds learning habits, not proof of profitability.",
-      "Stopping practice entirely — habits like journaling and rule adherence fade quickly without repetition.",
-      "Starting the next cycle without focus areas — unfocused practice repeats the same mistakes.",
-      "Throwing out the Playbook to try something new — refine with data instead of starting over.",
-      "Measuring the next cycle by simulated profit alone — keep process score and adherence as the main metrics."
+      "Treating graduation as a signal to start trading real money.",
+      "Stopping practice and journaling once the course is finished.",
+      "Trying to improve all eight skills at once instead of focusing on two or three.",
+      "Changing the Playbook based on feelings rather than evidence.",
+      "Forgetting the daily 1% habit that built your progress."
     ],
     quiz: [
-      { q: "What is the most valuable thing built during the 84 days?", a: "A repeatable process and the habit of improving a little every day — plan, practise, journal, review, adjust." },
-      { q: "What is the recommended next step after graduation?", a: "Another cycle of learning and simulated practice focused on your three focus areas — not real-money trading." },
-      { q: "Name three habits to keep going.", a: "Simulating, journaling and reviewing/improving (plus reading the Playbook before every session)." }
+      { q: "What does graduating from this journey mean?", a: "A foundation for continued learning and simulated practice — not readiness for real money." },
+      { q: "How should you choose focus skills for the next 84 days?", a: "Use your Final Evaluation results and pick the two or three weakest skills." },
+      { q: "Which app tools keep your practice simulated?", a: "Trading → Replay, Trading → Backtest and Trading → Paper on historical data with virtual money." }
     ]
   }
 };

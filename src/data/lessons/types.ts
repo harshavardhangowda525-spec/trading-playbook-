@@ -15,3 +15,18 @@ export interface LessonContent {
   /** Quick self-check: exactly three questions with short answers. */
   quiz: { q: string; a: string }[];
 }
+
+/** One day of the curriculum outline (shown on the Journey and lesson header). */
+export interface LessonPlan {
+  day: number;
+  title: string;
+  /** Two or three sentence summary shown at the top of the lesson. */
+  concept: string;
+  /** Exactly four short key points. */
+  keyPoints: string[];
+  /** Short labels for the day's three 1% checkboxes. */
+  learn: string;
+  practice: string;
+  journal: string;
+  review?: boolean;
+}
