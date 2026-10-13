@@ -1,12 +1,13 @@
 import { useRef, useState } from 'react';
 import { motion } from 'framer-motion';
-import { Cloud, Download, HardDrive, LogOut, Upload } from 'lucide-react';
+import { Cloud, Download, HardDrive, LogOut, RotateCcw, Upload } from 'lucide-react';
 import { Field, NumberInput, PageHeader, Panel, reveal } from '../components/ui';
 import { CLIENT_COUNTERS } from '../data/schedule';
 import { useAuth } from '../lib/auth';
 import { useProfile } from '../lib/data';
 import { useSyncStatus, useToday } from '../lib/hooks';
 import { journeyDay } from '../lib/domain';
+import { addDays, formatLong } from '../lib/dates';
 import { store, type SyncStatus } from '../lib/store';
 import '../styles/analytics.css';
 
@@ -17,6 +18,12 @@ const SYNC_LABEL: Record<SyncStatus, { text: string; tone: string }> = {
   syncing: { text: 'Syncing…', tone: 'warn' },
   offline: { text: 'Offline — changes queued', tone: 'warn' },
   error: { text: 'Sync error — retrying', tone: 'bad' },
+};
+
+/** Preferences that survive a fresh start (everything else is progress and is erased). */
+const KEEP_ON_RESTART: Record<string, string[] | '*'> = {
+  settings: ['profile', 'assistantPrefs', 'lessonVideos', 'marketsViewer'],
+  datasets: '*', // imported CSV market data
 };
 
 const ENV_EXAMPLE = `VITE_SUPABASE_URL=https://YOUR-PROJECT.supabase.co
@@ -66,6 +73,23 @@ export function SettingsPage() {
     } catch (err) {
       setMsg({ tone: 'bad', text: `Import failed: ${err instanceof Error ? err.message : 'invalid file'}` });
     }
+  };
+
+  const [restartDay, setRestartDay] = useState<'tomorrow' | 'today'>('tomorrow');
+  const [confirmText, setConfirmText] = useState('');
+  const [restartMsg, setRestartMsg] = useState<string | null>(null);
+  const restartDate = restartDay === 'tomorrow' ? addDays(today, 1) : today;
+  const startOver = () => {
+    if (confirmText.trim().toUpperCase() !== 'RESTART') return;
+    exportData(); // safety backup first
+    const erased = store.eraseAll((c, id) => {
+      const keep = KEEP_ON_RESTART[c];
+      return keep === '*' || (Array.isArray(keep) && keep.includes(id));
+    });
+    update({ startDate: restartDate });
+    setConfirmText('');
+    setMsg(null);
+    setRestartMsg(`Fresh start: ${erased} records erased (a backup was downloaded first). Day 1 is ${formatLong(restartDate)}.`);
   };
 
   const setTarget = (id: string, v: number | null) =>
@@ -182,8 +206,39 @@ export function SettingsPage() {
           </Panel>
         </motion.div>
 
-        {/* ── Cloud setup (local mode) or about ───────────────────── */}
+        {/* ── Start over ───────────────────────────────────────────── */}
         <motion.div variants={reveal} initial="hidden" animate="show" custom={2}>
+          <Panel title="Start over" sub="fresh start" className="an-panel">
+            <p className="small muted" style={{ margin: 0 }}>
+              Begin the 84-day journey again from Day 1. This erases all progress — lesson completions and notes, timetable history and streaks,
+              every journal, Mistake Lab, Practice Lab sessions, strategies, playbook, vault notes and the AI chat
+              {cloud ? ', on every device signed in to this account' : ''}. Your settings, daily targets, AI model choice, chosen lesson videos and
+              imported CSV data are kept. A full backup downloads automatically first, so you can restore it with Import JSON.
+            </p>
+            <div className="row wrap mt-16" style={{ gap: 8 }}>
+              <span className="small">Day 1 is</span>
+              {(['tomorrow', 'today'] as const).map((d) => (
+                <button key={d} type="button" className={`btn btn-sm${restartDay === d ? ' btn-primary' : ' btn-ghost'}`} onClick={() => setRestartDay(d)}>
+                  {d === 'tomorrow' ? `Tomorrow · ${formatLong(addDays(today, 1))}` : `Today · ${formatLong(today)}`}
+                </button>
+              ))}
+            </div>
+            <Field label='Type "RESTART" to confirm'>
+              <input className="input" value={confirmText} onChange={(e) => setConfirmText(e.target.value)} placeholder="RESTART" aria-label="Type RESTART to confirm" />
+            </Field>
+            <button type="button" className="btn mt-16" disabled={confirmText.trim().toUpperCase() !== 'RESTART'} onClick={startOver}>
+              <RotateCcw size={15} /> Erase progress and start over
+            </button>
+            {restartMsg && (
+              <div className="notice good mt-16" role="status">
+                {restartMsg}
+              </div>
+            )}
+          </Panel>
+        </motion.div>
+
+        {/* ── Cloud setup (local mode) or about ───────────────────── */}
+        <motion.div variants={reveal} initial="hidden" animate="show" custom={3}>
           {cloud ? (
             <Panel title="Cloud Accounts" sub="enabled" className="an-panel">
               <p className="small muted" style={{ margin: 0 }}>

@@ -45,7 +45,7 @@ To get **real accounts with cloud sync** (data follows you across devices and su
    ```
 4. Restart `npm run dev` (or rebuild). The app now opens with an email/password login.
 
-Without these keys the app runs in **LOCAL MODE** (no login, data stays in this browser). **Settings → Export** downloads a full JSON backup at any time, and **Import** restores it.
+Without these keys the app runs in **LOCAL MODE** (no login, data stays in this browser). **Settings → Export** downloads a full JSON backup at any time, and **Import** restores it. **Settings → Start over** erases all progress (after downloading a backup automatically) and restarts the 84-day journey with Day 1 today or tomorrow; preferences and imported CSV data are kept.
 
 Writes always land locally first and sync to Supabase in the background, so the app keeps working offline and catches up when you reconnect.
 
