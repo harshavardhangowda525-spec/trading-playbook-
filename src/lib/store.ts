@@ -252,6 +252,22 @@ class DocumentStore {
     this.statusListeners.forEach((fn) => fn());
   }
 
+  /**
+   * Erase every record except those `keep` returns true for. Deletions are
+   * tombstoned like any other removal, so they sync to the cloud too.
+   */
+  eraseAll(keep: (collection: string, id: string) => boolean): number {
+    let n = 0;
+    for (const [c, b] of this.docs) {
+      for (const d of [...b.values()]) {
+        if (d.deleted || keep(c, d.id)) continue;
+        this.remove(c, d.id);
+        n++;
+      }
+    }
+    return n;
+  }
+
   /** Full export of the signed-in user's data (backup). */
   exportAll(): Record<string, Record<string, unknown>> {
     const out: Record<string, Record<string, unknown>> = {};
