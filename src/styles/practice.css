@@ -715,3 +715,9 @@
   margin: 0;
   line-height: 1.6;
 }
+
+.mv-help {
+  padding: 8px 4px 0;
+  line-height: 1.6;
+  color: var(--text-2);
+}

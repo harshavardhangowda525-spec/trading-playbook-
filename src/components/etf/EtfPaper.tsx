@@ -1,10 +1,11 @@
 import { useMemo, useState } from 'react';
 import { motion } from 'framer-motion';
-import { AlertTriangle, ChevronsRight, Clock, Database, FileText, History, NotebookPen, Play, RotateCcw, ShieldAlert, Square, StepForward, Upload, Wallet, X } from 'lucide-react';
+import { AlertTriangle, ChevronsRight, Clock, FileText, History, NotebookPen, Play, RotateCcw, ShieldAlert, Square, StepForward, Upload, Wallet, X } from 'lucide-react';
 import { Field, NumberInput, SegControl, cx } from '../ui';
 import { PracticeChart } from '../practice/PracticeChart';
 import { DataImport } from '../practice/DataImport';
 import { ReportView } from './ReportView';
+import { EtfDataGuide } from './EtfDataGuide';
 import { RiskCostSettings } from './RiskCostSettings';
 import { EligibilityTable } from './EligibilityTable';
 import { INTERVALS, intervalSec, type Candle, type Interval } from '../../lib/market';
@@ -65,16 +66,7 @@ export function EtfPaper() {
     <div className="etf">
       <AccountBar account={account} onReset={(start) => updateAccount({ ...DEFAULT_PAPER_ACCOUNT, startingBalance: start, balance: start, resetAt: Date.now(), activeSessionId: null })} hasActive={!!active} />
       {!datasets.length ? (
-        <div className="glass pad etf-empty">
-          <Database size={20} />
-          <div>
-            <b>No ETF data yet</b>
-            <p className="small muted">Paper sessions replay real historical ETF sessions. Import an intraday CSV or fetch from Upstox first.</p>
-          </div>
-          <button className="btn btn-primary" onClick={() => setImportOpen(true)}>
-            <Upload size={14} /> Import or fetch ETF data
-          </button>
-        </div>
+        <EtfDataGuide onImport={() => setImportOpen(true)} what="start a paper session" />
       ) : active ? (
         <ActiveSession key={active.id} s={active} datasets={datasets} onSave={sessions.save} onFinished={finish} />
       ) : viewing ? (
