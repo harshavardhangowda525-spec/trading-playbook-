@@ -645,3 +645,22 @@
   overflow-wrap: anywhere;
   text-align: right;
 }
+.etf-guide {
+  display: grid;
+  gap: 10px;
+}
+.etf-guide-steps {
+  margin: 0;
+  padding-left: 20px;
+  display: grid;
+  gap: 10px;
+  font-size: 13.5px;
+  line-height: 1.6;
+  color: var(--text-2);
+}
+.etf-guide-steps code {
+  display: block;
+  margin-top: 4px;
+  font-size: 12px;
+  overflow-wrap: anywhere;
+}

@@ -6,12 +6,12 @@ import { INTERVALS, type Candle, type DataRef, type Interval } from '../../lib/m
 import { etfBars, intervalsFor, sourceLabel, useEtfDatasets } from '../../lib/etf/data';
 import { SESSIONS, localTime } from '../../lib/etf/calendar';
 import { DataImport } from './DataImport';
+import { EtfDataGuide } from '../etf/EtfDataGuide';
 import '../../styles/practice-data.css';
 
 const EASE = [0.22, 1, 0.36, 1] as const;
 const MAX_BARS = 600;
 const MIN_BARS = 60;
-const UNAVAILABLE = 'No ETF data yet — import an intraday CSV or fetch from Upstox to begin practice.';
 
 const tfLabel = (i: Interval) => INTERVALS.find((x) => x.key === i)!.label;
 
@@ -77,15 +77,7 @@ export function DataSourcePicker({ onLoad, busy }: { onLoad: (ref: DataRef, cand
       </div>
 
       {none ? (
-        <div className="pd-unavailable">
-          <div className="pd-note warn">
-            <AlertTriangle size={14} />
-            <span>{UNAVAILABLE}</span>
-          </div>
-          <button type="button" className="btn btn-sm" onClick={() => setImportOpen(true)}>
-            <Upload size={13} /> Import or fetch ETF data
-          </button>
-        </div>
+        <EtfDataGuide onImport={() => setImportOpen(true)} what="start a replay" />
       ) : (
         <div className="pd-picker-grid">
           <Field label="ETF dataset">

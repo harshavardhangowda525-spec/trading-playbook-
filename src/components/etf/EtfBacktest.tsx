@@ -1,10 +1,11 @@
 import { useEffect, useMemo, useState } from 'react';
 import { motion } from 'framer-motion';
-import { AlertTriangle, Database, FlaskConical, Play, Save, ShieldCheck, Trash2, Upload } from 'lucide-react';
+import { AlertTriangle, FlaskConical, Play, Save, ShieldCheck, Trash2, Upload } from 'lucide-react';
 import { Field, NumberInput, SegControl, cx } from '../ui';
 import { PracticeChart } from '../practice/PracticeChart';
 import { DataImport } from '../practice/DataImport';
 import { ReportView } from './ReportView';
+import { EtfDataGuide } from './EtfDataGuide';
 import { RiskCostSettings } from './RiskCostSettings';
 import { EligibilityTable } from './EligibilityTable';
 import { INTERVALS, intervalSec, type Interval } from '../../lib/market';
@@ -112,19 +113,10 @@ export function EtfBacktest() {
 
   if (!datasets.length) {
     return (
-      <div className="glass pad etf-empty">
-        <Database size={20} />
-        <div>
-          <b>No ETF data yet</b>
-          <p className="small muted">
-            Backtests run only on real historical ETF candles. Import an intraday CSV (IST timestamps) or fetch from Upstox. No sample or generated data is ever used.
-          </p>
-        </div>
-        <button className="btn btn-primary" onClick={() => setImportOpen(true)}>
-          <Upload size={14} /> Import or fetch ETF data
-        </button>
+      <>
+        <EtfDataGuide onImport={() => setImportOpen(true)} what="run a backtest" />
         <DataImport open={importOpen} onClose={() => setImportOpen(false)} onImported={(d) => setDsId(d.id)} />
-      </div>
+      </>
     );
   }
 
